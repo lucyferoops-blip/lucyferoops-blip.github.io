@@ -24,8 +24,9 @@
             overflow-x: hidden;
             position: relative;
         }
-        body::before {
-            content: '';
+
+        /* پس‌زمینه با div ثابت برای حل مشکل سافاری */
+        .bg-logo {
             position: fixed;
             top: 0;
             left: 0;
@@ -35,12 +36,10 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            background-attachment: fixed;
             opacity: 0.45;
-            z-index: -1;
+            z-index: -2;
         }
-        body::after {
-            content: '';
+        .bg-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -49,6 +48,7 @@
             background: rgba(3, 7, 18, 0.3);
             z-index: -1;
         }
+
         .glass {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(20px);
@@ -94,12 +94,19 @@
             background: rgba(59, 130, 246, 0.08);
             border: 1px solid rgba(59, 130, 246, 0.2);
             transition: all 0.3s;
+            /* جلوگیری از بیرون‌زدگی در فایرفاکس */
+            overflow-wrap: break-word;
+            word-break: break-word;
         }
         .skill-tag:hover {
             background: rgba(59, 130, 246, 0.2);
             border-color: rgba(59, 130, 246, 0.5);
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(59, 130, 246, 0.2);
+        }
+        /* اطمینان از کوچک نشدن آیکن‌ها */
+        .skill-tag i {
+            flex-shrink: 0;
         }
         .timeline-item {
             max-width: 600px;
@@ -136,6 +143,10 @@
     </style>
 </head>
 <body>
+
+    <!-- لایه‌های پس‌زمینه (جایگزین body::before/after) -->
+    <div class="bg-logo"></div>
+    <div class="bg-overlay"></div>
 
     <!-- HERO -->
     <section class="min-h-screen flex items-center justify-center px-6">
@@ -174,7 +185,6 @@
                     <p class="text-gray-400 mt-1">Core Language</p>
                 </div>
                 <div class="glass p-6 rounded-3xl card-hover">
-                    <!-- آیکن قفل جایگزین شد -->
                     <i class="fas fa-lock text-3xl text-blue-400 mb-3"></i>
                     <h3 class="text-4xl font-bold text-blue-400">Security</h3>
                     <p class="text-gray-400 mt-1">White Hat Focus</p>
@@ -225,14 +235,14 @@
             <p class="text-gray-400 text-lg">Languages, frameworks, and tools I'm working with</p>
         </div>
         <div class="flex flex-wrap justify-center gap-4">
-            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fab fa-python text-blue-400 text-2xl"></i> Python</span>
-            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fab fa-telegram text-blue-400 text-2xl"></i> Telegram Bot API</span>
-            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fas fa-shield-alt text-blue-400 text-2xl"></i> Ethical Hacking</span>
-            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fas fa-network-wired text-blue-400 text-2xl"></i> REST APIs</span>
-            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fas fa-database text-blue-400 text-2xl"></i> SQLite / PostgreSQL</span>
-            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fab fa-github text-blue-400 text-2xl"></i> Git & GitHub</span>
-            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fas fa-terminal text-blue-400 text-2xl"></i> Linux & Bash</span>
-            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fas fa-cloud text-blue-400 text-2xl"></i> VPS / Deploy</span>
+            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fab fa-python text-blue-400 text-2xl flex-shrink-0"></i> Python</span>
+            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fab fa-telegram text-blue-400 text-2xl flex-shrink-0"></i> Telegram Bot API</span>
+            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fas fa-shield-alt text-blue-400 text-2xl flex-shrink-0"></i> Ethical Hacking</span>
+            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fas fa-network-wired text-blue-400 text-2xl flex-shrink-0"></i> REST APIs</span>
+            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fas fa-database text-blue-400 text-2xl flex-shrink-0"></i> SQLite / PostgreSQL</span>
+            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fab fa-github text-blue-400 text-2xl flex-shrink-0"></i> Git & GitHub</span>
+            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fas fa-terminal text-blue-400 text-2xl flex-shrink-0"></i> Linux & Bash</span>
+            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fas fa-cloud text-blue-400 text-2xl flex-shrink-0"></i> VPS / Deploy</span>
         </div>
     </section>
 
