@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Majid | Junior Python Developer & White Hat Hacker</title>
     <meta name="description" content="Junior Python developer, white hat hacker, learning and building Telegram bots, automation, and security tools. Open for freelance projects.">
@@ -25,7 +26,14 @@
             position: relative;
         }
 
-        /* پس‌زمینه با div ثابت برای حل مشکل سافاری */
+        /* رفع باگ نمایش آیکون در سافاری و فایرفاکس */
+        i, .fa, .fab, .fas {
+            display: inline-block !important;
+            line-height: 1 !important;
+            flex-shrink: 0 !important;
+        }
+
+        /* پس‌زمینه ثابت */
         .bg-logo {
             position: fixed;
             top: 0;
@@ -94,19 +102,17 @@
             background: rgba(59, 130, 246, 0.08);
             border: 1px solid rgba(59, 130, 246, 0.2);
             transition: all 0.3s;
-            /* جلوگیری از بیرون‌زدگی در فایرفاکس */
             overflow-wrap: break-word;
             word-break: break-word;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
         .skill-tag:hover {
             background: rgba(59, 130, 246, 0.2);
             border-color: rgba(59, 130, 246, 0.5);
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(59, 130, 246, 0.2);
-        }
-        /* اطمینان از کوچک نشدن آیکن‌ها */
-        .skill-tag i {
-            flex-shrink: 0;
         }
         .timeline-item {
             max-width: 600px;
@@ -144,15 +150,24 @@
 </head>
 <body>
 
-    <!-- لایه‌های پس‌زمینه (جایگزین body::before/after) -->
+    <!-- لایه‌های پس‌زمینه -->
     <div class="bg-logo"></div>
     <div class="bg-overlay"></div>
 
     <!-- HERO -->
     <section class="min-h-screen flex items-center justify-center px-6">
         <div class="max-w-7xl w-full text-center">
+            
+            <!-- دکمه تلگرام بالا (اضافه شده طبق عکس) -->
+            <div data-aos="fade-down" class="flex justify-center mb-10">
+                <a href="https://t.me/sarsam_Oo" target="_blank" class="glass px-8 py-4 rounded-3xl inline-flex items-center gap-3 card-hover border-white/10 bg-black/40">
+                    <i class="fab fa-telegram text-blue-400 text-3xl flex-shrink-0"></i>
+                    <span class="text-xl font-semibold">Telegram</span>
+                </a>
+            </div>
+
             <div data-aos="fade-down" class="inline-flex items-center gap-2 glass px-6 py-3 rounded-full mb-8 text-blue-300">
-                <span class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></span>
+                <span class="w-3 h-3 bg-green-400 rounded-full animate-pulse flex-shrink-0"></span>
                 Open for Opportunities
             </div>
 
@@ -163,40 +178,40 @@
             </div>
 
             <p data-aos="fade-up" data-aos-delay="600" class="max-w-3xl mx-auto text-lg md:text-xl text-gray-400 leading-relaxed mb-10">
-                <i class="fas fa-shield-alt text-blue-400 mr-2"></i>
+                <i class="fas fa-shield-alt text-blue-400 mr-2 flex-shrink-0"></i>
                 Junior Python Developer & White Hat Hacker. Learning, building Telegram bots, automation tools,
                 and security-focused scripts. Looking for my first freelance projects.
             </p>
 
             <div data-aos="fade-up" data-aos-delay="800" class="flex justify-center gap-5 flex-wrap">
                 <a href="https://github.com/lucyferoops-blip" target="_blank" class="btn-primary px-10 py-4 rounded-2xl font-bold text-lg inline-flex items-center gap-3">
-                    <i class="fab fa-github text-xl"></i> GitHub
+                    <i class="fab fa-github text-xl flex-shrink-0"></i> GitHub
                 </a>
                 <a href="https://t.me/sarsam_Oo" target="_blank" class="glass px-10 py-4 rounded-2xl font-bold text-lg inline-flex items-center gap-3 card-hover border-white/10">
-                    <i class="fab fa-telegram text-blue-400 text-xl"></i> Telegram
+                    <i class="fab fa-telegram text-blue-400 text-xl flex-shrink-0"></i> Telegram
                 </a>
             </div>
 
-            <!-- Honest Stats -->
-            <div data-aos="fade-up" data-aos-delay="1000" class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20">
+            <!-- آمار و مهارت‌های کلیدی (رفع مشکل بریدگی در موبایل) -->
+            <div data-aos="fade-up" data-aos-delay="1000" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-20">
                 <div class="glass p-6 rounded-3xl card-hover">
-                    <i class="fab fa-python text-3xl text-blue-400 mb-3"></i>
-                    <h3 class="text-4xl font-bold text-blue-400">Python</h3>
+                    <i class="fab fa-python text-3xl text-blue-400 mb-3 flex-shrink-0"></i>
+                    <h3 class="text-2xl md:text-4xl font-bold text-blue-400">Python</h3>
                     <p class="text-gray-400 mt-1">Core Language</p>
                 </div>
                 <div class="glass p-6 rounded-3xl card-hover">
-                    <i class="fas fa-lock text-3xl text-blue-400 mb-3"></i>
-                    <h3 class="text-4xl font-bold text-blue-400">Security</h3>
+                    <i class="fas fa-lock text-3xl text-blue-400 mb-3 flex-shrink-0"></i>
+                    <h3 class="text-2xl md:text-4xl font-bold text-blue-400">Security</h3>
                     <p class="text-gray-400 mt-1">White Hat Focus</p>
                 </div>
                 <div class="glass p-6 rounded-3xl card-hover">
-                    <i class="fab fa-telegram text-3xl text-blue-400 mb-3"></i>
-                    <h3 class="text-4xl font-bold text-blue-400">Bots</h3>
+                    <i class="fab fa-telegram text-3xl text-blue-400 mb-3 flex-shrink-0"></i>
+                    <h3 class="text-2xl md:text-4xl font-bold text-blue-400">Bots</h3>
                     <p class="text-gray-400 mt-1">Telegram Automation</p>
                 </div>
                 <div class="glass p-6 rounded-3xl card-hover">
-                    <i class="fas fa-rocket text-3xl text-blue-400 mb-3"></i>
-                    <h3 class="text-4xl font-bold text-blue-400">Open</h3>
+                    <i class="fas fa-rocket text-3xl text-blue-400 mb-3 flex-shrink-0"></i>
+                    <h3 class="text-2xl md:text-4xl font-bold text-blue-400">Open</h3>
                     <p class="text-gray-400 mt-1">For Freelance</p>
                 </div>
             </div>
@@ -211,17 +226,17 @@
         </div>
         <div class="grid md:grid-cols-3 gap-8 justify-center">
             <div data-aos="zoom-in" class="glass p-8 rounded-3xl card-hover text-center">
-                <div class="icon-box mx-auto mb-6"><i class="fab fa-telegram text-blue-400"></i></div>
+                <div class="icon-box mx-auto mb-6"><i class="fab fa-telegram text-blue-400 flex-shrink-0"></i></div>
                 <h3 class="text-2xl font-bold mb-4">Telegram Bots</h3>
                 <p class="text-gray-400 leading-relaxed">Building useful bots with payment integration, admin panels, and automation features.</p>
             </div>
             <div data-aos="zoom-in" data-aos-delay="100" class="glass p-8 rounded-3xl card-hover text-center">
-                <div class="icon-box mx-auto mb-6"><i class="fas fa-bug text-blue-400"></i></div>
+                <div class="icon-box mx-auto mb-6"><i class="fas fa-bug text-blue-400 flex-shrink-0"></i></div>
                 <h3 class="text-2xl font-bold mb-4">Security Tools</h3>
                 <p class="text-gray-400 leading-relaxed">Writing ethical hacking scripts, vulnerability scanners, and learning network security.</p>
             </div>
             <div data-aos="zoom-in" data-aos-delay="200" class="glass p-8 rounded-3xl card-hover text-center">
-                <div class="icon-box mx-auto mb-6"><i class="fas fa-code text-blue-400"></i></div>
+                <div class="icon-box mx-auto mb-6"><i class="fas fa-code text-blue-400 flex-shrink-0"></i></div>
                 <h3 class="text-2xl font-bold mb-4">Backend APIs</h3>
                 <p class="text-gray-400 leading-relaxed">Learning FastAPI, Django REST, and database design to build robust backends.</p>
             </div>
@@ -235,14 +250,14 @@
             <p class="text-gray-400 text-lg">Languages, frameworks, and tools I'm working with</p>
         </div>
         <div class="flex flex-wrap justify-center gap-4">
-            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fab fa-python text-blue-400 text-2xl flex-shrink-0"></i> Python</span>
-            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fab fa-telegram text-blue-400 text-2xl flex-shrink-0"></i> Telegram Bot API</span>
-            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fas fa-shield-alt text-blue-400 text-2xl flex-shrink-0"></i> Ethical Hacking</span>
-            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fas fa-network-wired text-blue-400 text-2xl flex-shrink-0"></i> REST APIs</span>
-            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fas fa-database text-blue-400 text-2xl flex-shrink-0"></i> SQLite / PostgreSQL</span>
-            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fab fa-github text-blue-400 text-2xl flex-shrink-0"></i> Git & GitHub</span>
-            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fas fa-terminal text-blue-400 text-2xl flex-shrink-0"></i> Linux & Bash</span>
-            <span class="skill-tag px-6 py-4 rounded-2xl flex items-center gap-3 text-lg"><i class="fas fa-cloud text-blue-400 text-2xl flex-shrink-0"></i> VPS / Deploy</span>
+            <span class="skill-tag px-6 py-4 rounded-2xl text-lg"><i class="fab fa-python text-blue-400 text-2xl flex-shrink-0"></i> Python</span>
+            <span class="skill-tag px-6 py-4 rounded-2xl text-lg"><i class="fab fa-telegram text-blue-400 text-2xl flex-shrink-0"></i> Telegram Bot API</span>
+            <span class="skill-tag px-6 py-4 rounded-2xl text-lg"><i class="fas fa-shield-alt text-blue-400 text-2xl flex-shrink-0"></i> Ethical Hacking</span>
+            <span class="skill-tag px-6 py-4 rounded-2xl text-lg"><i class="fas fa-network-wired text-blue-400 text-2xl flex-shrink-0"></i> REST APIs</span>
+            <span class="skill-tag px-6 py-4 rounded-2xl text-lg"><i class="fas fa-database text-blue-400 text-2xl flex-shrink-0"></i> SQLite / PostgreSQL</span>
+            <span class="skill-tag px-6 py-4 rounded-2xl text-lg"><i class="fab fa-github text-blue-400 text-2xl flex-shrink-0"></i> Git & GitHub</span>
+            <span class="skill-tag px-6 py-4 rounded-2xl text-lg"><i class="fas fa-terminal text-blue-400 text-2xl flex-shrink-0"></i> Linux & Bash</span>
+            <span class="skill-tag px-6 py-4 rounded-2xl text-lg"><i class="fas fa-cloud text-blue-400 text-2xl flex-shrink-0"></i> VPS / Deploy</span>
         </div>
     </section>
 
@@ -254,7 +269,7 @@
         </div>
         <div class="grid md:grid-cols-3 gap-8 justify-center">
             <div class="glass card-hover p-8 rounded-3xl text-center">
-                <div class="icon-box mx-auto mb-6"><i class="fas fa-robot text-blue-400 text-2xl"></i></div>
+                <div class="icon-box mx-auto mb-6"><i class="fas fa-robot text-blue-400 text-2xl flex-shrink-0"></i></div>
                 <h3 class="text-2xl font-bold mb-4">🤖 Simple Telegram Bot</h3>
                 <p class="text-gray-400 mb-4">A basic bot with commands, inline keyboards, and user management – my first real project.</p>
                 <div class="flex gap-2 flex-wrap justify-center">
@@ -263,7 +278,7 @@
                 </div>
             </div>
             <div class="glass card-hover p-8 rounded-3xl text-center">
-                <div class="icon-box mx-auto mb-6"><i class="fas fa-shield-virus text-blue-400 text-2xl"></i></div>
+                <div class="icon-box mx-auto mb-6"><i class="fas fa-shield-virus text-blue-400 text-2xl flex-shrink-0"></i></div>
                 <h3 class="text-2xl font-bold mb-4">🛡️ Port Scanner</h3>
                 <p class="text-gray-400 mb-4">A Python script to scan open ports for ethical hacking practice and network analysis.</p>
                 <div class="flex gap-2 flex-wrap justify-center">
@@ -272,7 +287,7 @@
                 </div>
             </div>
             <div class="glass card-hover p-8 rounded-3xl text-center">
-                <div class="icon-box mx-auto mb-6"><i class="fas fa-download text-blue-400 text-2xl"></i></div>
+                <div class="icon-box mx-auto mb-6"><i class="fas fa-download text-blue-400 text-2xl flex-shrink-0"></i></div>
                 <h3 class="text-2xl font-bold mb-4">📥 YouTube Downloader Bot</h3>
                 <p class="text-gray-400 mb-4">A Telegram bot that downloads videos – learning API integration and async programming.</p>
                 <div class="flex gap-2 flex-wrap justify-center">
@@ -292,22 +307,22 @@
         </div>
         <div class="space-y-8">
             <div class="timeline-item glass p-8 rounded-3xl card-hover text-center">
-                <div class="icon-box mx-auto mb-4"><i class="fas fa-comments text-blue-400 text-2xl"></i></div>
+                <div class="icon-box mx-auto mb-4"><i class="fas fa-comments text-blue-400 text-2xl flex-shrink-0"></i></div>
                 <h3 class="text-2xl font-bold mb-2">1. Understand</h3>
                 <p class="text-gray-400">We discuss what you need and I make sure I fully understand the problem.</p>
             </div>
             <div class="timeline-item glass p-8 rounded-3xl card-hover text-center">
-                <div class="icon-box mx-auto mb-4"><i class="fas fa-pencil-ruler text-blue-400 text-2xl"></i></div>
+                <div class="icon-box mx-auto mb-4"><i class="fas fa-pencil-ruler text-blue-400 text-2xl flex-shrink-0"></i></div>
                 <h3 class="text-2xl font-bold mb-2">2. Plan</h3>
                 <p class="text-gray-400">I outline a simple plan and share it with you before writing any code.</p>
             </div>
             <div class="timeline-item glass p-8 rounded-3xl card-hover text-center">
-                <div class="icon-box mx-auto mb-4"><i class="fas fa-code text-blue-400 text-2xl"></i></div>
+                <div class="icon-box mx-auto mb-4"><i class="fas fa-code text-blue-400 text-2xl flex-shrink-0"></i></div>
                 <h3 class="text-2xl font-bold mb-2">3. Build</h3>
                 <p class="text-gray-400">I code the solution, test it, and keep you updated on progress.</p>
             </div>
             <div class="timeline-item glass p-8 rounded-3xl card-hover text-center">
-                <div class="icon-box mx-auto mb-4"><i class="fas fa-check-circle text-blue-400 text-2xl"></i></div>
+                <div class="icon-box mx-auto mb-4"><i class="fas fa-check-circle text-blue-400 text-2xl flex-shrink-0"></i></div>
                 <h3 class="text-2xl font-bold mb-2">4. Deliver</h3>
                 <p class="text-gray-400">I deliver the final work and help you set it up if needed.</p>
             </div>
@@ -317,14 +332,14 @@
     <!-- CTA -->
     <section class="max-w-7xl mx-auto px-6 py-24 text-center">
         <div data-aos="zoom-in" class="glass p-12 md:p-20 rounded-3xl">
-            <i class="fas fa-handshake text-6xl text-blue-400 mb-8"></i>
+            <i class="fas fa-handshake text-6xl text-blue-400 mb-8 flex-shrink-0"></i>
             <h2 class="text-4xl md:text-5xl font-bold mb-6">Let's Work <span class="gradient-text">Together</span></h2>
             <p class="text-gray-400 text-lg max-w-2xl mx-auto mb-10">
                 I'm a junior developer, eager to learn and ready to take on small projects.
                 If you need a simple bot, script, or security tool – I'd love to help.
             </p>
             <a href="https://t.me/sarsam_Oo" target="_blank" class="btn-primary px-12 py-5 rounded-2xl font-bold text-xl inline-flex items-center gap-4">
-                <i class="fab fa-telegram text-2xl"></i> Message Me on Telegram
+                <i class="fab fa-telegram text-2xl flex-shrink-0"></i> Message Me on Telegram
             </a>
         </div>
     </section>
@@ -334,12 +349,12 @@
         <div class="max-w-7xl mx-auto px-6 text-center">
             <div class="flex flex-col md:flex-row justify-between items-center gap-6">
                 <div class="flex items-center gap-3 justify-center md:justify-start">
-                    <i class="fas fa-code text-blue-400 text-2xl"></i>
+                    <i class="fas fa-code text-blue-400 text-2xl flex-shrink-0"></i>
                     <span class="text-xl font-bold">MAJID</span>
                 </div>
                 <div class="flex gap-6 justify-center">
-                    <a href="https://github.com/lucyferoops-blip" target="_blank" class="text-gray-400 hover:text-blue-400 transition text-2xl"><i class="fab fa-github"></i></a>
-                    <a href="https://t.me/sarsam_Oo" target="_blank" class="text-gray-400 hover:text-blue-400 transition text-2xl"><i class="fab fa-telegram"></i></a>
+                    <a href="https://github.com/lucyferoops-blip" target="_blank" class="text-gray-400 hover:text-blue-400 transition text-2xl" aria-label="GitHub"><i class="fab fa-github flex-shrink-0"></i></a>
+                    <a href="https://t.me/sarsam_Oo" target="_blank" class="text-gray-400 hover:text-blue-400 transition text-2xl" aria-label="Telegram"><i class="fab fa-telegram flex-shrink-0"></i></a>
                 </div>
                 <p class="text-gray-500">© 2026 MAJID – Junior Python Developer</p>
             </div>
