@@ -1,377 +1,968 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Majid | Junior Python Developer & White Hat Hacker</title>
-    <meta name="description" content="Junior Python developer, white hat hacker, learning and building Telegram bots, automation, and security tools. Open for freelance projects.">
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
+    <title>Backend & Security Developer | Freelance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-primary: #0a0a0c;
+            --bg-secondary: #111115;
+            --bg-card: #15161a;
+            --bg-card-hover: #1a1c21;
+            --border: #1f2128;
+            --border-light: #2a2d36;
+            --text-primary: #e4e4e7;
+            --text-secondary: #a1a1aa;
+            --text-muted: #6b6b75;
+            --accent: #00e676;
+            --accent-glow: rgba(0, 230, 118, 0.15);
+            --accent-subtle: rgba(0, 230, 118, 0.06);
+            --accent-muted: #00c853;
+            --blue-accent: #64b5f6;
+            --blue-subtle: rgba(100, 181, 246, 0.08);
+            --radius-sm: 6px;
+            --radius: 10px;
+            --radius-lg: 14px;
+            --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 16px rgba(0, 0, 0, 0.3);
+            --shadow-glow: 0 0 40px rgba(0, 230, 118, 0.06), 0 0 80px rgba(0, 230, 118, 0.03);
+            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-sans: 'Inter', 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+            --max-width: 1200px;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
         }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
         body {
-            background: #030712;
-            color: white;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            line-height: 1.6;
             overflow-x: hidden;
             position: relative;
+            min-height: 100vh;
         }
 
-        /* رفع باگ نمایش آیکون در سافاری و فایرفاکس */
-        i, .fa, .fab, .fas {
-            display: inline-block !important;
-            line-height: 1 !important;
-            flex-shrink: 0 !important;
-        }
-
-        /* پس‌زمینه ثابت */
-        .bg-logo {
+        /* ── Background Code Texture ────────────── */
+        .bg-code-texture {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('https://i.ibb.co/9Hm2SjB6/file-00000000f22071f48add5ae94480183d.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            opacity: 0.45;
-            z-index: -2;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.025;
+            overflow: hidden;
+            user-select: none;
         }
-        .bg-overlay {
+
+        .bg-code-texture pre {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            line-height: 1.7;
+            color: var(--text-primary);
+            white-space: pre;
+            position: absolute;
+            top: -5%;
+            left: -5%;
+            width: 120%;
+            height: 120%;
+            transform: rotate(-8deg) scale(1.05);
+            letter-spacing: 0.02em;
+        }
+
+        .bg-code-texture .line-dim { opacity: 0.4; }
+        .bg-code-texture .line-accent { color: var(--accent); opacity: 0.7; }
+        .bg-code-texture .line-blue { color: var(--blue-accent); opacity: 0.5; }
+
+        /* ── Grid Overlay ────────────── */
+        .grid-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(3, 7, 18, 0.3);
-            z-index: -1;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+            background-size: 50px 50px;
         }
 
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        }
-        .glow-text {
-            text-shadow: 0 0 40px rgba(59, 130, 246, 0.8), 0 0 80px rgba(59, 130, 246, 0.4);
-        }
-        .gradient-text {
-            background: linear-gradient(135deg, #60a5fa, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .card-hover {
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-        .card-hover:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 50px rgba(59, 130, 246, 0.25);
-            border-color: rgba(59, 130, 246, 0.4);
-        }
-        .icon-box {
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            transition: all 0.3s;
-        }
-        .card-hover:hover .icon-box {
-            background: rgba(59, 130, 246, 0.25);
-            border-color: rgba(59, 130, 246, 0.6);
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
-        }
-        .skill-tag {
-            background: rgba(59, 130, 246, 0.08);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            transition: all 0.3s;
-            overflow-wrap: break-word;
-            word-break: break-word;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .skill-tag:hover {
-            background: rgba(59, 130, 246, 0.2);
-            border-color: rgba(59, 130, 246, 0.5);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(59, 130, 246, 0.2);
-        }
-        .timeline-item {
-            max-width: 600px;
+        /* ── Main Container ────────────── */
+        .main-container {
+            position: relative;
+            z-index: 1;
+            max-width: var(--max-width);
             margin: 0 auto;
+            padding: 0 28px;
+        }
+
+        /* ── Language Toggle ────────────── */
+        .lang-toggle {
+            background: transparent;
+            border: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: var(--font-sans);
+            margin-left: 12px;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+        .lang-toggle:hover {
+            border-color: var(--accent-muted);
+            color: var(--text-primary);
+            background: var(--bg-card-hover);
+        }
+        .lang-toggle .active-lang {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ── Language visibility ────────────── */
+        .lang-fa { display: none; }
+        html[lang="fa"] .lang-en { display: none; }
+        html[lang="fa"] .lang-fa { display: inline; }
+
+        .lang-block { display: block; }
+        html[lang="fa"] .lang-en.lang-block { display: none; }
+        html[lang="fa"] .lang-fa.lang-block { display: block; }
+
+        /* ── Navigation ────────────── */
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 10, 12, 0.82);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 28px;
+            transition: var(--transition);
+        }
+
+        .nav-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 56px;
+            flex-wrap: wrap;
+        }
+
+        .nav-brand {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            text-decoration: none;
+            letter-spacing: -0.01em;
+        }
+
+        .nav-brand-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent-glow), 0 0 24px rgba(0, 230, 118, 0.2);
+            animation: pulse-dot 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { box-shadow: 0 0 10px var(--accent-glow), 0 0 24px rgba(0, 230, 118, 0.2); }
+            50% { box-shadow: 0 0 18px var(--accent-glow), 0 0 36px rgba(0, 230, 118, 0.35); }
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 450;
+            transition: var(--transition);
+            letter-spacing: 0.01em;
+            position: relative;
+            padding: 4px 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1.5px;
+            background: var(--accent);
+            transition: width 0.25s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+        .nav-links a:hover::after {
             width: 100%;
         }
+
+        .nav-cta {
+            background: transparent;
+            border: 1px solid var(--accent-muted);
+            color: var(--accent);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.825rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-sans);
+            letter-spacing: 0.02em;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-cta:hover {
+            background: var(--accent-subtle);
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(0, 230, 118, 0.1);
+        }
+
+        /* ── Hero Section ────────────── */
+        .hero {
+            padding: 80px 0 60px;
+            position: relative;
+        }
+
+        .hero-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+            min-height: 420px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent-subtle);
+            border: 1px solid rgba(0, 230, 118, 0.2);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent);
+            letter-spacing: 0.04em;
+            margin-bottom: 22px;
+            text-transform: uppercase;
+        }
+
+        .hero-badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: pulse-dot 2.5s ease-in-out infinite;
+        }
+
+        .hero-title {
+            font-family: var(--font-sans);
+            font-weight: 700;
+            font-size: clamp(2.4rem, 5vw, 3.2rem);
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .hero-title .accent { color: var(--accent); }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 28px;
+            max-width: 440px;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
         .btn-primary {
-            background: linear-gradient(135deg, #3b82f6, #6366f1);
-            transition: all 0.3s;
+            background: var(--accent);
+            color: #0a0a0c;
+            border: none;
+            padding: 13px 28px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.925rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-sans);
+            letter-spacing: 0.01em;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 20px rgba(0, 230, 118, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: #00ff7a;
+            box-shadow: 0 6px 28px rgba(0, 230, 118, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-light);
+            padding: 13px 28px;
+            border-radius: 25px;
+            font-weight: 500;
+            font-size: 0.925rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-sans);
+            letter-spacing: 0.01em;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* ── Terminal Card (Hero side) ────────────── */
+        .terminal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            max-width: 480px;
+            justify-self: end;
+            width: 100%;
+        }
+
+        .terminal-card-header {
+            background: #1a1d22;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .terminal-dot.red { background: #ef5350; }
+        .terminal-dot.yellow { background: #ffb74d; }
+        .terminal-dot.green { background: #66bb6a; }
+
+        .terminal-card-title {
+            margin-left: 8px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 0.03em;
+        }
+
+        .terminal-card-body {
+            padding: 18px 20px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            letter-spacing: 0.02em;
+            min-height: 160px;
+        }
+
+        .terminal-prompt { color: var(--accent); }
+        .terminal-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background: var(--accent);
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 2px;
+            border-radius: 1px;
+        }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* ── Section Titles ────────────── */
+        .section { padding: 70px 0; }
+
+        .section-label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .section-title {
+            font-family: var(--font-sans);
+            font-weight: 700;
+            font-size: 2rem;
+            letter-spacing: -0.02em;
+            margin-bottom: 14px;
+            color: var(--text-primary);
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            max-width: 550px;
+            margin-bottom: 40px;
+            font-size: 0.975rem;
+            line-height: 1.65;
+        }
+
+        /* ── Skills Grid ────────────── */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
+        }
+
+        .skill-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 18px;
+            transition: var(--transition);
+            cursor: default;
             position: relative;
             overflow: hidden;
-            z-index: 1;
         }
-        .btn-primary::before {
+
+        .skill-card::before {
             content: '';
             position: absolute;
             top: 0;
-            left: -100%;
+            left: 0;
             width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #6366f1, #3b82f6);
-            transition: left 0.4s;
-            z-index: -1;
+            height: 2px;
+            background: transparent;
+            transition: var(--transition);
         }
-        .btn-primary:hover::before { left: 0; }
-        .btn-primary:hover {
+
+        .skill-card:hover {
+            border-color: var(--border-light);
+            background: var(--bg-card-hover);
+            box-shadow: var(--shadow-card);
+            transform: translateY(-2px);
+        }
+        .skill-card:hover::before { background: var(--accent); }
+
+        .skill-icon { font-size: 1.5rem; margin-bottom: 10px; display: block; opacity: 0.9; }
+        .skill-name { font-weight: 600; font-size: 0.925rem; color: var(--text-primary); margin-bottom: 4px; }
+        .skill-tag { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.03em; }
+
+        /* ── Services Grid ────────────── */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 18px;
+        }
+
+        .service-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 26px 24px;
+            transition: var(--transition);
+            cursor: default;
+            position: relative;
+        }
+
+        .service-card:hover {
+            border-color: var(--border-light);
+            background: var(--bg-card-hover);
+            box-shadow: var(--shadow-glow);
+            transform: translateY(-2px);
+        }
+
+        .service-num {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--accent);
+            letter-spacing: 0.06em;
+            margin-bottom: 10px;
+            display: block;
+            opacity: 0.8;
+        }
+
+        .service-title { font-weight: 600; font-size: 1.05rem; margin-bottom: 8px; color: var(--text-primary); letter-spacing: -0.01em; }
+        .service-desc { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.55; }
+
+        /* ── Portfolio Grid ────────────── */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .portfolio-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .portfolio-card:hover {
+            border-color: var(--border-light);
+            box-shadow: var(--shadow-card);
             transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
         }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #030712; }
-        ::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.5); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(59, 130, 246, 0.8); }
+
+        .portfolio-preview {
+            background: #111318;
+            padding: 28px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--border);
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            letter-spacing: 0.03em;
+            min-height: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .portfolio-preview .code-snippet { opacity: 0.6; line-height: 1.7; text-align: left; width: 100%; color: #8a8a96; }
+        .portfolio-preview .code-snippet .hl { color: var(--accent); opacity: 0.9; }
+        .portfolio-preview .code-snippet .hl-blue { color: var(--blue-accent); opacity: 0.8; }
+
+        .portfolio-info { padding: 18px 20px; }
+        .portfolio-tag { font-family: var(--font-mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 6px; display: block; }
+        .portfolio-name { font-weight: 600; font-size: 1rem; color: var(--text-primary); margin-bottom: 4px; letter-spacing: -0.01em; }
+        .portfolio-desc { font-size: 0.825rem; color: var(--text-secondary); line-height: 1.5; }
+
+        /* ── Contact Section ────────────── */
+        .contact-section { padding: 70px 0 90px; text-align: center; }
+
+        .contact-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 40px 32px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: var(--shadow-card);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-card::after {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 180px;
+            height: 180px;
+            background: var(--accent-glow);
+            border-radius: 50%;
+            filter: blur(60px);
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        .contact-card > * { position: relative; z-index: 1; }
+
+        .contact-methods {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 22px;
+        }
+
+        .contact-method {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            font-family: var(--font-sans);
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .contact-method:hover {
+            border-color: var(--accent-muted);
+            color: var(--text-primary);
+            background: var(--bg-card-hover);
+        }
+
+        /* ── Footer ────────────── */
+        .footer {
+            border-top: 1px solid var(--border);
+            padding: 24px 28px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            letter-spacing: 0.03em;
+            position: relative;
+            z-index: 1;
+        }
+        .footer span { color: var(--accent); opacity: 0.7; }
+
+        .divider { border: none; border-top: 1px solid var(--border); margin: 0; position: relative; z-index: 1; }
+
+        /* ── Responsive ────────────── */
+        @media (max-width: 900px) {
+            .hero-inner { grid-template-columns: 1fr; gap: 36px; min-height: auto; }
+            .terminal-card { justify-self: center; max-width: 100%; }
+            .hero { padding: 50px 0 40px; }
+            .section { padding: 50px 0; }
+            .nav-links { gap: 14px; }
+            .skills-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+            .portfolio-grid { grid-template-columns: 1fr; }
+            .services-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 600px) {
+            .nav-inner { height: auto; padding: 12px 0; gap: 10px; }
+            .hero-title { font-size: 1.8rem; }
+            .hero-buttons { flex-direction: column; gap: 10px; }
+            .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+            .section-title { font-size: 1.5rem; }
+            .contact-card { padding: 28px 18px; }
+            .main-container { padding: 0 16px; }
+            .nav { padding: 0 16px; }
+            .bg-code-texture pre { font-size: 8px; transform: rotate(-6deg) scale(1.1); }
+        }
     </style>
 </head>
 <body>
 
-    <!-- لایه‌های پس‌زمینه -->
-    <div class="bg-logo"></div>
-    <div class="bg-overlay"></div>
+    <!-- ═══════════════ Background Texture ═══════════════ -->
+    <div class="bg-code-texture" aria-hidden="true">
+        <pre>
+<span class="line-dim">import os, django, docker</span>
+<span class="line-accent">SECRET_KEY = os.environ.get("DJANGO_SECRET")</span>
+<span class="line-blue">client = docker.from_env()</span>
+<span class="line-accent">DEBUG = False</span>
+<span class="line-blue">nginx -t && systemctl reload nginx</span>
+<span class="line-accent">burp_scan = scanner.scan(target_url)</span>
+<span class="line-blue">gunicorn --bind 0.0.0.0:8000 wsgi:application</span>
+<span class="line-accent">def secure_endpoint(request):</span>
+<span class="line-blue">docker-compose up -d --build</span>
+        </pre>
+    </div>
+    <div class="grid-overlay" aria-hidden="true"></div>
 
-    <!-- HERO -->
-    <section class="min-h-screen flex items-center justify-center px-6">
-        <div class="max-w-7xl w-full text-center">
-            
-            <!-- دکمه تلگرام بالا -->
-            <div data-aos="fade-down" class="flex justify-center mb-10">
-                <a href="https://t.me/sarsam_Oo" target="_blank" class="glass px-8 py-4 rounded-3xl inline-flex items-center gap-3 card-hover border-white/10 bg-black/40">
-                    <i class="fab fa-telegram text-blue-400 text-3xl flex-shrink-0"></i>
-                    <span class="text-xl font-semibold">Telegram</span>
-                </a>
-            </div>
-
-            <div data-aos="fade-down" class="inline-flex items-center gap-2 glass px-6 py-3 rounded-full mb-8 text-blue-300">
-                <span class="w-3 h-3 bg-green-400 rounded-full animate-pulse flex-shrink-0"></span>
-                Open for Opportunities
-            </div>
-
-            <h1 data-aos="fade-up" data-aos-delay="200" class="text-7xl md:text-9xl font-black glow-text mb-6 tracking-tighter">MAJID</h1>
-
-            <div data-aos="fade-up" data-aos-delay="400" class="text-3xl md:text-5xl font-bold mb-6 h-16">
-                <span class="gradient-text" id="typed"></span>
-            </div>
-
-            <p data-aos="fade-up" data-aos-delay="600" class="max-w-3xl mx-auto text-lg md:text-xl text-gray-400 leading-relaxed mb-10">
-                <i class="fas fa-shield-alt text-blue-400 mr-2 flex-shrink-0"></i>
-                Junior Python Developer & White Hat Hacker. Learning, building Telegram bots, automation tools,
-                and security-focused scripts. Looking for my first freelance projects.
-            </p>
-
-            <div data-aos="fade-up" data-aos-delay="800" class="flex justify-center gap-5 flex-wrap">
-                <a href="https://github.com/lucyferoops-blip" target="_blank" class="btn-primary px-10 py-4 rounded-2xl font-bold text-lg inline-flex items-center gap-3">
-                    <i class="fab fa-github text-xl flex-shrink-0"></i> GitHub
-                </a>
-                <!-- دکمه تلگرام وسط حذف شد تا تکراری نباشد -->
-            </div>
-
-            <!-- آمار و مهارت‌های کلیدی -->
-            <div data-aos="fade-up" data-aos-delay="1000" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-20">
-                <div class="glass p-6 rounded-3xl card-hover">
-                    <i class="fab fa-python text-3xl text-blue-400 mb-3 flex-shrink-0"></i>
-                    <h3 class="text-2xl md:text-4xl font-bold text-blue-400">Python</h3>
-                    <p class="text-gray-400 mt-1">Core Language</p>
-                </div>
-                <div class="glass p-6 rounded-3xl card-hover">
-                    <i class="fas fa-lock text-3xl text-blue-400 mb-3 flex-shrink-0"></i>
-                    <h3 class="text-2xl md:text-4xl font-bold text-blue-400">Security</h3>
-                    <p class="text-gray-400 mt-1">White Hat Focus</p>
-                </div>
-                <div class="glass p-6 rounded-3xl card-hover">
-                    <i class="fab fa-telegram text-3xl text-blue-400 mb-3 flex-shrink-0"></i>
-                    <h3 class="text-2xl md:text-4xl font-bold text-blue-400">Bots</h3>
-                    <p class="text-gray-400 mt-1">Telegram Automation</p>
-                </div>
-                <div class="glass p-6 rounded-3xl card-hover">
-                    <i class="fas fa-rocket text-3xl text-blue-400 mb-3 flex-shrink-0"></i>
-                    <h3 class="text-2xl md:text-4xl font-bold text-blue-400">Open</h3>
-                    <p class="text-gray-400 mt-1">For Freelance</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SERVICES -->
-    <section class="max-w-7xl mx-auto px-6 py-24">
-        <div data-aos="fade-up" class="text-center mb-16">
-            <h2 class="text-5xl font-bold mb-4">What <span class="gradient-text">I'm Learning</span></h2>
-            <p class="text-gray-400 text-lg max-w-2xl mx-auto">Currently focused on these areas and actively building projects</p>
-        </div>
-        <div class="grid md:grid-cols-3 gap-8 justify-center">
-            <div data-aos="zoom-in" class="glass p-8 rounded-3xl card-hover text-center">
-                <div class="icon-box mx-auto mb-6"><i class="fab fa-telegram text-blue-400 flex-shrink-0"></i></div>
-                <h3 class="text-2xl font-bold mb-4">Telegram Bots</h3>
-                <p class="text-gray-400 leading-relaxed">Building useful bots with payment integration, admin panels, and automation features.</p>
-            </div>
-            <div data-aos="zoom-in" data-aos-delay="100" class="glass p-8 rounded-3xl card-hover text-center">
-                <div class="icon-box mx-auto mb-6"><i class="fas fa-bug text-blue-400 flex-shrink-0"></i></div>
-                <h3 class="text-2xl font-bold mb-4">Security Tools</h3>
-                <p class="text-gray-400 leading-relaxed">Writing ethical hacking scripts, vulnerability scanners, and learning network security.</p>
-            </div>
-            <div data-aos="zoom-in" data-aos-delay="200" class="glass p-8 rounded-3xl card-hover text-center">
-                <div class="icon-box mx-auto mb-6"><i class="fas fa-code text-blue-400 flex-shrink-0"></i></div>
-                <h3 class="text-2xl font-bold mb-4">Backend APIs</h3>
-                <p class="text-gray-400 leading-relaxed">Learning FastAPI, Django REST, and database design to build robust backends.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- SKILLS -->
-    <section class="max-w-7xl mx-auto px-6 py-24">
-        <div data-aos="fade-up" class="text-center mb-16">
-            <h2 class="text-5xl font-bold mb-4">Tech <span class="gradient-text">I Use</span></h2>
-            <p class="text-gray-400 text-lg">Languages, frameworks, and tools I'm working with</p>
-        </div>
-        <div class="flex flex-wrap justify-center gap-4">
-            <span class="skill-tag px-6 py-4 rounded-2xl text-lg"><i class="fab fa-python text-blue-400 text-2xl flex-shrink-0"></i> Python</span>
-            <span class="skill-tag px-6 py-4 rounded-2xl text-lg"><i class="fab fa-telegram text-blue-400 text-2xl flex-shrink-0"></i> Telegram Bot API</span>
-            <span class="skill-tag px-6 py-4 rounded-2xl text-lg"><i class="fas fa-shield-alt text-blue-400 text-2xl flex-shrink-0"></i> Ethical Hacking</span>
-            <span class="skill-tag px-6 py-4 rounded-2xl text-lg"><i class="fas fa-network-wired text-blue-400 text-2xl flex-shrink-0"></i> REST APIs</span>
-            <span class="skill-tag px-6 py-4 rounded-2xl text-lg"><i class="fas fa-database text-blue-400 text-2xl flex-shrink-0"></i> SQLite / PostgreSQL</span>
-            <span class="skill-tag px-6 py-4 rounded-2xl text-lg"><i class="fab fa-github text-blue-400 text-2xl flex-shrink-0"></i> Git & GitHub</span>
-            <span class="skill-tag px-6 py-4 rounded-2xl text-lg"><i class="fas fa-terminal text-blue-400 text-2xl flex-shrink-0"></i> Linux & Bash</span>
-            <span class="skill-tag px-6 py-4 rounded-2xl text-lg"><i class="fas fa-cloud text-blue-400 text-2xl flex-shrink-0"></i> VPS / Deploy</span>
-        </div>
-    </section>
-
-    <!-- PROJECTS -->
-    <section class="max-w-7xl mx-auto px-6 py-24">
-        <div data-aos="fade-up" class="text-center mb-16">
-            <h2 class="text-5xl font-bold mb-4">Current <span class="gradient-text">Projects</span></h2>
-            <p class="text-gray-400 text-lg">What I'm building right now to learn and grow</p>
-        </div>
-        <div class="grid md:grid-cols-3 gap-8 justify-center">
-            <div class="glass card-hover p-8 rounded-3xl text-center">
-                <div class="icon-box mx-auto mb-6"><i class="fas fa-robot text-blue-400 text-2xl flex-shrink-0"></i></div>
-                <h3 class="text-2xl font-bold mb-4">🤖 Simple Telegram Bot</h3>
-                <p class="text-gray-400 mb-4">A basic bot with commands, inline keyboards, and user management – my first real project.</p>
-                <div class="flex gap-2 flex-wrap justify-center">
-                    <span class="text-xs glass px-3 py-1 rounded-full text-blue-300">Python</span>
-                    <span class="text-xs glass px-3 py-1 rounded-full text-blue-300">Aiogram</span>
-                </div>
-            </div>
-            <div class="glass card-hover p-8 rounded-3xl text-center">
-                <div class="icon-box mx-auto mb-6"><i class="fas fa-shield-virus text-blue-400 text-2xl flex-shrink-0"></i></div>
-                <h3 class="text-2xl font-bold mb-4">🛡️ Port Scanner</h3>
-                <p class="text-gray-400 mb-4">A Python script to scan open ports for ethical hacking practice and network analysis.</p>
-                <div class="flex gap-2 flex-wrap justify-center">
-                    <span class="text-xs glass px-3 py-1 rounded-full text-blue-300">Python</span>
-                    <span class="text-xs glass px-3 py-1 rounded-full text-blue-300">Socket</span>
-                </div>
-            </div>
-            <div class="glass card-hover p-8 rounded-3xl text-center">
-                <div class="icon-box mx-auto mb-6"><i class="fas fa-download text-blue-400 text-2xl flex-shrink-0"></i></div>
-                <h3 class="text-2xl font-bold mb-4">📥 YouTube Downloader Bot</h3>
-                <p class="text-gray-400 mb-4">A Telegram bot that downloads videos – learning API integration and async programming.</p>
-                <div class="flex gap-2 flex-wrap justify-center">
-                    <span class="text-xs glass px-3 py-1 rounded-full text-blue-300">Python</span>
-                    <span class="text-xs glass px-3 py-1 rounded-full text-blue-300">yt-dlp</span>
-                    <span class="text-xs glass px-3 py-1 rounded-full text-blue-300">AsyncIO</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- PROCESS -->
-    <section class="max-w-7xl mx-auto px-6 py-24">
-        <div data-aos="fade-up" class="text-center mb-16">
-            <h2 class="text-5xl font-bold mb-4">How I <span class="gradient-text">Work</span></h2>
-            <p class="text-gray-400 text-lg">My simple process for any project</p>
-        </div>
-        <div class="space-y-8">
-            <div class="timeline-item glass p-8 rounded-3xl card-hover text-center">
-                <div class="icon-box mx-auto mb-4"><i class="fas fa-comments text-blue-400 text-2xl flex-shrink-0"></i></div>
-                <h3 class="text-2xl font-bold mb-2">1. Understand</h3>
-                <p class="text-gray-400">We discuss what you need and I make sure I fully understand the problem.</p>
-            </div>
-            <div class="timeline-item glass p-8 rounded-3xl card-hover text-center">
-                <div class="icon-box mx-auto mb-4"><i class="fas fa-pencil-ruler text-blue-400 text-2xl flex-shrink-0"></i></div>
-                <h3 class="text-2xl font-bold mb-2">2. Plan</h3>
-                <p class="text-gray-400">I outline a simple plan and share it with you before writing any code.</p>
-            </div>
-            <div class="timeline-item glass p-8 rounded-3xl card-hover text-center">
-                <div class="icon-box mx-auto mb-4"><i class="fas fa-code text-blue-400 text-2xl flex-shrink-0"></i></div>
-                <h3 class="text-2xl font-bold mb-2">3. Build</h3>
-                <p class="text-gray-400">I code the solution, test it, and keep you updated on progress.</p>
-            </div>
-            <div class="timeline-item glass p-8 rounded-3xl card-hover text-center">
-                <div class="icon-box mx-auto mb-4"><i class="fas fa-check-circle text-blue-400 text-2xl flex-shrink-0"></i></div>
-                <h3 class="text-2xl font-bold mb-2">4. Deliver</h3>
-                <p class="text-gray-400">I deliver the final work and help you set it up if needed.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="max-w-7xl mx-auto px-6 py-24 text-center">
-        <div data-aos="zoom-in" class="glass p-12 md:p-20 rounded-3xl">
-            <i class="fas fa-handshake text-6xl text-blue-400 mb-8 flex-shrink-0"></i>
-            <h2 class="text-4xl md:text-5xl font-bold mb-6">Let's Work <span class="gradient-text">Together</span></h2>
-            <p class="text-gray-400 text-lg max-w-2xl mx-auto mb-10">
-                I'm a junior developer, eager to learn and ready to take on small projects.
-                If you need a simple bot, script, or security tool – I'd love to help.
-            </p>
-            <a href="https://t.me/sarsam_Oo" target="_blank" class="btn-primary px-12 py-5 rounded-2xl font-bold text-xl inline-flex items-center gap-4">
-                <i class="fab fa-telegram text-2xl flex-shrink-0"></i> Message Me on Telegram
+    <!-- ═══════════════ Navigation ═══════════════ -->
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+        <div class="nav-inner">
+            <a href="#" class="nav-brand" aria-label="Home">
+                <span class="nav-brand-dot" aria-hidden="true"></span>
+                &lt;dev/sec&gt;
             </a>
+            <ul class="nav-links">
+                <li><a href="#skills"><span class="lang-en">Skills</span><span class="lang-fa">مهارت‌ها</span></a></li>
+                <li><a href="#services"><span class="lang-en">Services</span><span class="lang-fa">خدمات</span></a></li>
+                <li><a href="#portfolio"><span class="lang-en">Portfolio</span><span class="lang-fa">نمونه‌کارها</span></a></li>
+                <li><a href="#contact" class="nav-cta"><span class="lang-en">Get in Touch</span><span class="lang-fa">تماس بگیرید</span></a></li>
+                <li>
+                    <button class="lang-toggle" id="langToggle" aria-label="Switch language">
+                        <span class="lang-en"><span class="active-lang">EN</span> / FA</span>
+                        <span class="lang-fa">FA / <span class="active-lang">EN</span></span>
+                    </button>
+                </li>
+            </ul>
         </div>
-    </section>
+    </nav>
 
-    <!-- FOOTER -->
-    <footer class="border-t border-white/5 py-12">
-        <div class="max-w-7xl mx-auto px-6 text-center">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                <div class="flex items-center gap-3 justify-center md:justify-start">
-                    <i class="fas fa-code text-blue-400 text-2xl flex-shrink-0"></i>
-                    <span class="text-xl font-bold">MAJID</span>
+    <!-- ═══════════════ Main Content ═══════════════ -->
+    <div class="main-container">
+
+        <!-- ── Hero Section ────────────── -->
+        <section class="hero" aria-labelledby="hero-heading">
+            <div class="hero-inner">
+                <div class="hero-text">
+                    <div class="hero-badge">
+                        <span class="hero-badge-dot" aria-hidden="true"></span>
+                        <span class="lang-en">AVAILABLE FOR PROJECTS</span>
+                        <span class="lang-fa">آماده همکاری</span>
+                    </div>
+                    <h1 id="hero-heading" class="hero-title">
+                        <span class="lang-en">Backend &amp;<br><span class="accent">Security</span> Developer</span>
+                        <span class="lang-fa">توسعه‌دهنده <span class="accent">بک‌اند</span><br>و <span class="accent">امنیت</span></span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        <span class="lang-en">I build hardened backend systems, secure APIs, and deploy infrastructure that scales. Python, Django, Docker, and Ubuntu — engineered for reliability.</span>
+                        <span class="lang-fa">سیستم‌های بک‌اند مقاوم، APIهای امن و زیرساخت‌های مقیاس‌پذیر می‌سازم. Python، Django، Docker و Ubuntu — مهندسی‌شده برای قابلیت اطمینان.</span>
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#contact" class="btn-primary">
+                            <span class="lang-en">Start a Project</span>
+                            <span class="lang-fa">شروع پروژه</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </a>
+                        <a href="#portfolio" class="btn-secondary">
+                            <span class="lang-en">View Work</span>
+                            <span class="lang-fa">مشاهده نمونه‌کارها</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg>
+                        </a>
+                    </div>
                 </div>
-                <div class="flex gap-6 justify-center">
-                    <a href="https://github.com/lucyferoops-blip" target="_blank" class="text-gray-400 hover:text-blue-400 transition text-2xl" aria-label="GitHub"><i class="fab fa-github flex-shrink-0"></i></a>
-                    <a href="https://t.me/sarsam_Oo" target="_blank" class="text-gray-400 hover:text-blue-400 transition text-2xl" aria-label="Telegram"><i class="fab fa-telegram flex-shrink-0"></i></a>
+
+                <!-- Terminal Card -->
+                <div class="terminal-card" aria-label="Terminal preview">
+                    <div class="terminal-card-header">
+                        <span class="terminal-dot red" aria-hidden="true"></span>
+                        <span class="terminal-dot yellow" aria-hidden="true"></span>
+                        <span class="terminal-dot green" aria-hidden="true"></span>
+                        <span class="terminal-card-title">session — /home/dev</span>
+                    </div>
+                    <div class="terminal-card-body">
+                        <div><span class="terminal-prompt">dev@secure:~$</span> whoami<span class="terminal-cursor" aria-hidden="true"></span></div>
+                        <div class="terminal-output">backend_security_engineer</div>
+                        <div style="margin-top:6px;"><span class="terminal-prompt">dev@secure:~$</span> cat /etc/skills</div>
+                        <div class="terminal-output">
+                            <span class="key">python</span> <span class="val">3.11+</span> ·
+                            <span class="key">django</span> <span class="val">4.2 LTS</span> ·
+                            <span class="key">docker</span> <span class="val">24.x</span><br>
+                            <span class="key">ubuntu</span> <span class="val">22.04/24.04</span> ·
+                            <span class="key">burp</span> <span class="val">suite pro</span> ·
+                            <span class="key">api</span> <span class="val">REST/gRPC</span>
+                        </div>
+                        <div style="margin-top:6px;color:#5a5a66;"># security-first mindset · zero-trust architecture</div>
+                    </div>
                 </div>
-                <p class="text-gray-500">© 2026 MAJID – Junior Python Developer</p>
             </div>
-        </div>
+        </section>
+
+        <!-- ── Skills Section ────────────── -->
+        <section class="section" id="skills" aria-labelledby="skills-heading">
+            <span class="section-label">// <span class="lang-en">competencies</span><span class="lang-fa">مهارت‌ها</span></span>
+            <h2 class="section-title" id="skills-heading"><span class="lang-en">Core Technology Stack</span><span class="lang-fa">فناوری‌های اصلی</span></h2>
+            <p class="section-desc">
+                <span class="lang-en">Tools and platforms I work with daily — selected for performance, security, and maintainability in production environments.</span>
+                <span class="lang-fa">ابزارها و پلتفرم‌هایی که روزانه با آن‌ها کار می‌کنم — انتخاب‌شده برای کارایی، امنیت و نگهداری‌پذیری در محیط‌های عملیاتی.</span>
+            </p>
+            <div class="skills-grid">
+                <div class="skill-card"><span class="skill-icon">🐍</span><div class="skill-name">Python</div><span class="skill-tag">3.11+ · asyncio</span></div>
+                <div class="skill-card"><span class="skill-icon">🟢</span><div class="skill-name">Django</div><span class="skill-tag">4.2 LTS · DRF</span></div>
+                <div class="skill-card"><span class="skill-icon">🐳</span><div class="skill-name">Docker</div><span class="skill-tag">Compose · Swarm</span></div>
+                <div class="skill-card"><span class="skill-icon">🐧</span><div class="skill-name">Ubuntu Server</div><span class="skill-tag">22.04/24.04 LTS</span></div>
+                <div class="skill-card"><span class="skill-icon">🔗</span><div class="skill-name"><span class="lang-en">API Development</span><span class="lang-fa">توسعه API</span></div><span class="skill-tag">REST · gRPC · GraphQL</span></div>
+                <div class="skill-card"><span class="skill-icon">🛡️</span><div class="skill-name"><span class="lang-en">Security Testing</span><span class="lang-fa">تست امنیت</span></div><span class="skill-tag">Burp Suite · OWASP</span></div>
+                <div class="skill-card"><span class="skill-icon">⚙️</span><div class="skill-name">Nginx</div><span class="skill-tag">Reverse Proxy · TLS</span></div>
+                <div class="skill-card"><span class="skill-icon">📊</span><div class="skill-name">PostgreSQL</div><span class="skill-tag">Optimization · Replication</span></div>
+            </div>
+        </section>
+
+        <!-- ── Services Section ────────────── -->
+        <section class="section" id="services" aria-labelledby="services-heading">
+            <span class="section-label">// <span class="lang-en">what I offer</span><span class="lang-fa">خدمات</span></span>
+            <h2 class="section-title" id="services-heading"><span class="lang-en">Services & Specialization</span><span class="lang-fa">خدمات و تخصص‌ها</span></h2>
+            <p class="section-desc">
+                <span class="lang-en">End-to-end backend engineering with a security-first approach. Every line of code is written with threat modeling in mind.</span>
+                <span class="lang-fa">مهندسی بک‌اند کامل با رویکرد امنیت‌محور. هر خط کد با در نظر گرفتن مدل‌سازی تهدید نوشته می‌شود.</span>
+            </p>
+            <div class="services-grid">
+                <div class="service-card"><span class="service-num">01</span><div class="service-title"><span class="lang-en">Backend Development</span><span class="lang-fa">توسعه بک‌اند</span></div><p class="service-desc"><span class="lang-en">Robust server-side applications with Python & Django. Clean architecture, thorough testing, and documentation that engineering teams appreciate.</span><span class="lang-fa">برنامه‌های سمت سرور مقاوم با Python و Django. معماری تمیز، تست کامل و مستنداتی که تیم‌های مهندسی قدردان آن هستند.</span></p></div>
+                <div class="service-card"><span class="service-num">02</span><div class="service-title"><span class="lang-en">API Design & Integration</span><span class="lang-fa">طراحی و یکپارچه‌سازی API</span></div><p class="service-desc"><span class="lang-en">RESTful and gRPC APIs designed for performance. Authentication flows, rate limiting, versioning, and comprehensive OpenAPI specs.</span><span class="lang-fa">APIهای RESTful و gRPC طراحی‌شده برای عملکرد بالا. جریان‌های احراز هویت، محدودیت نرخ، نسخه‌بندی و مستندات OpenAPI کامل.</span></p></div>
+                <div class="service-card"><span class="service-num">03</span><div class="service-title"><span class="lang-en">Bot Development</span><span class="lang-fa">توسعه بات</span></div><p class="service-desc"><span class="lang-en">Custom automation bots and workers — Telegram, Discord, Slack integrations, task queues, and cron-based pipelines.</span><span class="lang-fa">بات‌ها و کارگرهای اتوماسیون سفارشی — یکپارچه‌سازی Telegram، Discord، Slack، صف‌های وظیفه و پایپ‌لاین‌های مبتنی بر cron.</span></p></div>
+                <div class="service-card"><span class="service-num">04</span><div class="service-title"><span class="lang-en">Server Deployment</span><span class="lang-fa">استقرار سرور</span></div><p class="service-desc"><span class="lang-en">Dockerized deployments on Ubuntu. Nginx reverse proxies, TLS cert management, CI/CD pipelines, and infrastructure hardening.</span><span class="lang-fa">استقرار مبتنی بر Docker روی Ubuntu. پروکسی معکوس Nginx، مدیریت گواهی TLS، خطوط CI/CD و ایمن‌سازی زیرساخت.</span></p></div>
+                <div class="service-card"><span class="service-num">05</span><div class="service-title"><span class="lang-en">Security Auditing</span><span class="lang-fa">ممیزی امنیت</span></div><p class="service-desc"><span class="lang-en">Web application penetration testing with Burp Suite. Vulnerability assessment, OWASP Top 10 analysis, and actionable remediation reports.</span><span class="lang-fa">تست نفوذ برنامه‌های وب با Burp Suite. ارزیابی آسیب‌پذیری، تحلیل OWASP Top 10 و گزارش‌های اصلاحی عملی.</span></p></div>
+                <div class="service-card"><span class="service-num">06</span><div class="service-title"><span class="lang-en">Code Review & Hardening</span><span class="lang-fa">بازبینی کد و ایمن‌سازی</span></div><p class="service-desc"><span class="lang-en">Security-focused code reviews. Input validation, dependency auditing, secrets management, and secure coding best practices.</span><span class="lang-fa">بازبینی کد با تمرکز بر امنیت. اعتبارسنجی ورودی، ممیزی وابستگی‌ها، مدیریت اسرار و بهترین شیوه‌های کدنویسی امن.</span></p></div>
+            </div>
+        </section>
+
+        <!-- ── Portfolio Section ────────────── -->
+        <section class="section" id="portfolio" aria-labelledby="portfolio-heading">
+            <span class="section-label">// <span class="lang-en">recent work</span><span class="lang-fa">نمونه‌کارهای اخیر</span></span>
+            <h2 class="section-title" id="portfolio-heading"><span class="lang-en">Project Portfolio</span><span class="lang-fa">نمونه‌کارها</span></h2>
+            <p class="section-desc">
+                <span class="lang-en">Selected projects demonstrating backend architecture, security implementation, and infrastructure deployment.</span>
+                <span class="lang-fa">پروژه‌های منتخب که معماری بک‌اند، پیاده‌سازی امنیت و استقرار زیرساخت را نشان می‌دهند.</span>
+            </p>
+            <div class="portfolio-grid">
+                <div class="portfolio-card" tabindex="0">
+                    <div class="portfolio-preview"><span class="code-snippet"><span class="hl">@require_https</span><br><span class="hl-blue">def</span> process_payment(request):<br>&nbsp;&nbsp;payload = <span class="hl">validate_jwt</span>(...)<br>&nbsp;&nbsp;<span class="hl-blue">return</span> stripe.Charge.create(...)</span></div>
+                    <div class="portfolio-info">
+                        <span class="portfolio-tag"><span class="lang-en">Fintech</span><span class="lang-fa">فین‌تک</span></span>
+                        <div class="portfolio-name"><span class="lang-en">Secure Payment API Gateway</span><span class="lang-fa">درگاه پرداخت امن API</span></div>
+                        <p class="portfolio-desc"><span class="lang-en">PCI-compliant payment processor with Django REST, Stripe integration, and comprehensive audit logging.</span><span class="lang-fa">پردازش‌گر پرداخت منطبق با PCI با Django REST، یکپارچه‌سازی Stripe و ثبت گزارش‌های ممیزی کامل.</span></p>
+                    </div>
+                </div>
+                <div class="portfolio-card" tabindex="0">
+                    <div class="portfolio-preview"><span class="code-snippet"><span class="hl-blue">version:</span> <span class="hl">'3.8'</span><br><span class="hl-blue">services:</span><br>&nbsp;&nbsp;<span class="hl">api_gateway:</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-blue">image:</span> nginx:alpine</span></div>
+                    <div class="portfolio-info">
+                        <span class="portfolio-tag"><span class="lang-en">Infrastructure</span><span class="lang-fa">زیرساخت</span></span>
+                        <div class="portfolio-name"><span class="lang-en">Dockerized Microservices Cluster</span><span class="lang-fa">کلاستر میکروسرویس Dockerized</span></div>
+                        <p class="portfolio-desc"><span class="lang-en">Multi-service architecture with Docker Compose, internal networking, and health-check monitoring on Ubuntu.</span><span class="lang-fa">معماری چندسرویسی با Docker Compose، شبکه داخلی و پایش سلامت روی Ubuntu.</span></p>
+                    </div>
+                </div>
+                <div class="portfolio-card" tabindex="0">
+                    <div class="portfolio-preview"><span class="code-snippet"><span class="hl">burp_report</span> = {<br>&nbsp;&nbsp;<span class="hl-blue">"xss"</span>: <span class="hl">"patched"</span>,<br>&nbsp;&nbsp;<span class="hl-blue">"csrf"</span>: <span class="hl">"token_implemented"</span><br>}</span></div>
+                    <div class="portfolio-info">
+                        <span class="portfolio-tag"><span class="lang-en">Security Audit</span><span class="lang-fa">ممیزی امنیت</span></span>
+                        <div class="portfolio-name"><span class="lang-en">Web Security Audit Dashboard</span><span class="lang-fa">داشبورد ممیزی امنیت وب</span></div>
+                        <p class="portfolio-desc"><span class="lang-en">Internal tool aggregating Burp Suite scan results with remediation tracking and risk scoring.</span><span class="lang-fa">ابزار داخلی برای تجمیع نتایج اسکن Burp Suite با پیگیری اصلاح و امتیازدهی ریسک.</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Contact Section ────────────── -->
+        <section class="contact-section" id="contact" aria-labelledby="contact-heading">
+            <span class="section-label">// <span class="lang-en">start a conversation</span><span class="lang-fa">شروع گفتگو</span></span>
+            <h2 class="section-title" id="contact-heading"><span class="lang-en">Let's Build Something Secure</span><span class="lang-fa">بیایید چیزی امن بسازیم</span></h2>
+            <p class="section-desc" style="margin:0 auto 30px; text-align:center;">
+                <span class="lang-en">Whether you need a hardened backend, a security audit, or infrastructure that won't fail under pressure — I'm available for select freelance engagements.</span>
+                <span class="lang-fa">چه به یک بک‌اند مقاوم، ممیزی امنیت یا زیرساختی که تحت فشار خراب نشود نیاز داشته باشید — برای پروژه‌های فریلنسری منتخب در دسترس هستم.</span>
+            </p>
+            <div class="contact-card">
+                <span class="section-label" style="margin-bottom:4px;">// <span class="lang-en">connect via</span><span class="lang-fa">ارتباط از طریق</span></span>
+                <div class="contact-methods" style="margin-top: 12px;">
+                    <a href="https://t.me/M4j1D_0xDEAD" target="_blank" rel="noopener noreferrer" class="contact-method" aria-label="Telegram">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18.69-.963 4.425-1.363 5.874-.168.645-.502.86-.825.88-.703.065-1.238-.463-1.92-.91-1.068-.698-1.67-1.133-2.705-1.814-1.195-.787-.42-1.22.26-1.926.178-.184 3.27-2.998 3.33-3.254.008-.032.014-.15-.056-.213-.07-.063-.173-.04-.248-.023-.105.023-1.78 1.132-5.027 3.323-.476.327-.907.487-1.293.478-.425-.01-1.245-.24-1.855-.438-.747-.243-1.34-.372-1.29-.785.027-.215.325-.436.895-.66 3.506-1.527 5.844-2.534 7.014-3.022 3.34-1.39 4.035-1.63 4.487-1.638.1-.002.323.023.467.14.12.098.153.23.17.337.016.108.037.353.02.546z"/></svg>
+                        Telegram
+                    </a>
+                    <a href="https://github.com/lucyferoops-blip" target="_blank" rel="noopener noreferrer" class="contact-method" aria-label="GitHub">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.418-1.305.762-1.604-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                        GitHub
+                    </a>
+                    <span class="contact-method" aria-label="Discord username">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z"/></svg>
+                        Discord: majidvsx
+                    </span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <hr class="divider" aria-hidden="true">
+
+    <!-- ═══════════════ Footer ═══════════════ -->
+    <footer class="footer">
+        <p>&copy; <span id="current-year"></span> Backend & Security Developer. <span class="lang-en">All rights reserved.</span><span class="lang-fa">تمامی حقوق محفوظ است.</span> &nbsp;|&nbsp; PGP: <span>0xABCD1234</span></p>
     </footer>
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
     <script>
-        AOS.init({ once: true, duration: 800 });
-        new Typed('#typed', {
-            strings: ['Junior Python Dev', 'White Hat Hacker', 'Bot Builder', 'Security Enthusiast'],
-            typeSpeed: 80,
-            backSpeed: 50,
-            backDelay: 1500,
-            loop: true,
-            showCursor: true,
-            cursorChar: '|'
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        const html = document.documentElement;
+        const toggleBtn = document.getElementById('langToggle');
+
+        function setLang(lang) {
+            html.setAttribute('lang', lang);
+            localStorage.setItem('preferredLang', lang);
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            const currentLang = html.getAttribute('lang') || 'en';
+            const newLang = currentLang === 'en' ? 'fa' : 'en';
+            setLang(newLang);
         });
+
+        const savedLang = localStorage.getItem('preferredLang') || 'en';
+        setLang(savedLang);
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                const target = document.querySelector(targetId);
+                if (target) {
+                    e.preventDefault();
+                    const navHeight = document.querySelector('.nav').offsetHeight;
+                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight - 16;
+                    window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                }
+            });
+        });
+
+        const bgTexture = document.querySelector('.bg-code-texture pre');
+        if (bgTexture && window.innerWidth > 768) {
+            document.addEventListener('mousemove', function(e) {
+                const x = (e.clientX / window.innerWidth - 0.5) * 6;
+                const y = (e.clientY / window.innerHeight - 0.5) * 6;
+                bgTexture.style.transform = `rotate(-8deg) scale(1.05) translate(${x}px, ${y}px)`;
+            });
+        }
+
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -30px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.skill-card, .service-card, .portfolio-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(16px)';
+            el.style.transition = 'opacity 0.5s ease, transform 0.5s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease';
+            observer.observe(el);
+        });
+
+        setTimeout(() => {
+            document.querySelectorAll('.skill-card, .service-card, .portfolio-card').forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight) {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }
+            });
+        }, 150);
     </script>
 </body>
 </html>
