@@ -1,40 +1,26 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="fa" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Backend & Security Developer | Freelance</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Majid Dev | Interactive Terminal Portfolio</title>
     <style>
         :root {
-            --bg-primary: #0a0a0c;
-            --bg-secondary: #111115;
-            --bg-card: rgba(21, 22, 26, 0.65);
-            --bg-card-hover: rgba(26, 28, 33, 0.75);
-            --border: rgba(31, 33, 40, 0.5);
-            --border-light: rgba(42, 45, 54, 0.55);
-            --text-primary: #e4e4e7;
-            --text-secondary: #a1a1aa;
-            --text-muted: #6b6b75;
-            --accent: #00e676;
-            --accent-glow: rgba(0, 230, 118, 0.15);
-            --accent-subtle: rgba(0, 230, 118, 0.06);
-            --accent-muted: #00c853;
-            --blue-accent: #64b5f6;
-            --blue-subtle: rgba(100, 181, 246, 0.08);
-            --radius-sm: 6px;
-            --radius: 10px;
-            --radius-lg: 14px;
-            --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.4);
-            --shadow-glow: 0 0 40px rgba(0, 230, 118, 0.06), 0 0 80px rgba(0, 230, 118, 0.03);
-            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            --font-sans: 'Inter', 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-            --max-width: 1200px;
-            --glass-blur: 14px;
-            --glass-border: rgba(255, 255, 255, 0.06);
+            --neon-primary: #0ff;
+            --neon-secondary: #c200ff;
+            --glow-color: rgba(0, 255, 255, 0.6);
+            --bg-color: #0a0a0f;
+            --text-color: #c0f0ff;
+            --heading-color: #ff79c6;
+            --highlight-color: #ffb86c;
+            --prompt-color: #0ff;
+            --progress-bg: #1a1a2e;
+            --progress-fill: #0ff;
+            --terminal-bg: rgba(10, 10, 25, 0.75);
+            --border-glow: rgba(0, 255, 255, 0.3);
+            --hover-glow: rgba(0, 255, 255, 0.3);
+            --noise-opacity: 0.03;
+            --crt-opacity: 0.08;
         }
 
         * {
@@ -43,37 +29,17 @@
             box-sizing: border-box;
         }
 
-        html {
-            scroll-behavior: smooth;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
         body {
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: var(--font-sans);
-            line-height: 1.6;
+            background: var(--bg-color);
+            font-family: 'Fira Code', 'Courier New', monospace;
             overflow-x: hidden;
+            height: 100vh;
             position: relative;
-            min-height: 100vh;
+            cursor: default;
         }
 
-        /* ── Background Photo Layer ────────────── */
-        .bg-photo {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -2;
-            background: linear-gradient(rgba(10, 10, 12, 0.7), rgba(10, 10, 12, 0.8)),
-                        url('https://i.postimg.cc/zD9RYKkb/Screenshot-20260626-165531-Telegram.jpg') center/cover no-repeat;
-        }
-
-        /* ── Background Code Texture ────────────── */
-        .bg-code-texture {
+        /* Mouse glow */
+        .mouse-glow {
             position: fixed;
             top: 0;
             left: 0;
@@ -81,32 +47,12 @@
             height: 100%;
             pointer-events: none;
             z-index: 0;
-            opacity: 0.03;
-            overflow: hidden;
-            user-select: none;
+            background: radial-gradient(circle 300px at var(--mouse-x, 0) var(--mouse-y, 0), rgba(0, 255, 255, 0.08), transparent 70%);
+            transition: opacity 0.3s;
         }
 
-        .bg-code-texture pre {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            line-height: 1.7;
-            color: var(--text-primary);
-            white-space: pre;
-            position: absolute;
-            top: -5%;
-            left: -5%;
-            width: 120%;
-            height: 120%;
-            transform: rotate(-8deg) scale(1.05);
-            letter-spacing: 0.02em;
-        }
-
-        .bg-code-texture .line-dim { opacity: 0.4; }
-        .bg-code-texture .line-accent { color: var(--accent); opacity: 0.7; }
-        .bg-code-texture .line-blue { color: var(--blue-accent); opacity: 0.5; }
-
-        /* ── Grid Overlay ────────────── */
-        .grid-overlay {
+        /* Noise overlay */
+        .noise-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -114,888 +60,935 @@
             height: 100%;
             pointer-events: none;
             z-index: 0;
-            opacity: 0.03;
-            background-image:
-                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 50px 50px;
+            opacity: var(--noise-opacity);
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E");
+            background-size: 200px 200px;
         }
 
-        /* ── Main Container ────────────── */
-        .main-container {
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .scroll-sections {
             position: relative;
             z-index: 1;
-            max-width: var(--max-width);
-            margin: 0 auto;
-            padding: 0 28px;
+            pointer-events: none;
         }
 
-        /* ── Language Toggle ────────────── */
-        .lang-toggle {
-            background: transparent;
-            border: 1px solid var(--border-light);
-            color: var(--text-secondary);
-            padding: 4px 10px;
-            border-radius: 16px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            cursor: pointer;
-            font-family: var(--font-sans);
-            margin-left: 12px;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            white-space: nowrap;
-        }
-        .lang-toggle:hover {
-            border-color: var(--accent-muted);
-            color: var(--text-primary);
-            background: var(--bg-card-hover);
-        }
-        .lang-toggle .active-lang {
-            color: var(--accent);
-            font-weight: 600;
+        .scroll-sections section {
+            height: 100vh;
+            width: 100%;
+            pointer-events: auto;
         }
 
-        /* ── Language visibility ────────────── */
-        .lang-fa { display: none; }
-        html[lang="fa"] .lang-en { display: none; }
-        html[lang="fa"] .lang-fa { display: inline; }
-
-        .lang-block { display: block; }
-        html[lang="fa"] .lang-en.lang-block { display: none; }
-        html[lang="fa"] .lang-fa.lang-block { display: block; }
-
-        /* ── Navigation ────────────── */
-        .nav {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(10, 10, 12, 0.75);
+        .terminal-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(90%, 850px);
+            max-height: 80vh;
+            background: var(--terminal-bg);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border);
-            padding: 0 28px;
-            transition: var(--transition);
-        }
-
-        .nav-inner {
-            max-width: var(--max-width);
-            margin: 0 auto;
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.15), 0 0 15px rgba(200, 0, 255, 0.2);
+            z-index: 2;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 56px;
-            flex-wrap: wrap;
-        }
-
-        .nav-brand {
-            font-family: var(--font-mono);
-            font-weight: 500;
-            font-size: 0.95rem;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            text-decoration: none;
-            letter-spacing: -0.01em;
-        }
-
-        .nav-brand-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--accent);
-            box-shadow: 0 0 10px var(--accent-glow), 0 0 24px rgba(0, 230, 118, 0.2);
-            animation: pulse-dot 3s ease-in-out infinite;
-        }
-
-        @keyframes pulse-dot {
-            0%, 100% { box-shadow: 0 0 10px var(--accent-glow), 0 0 24px rgba(0, 230, 118, 0.2); }
-            50% { box-shadow: 0 0 18px var(--accent-glow), 0 0 36px rgba(0, 230, 118, 0.35); }
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            list-style: none;
-            flex-wrap: wrap;
-        }
-
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.875rem;
-            font-weight: 450;
-            transition: var(--transition);
-            letter-spacing: 0.01em;
-            position: relative;
-            padding: 4px 0;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 0;
-            height: 1.5px;
-            background: var(--accent);
-            transition: width 0.25s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--text-primary);
-        }
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .nav-cta {
-            background: transparent;
-            border: 1px solid var(--accent-muted);
-            color: var(--accent);
-            padding: 8px 18px;
-            border-radius: 20px;
-            font-size: 0.825rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: var(--font-sans);
-            letter-spacing: 0.02em;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .nav-cta:hover {
-            background: var(--accent-subtle);
-            border-color: var(--accent);
-            box-shadow: 0 0 20px rgba(0, 230, 118, 0.1);
-        }
-
-        /* ── Hero Section ────────────── */
-        .hero {
-            padding: 80px 0 60px;
-            position: relative;
-        }
-
-        .hero-inner {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            align-items: center;
-            min-height: 420px;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(0, 230, 118, 0.08);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 230, 118, 0.25);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--accent);
-            letter-spacing: 0.04em;
-            margin-bottom: 22px;
-            text-transform: uppercase;
-        }
-
-        .hero-badge-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--accent);
-            animation: pulse-dot 2.5s ease-in-out infinite;
-        }
-
-        .hero-title {
-            font-family: var(--font-sans);
-            font-weight: 700;
-            font-size: clamp(2.4rem, 5vw, 3.2rem);
-            line-height: 1.15;
-            letter-spacing: -0.03em;
-            margin-bottom: 16px;
-            color: var(--text-primary);
-        }
-
-        .hero-title .accent { color: var(--accent); }
-
-        .hero-subtitle {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            margin-bottom: 28px;
-            max-width: 440px;
-            line-height: 1.6;
-            font-weight: 400;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 14px;
-            flex-wrap: wrap;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: #0a0a0c;
-            border: none;
-            padding: 13px 28px;
-            border-radius: 25px;
-            font-weight: 600;
-            font-size: 0.925rem;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: var(--font-sans);
-            letter-spacing: 0.01em;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 20px rgba(0, 230, 118, 0.2);
-        }
-
-        .btn-primary:hover {
-            background: #00ff7a;
-            box-shadow: 0 6px 28px rgba(0, 230, 118, 0.3);
-            transform: translateY(-1px);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(10px);
-            color: var(--text-primary);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 13px 28px;
-            border-radius: 25px;
-            font-weight: 500;
-            font-size: 0.925rem;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: var(--font-sans);
-            letter-spacing: 0.01em;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-secondary:hover {
-            border-color: rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        /* ── Terminal Card ────────────── */
-        .terminal-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(var(--glass-blur));
-            -webkit-backdrop-filter: blur(var(--glass-blur));
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
+            flex-direction: column;
             overflow: hidden;
-            box-shadow: var(--shadow-card);
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            max-width: 480px;
-            justify-self: end;
-            width: 100%;
+            transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s, border-color 0.3s;
         }
 
-        .terminal-card-header {
-            background: rgba(26, 29, 34, 0.5);
-            backdrop-filter: blur(10px);
-            padding: 10px 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-bottom: 1px solid var(--glass-border);
+        .terminal-container:hover {
+            box-shadow: 0 0 50px var(--hover-glow), 0 0 25px rgba(200, 0, 255, 0.4);
+            border-color: rgba(200, 0, 255, 0.6);
         }
 
-        .terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
-        .terminal-dot.red { background: #ef5350; }
-        .terminal-dot.yellow { background: #ffb74d; }
-        .terminal-dot.green { background: #66bb6a; }
-
-        .terminal-card-title {
-            margin-left: 8px;
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            letter-spacing: 0.03em;
-        }
-
-        .terminal-card-body {
-            padding: 18px 20px;
-            line-height: 1.8;
-            color: var(--text-secondary);
-            letter-spacing: 0.02em;
-            min-height: 160px;
-        }
-
-        .terminal-prompt { color: var(--accent); }
-        .terminal-cursor {
-            display: inline-block;
-            width: 8px;
-            height: 15px;
-            background: var(--accent);
-            animation: blink 1s step-end infinite;
-            vertical-align: middle;
-            margin-left: 2px;
-            border-radius: 1px;
-        }
-
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-
-        /* ── Section Titles ────────────── */
-        .section { padding: 70px 0; }
-
-        .section-label {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--accent);
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .section-title {
-            font-family: var(--font-sans);
-            font-weight: 700;
-            font-size: 2rem;
-            letter-spacing: -0.02em;
-            margin-bottom: 14px;
-            color: var(--text-primary);
-        }
-
-        .section-desc {
-            color: var(--text-secondary);
-            max-width: 550px;
-            margin-bottom: 40px;
-            font-size: 0.975rem;
-            line-height: 1.65;
-        }
-
-        /* ── Skills Grid ────────────── */
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 16px;
-        }
-
-        .skill-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(var(--glass-blur));
-            -webkit-backdrop-filter: blur(var(--glass-blur));
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius);
-            padding: 20px 18px;
-            transition: var(--transition);
-            cursor: default;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .skill-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: transparent;
-            transition: var(--transition);
-        }
-
-        .skill-card:hover {
-            border-color: rgba(255, 255, 255, 0.12);
-            background: var(--bg-card-hover);
-            box-shadow: var(--shadow-card);
-            transform: translateY(-2px);
-        }
-        .skill-card:hover::before { background: var(--accent); }
-
-        .skill-icon { font-size: 1.5rem; margin-bottom: 10px; display: block; opacity: 0.9; }
-        .skill-name { font-weight: 600; font-size: 0.925rem; color: var(--text-primary); margin-bottom: 4px; }
-        .skill-tag { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.03em; }
-
-        /* ── Services Grid ────────────── */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 18px;
-        }
-
-        .service-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(var(--glass-blur));
-            -webkit-backdrop-filter: blur(var(--glass-blur));
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            padding: 26px 24px;
-            transition: var(--transition);
-            cursor: default;
-            position: relative;
-        }
-
-        .service-card:hover {
-            border-color: rgba(255, 255, 255, 0.12);
-            background: var(--bg-card-hover);
-            box-shadow: var(--shadow-glow);
-            transform: translateY(-2px);
-        }
-
-        .service-num {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            color: var(--accent);
-            letter-spacing: 0.06em;
-            margin-bottom: 10px;
-            display: block;
+        .section-transition {
+            transform: translate(-50%, -50%) scale(0.98) rotate(0.5deg);
+            filter: blur(1px);
             opacity: 0.8;
         }
 
-        .service-title { font-weight: 600; font-size: 1.05rem; margin-bottom: 8px; color: var(--text-primary); letter-spacing: -0.01em; }
-        .service-desc { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.55; }
-
-        /* ── Portfolio Grid ────────────── */
-        .portfolio-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .portfolio-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(var(--glass-blur));
-            -webkit-backdrop-filter: blur(var(--glass-blur));
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            transition: var(--transition);
-            cursor: pointer;
-        }
-
-        .portfolio-card:hover {
-            border-color: rgba(255, 255, 255, 0.12);
-            box-shadow: var(--shadow-card);
-            transform: translateY(-3px);
-        }
-
-        .portfolio-preview {
-            background: rgba(17, 19, 24, 0.4);
-            backdrop-filter: blur(10px);
-            padding: 28px 22px;
+        .terminal-header {
             display: flex;
             align-items: center;
-            justify-content: center;
-            border-bottom: 1px solid var(--glass-border);
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            letter-spacing: 0.03em;
-            min-height: 100px;
-            position: relative;
-            overflow: hidden;
+            padding: 12px 16px;
+            background: rgba(20, 20, 35, 0.7);
+            border-bottom: 1px solid var(--border-glow);
+            gap: 8px;
         }
 
-        .portfolio-preview .code-snippet { opacity: 0.6; line-height: 1.7; text-align: left; width: 100%; color: #8a8a96; }
-        .portfolio-preview .code-snippet .hl { color: var(--accent); opacity: 0.9; }
-        .portfolio-preview .code-snippet .hl-blue { color: var(--blue-accent); opacity: 0.8; }
-
-        .portfolio-info { padding: 18px 20px; }
-        .portfolio-tag { font-family: var(--font-mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 6px; display: block; }
-        .portfolio-name { font-weight: 600; font-size: 1rem; color: var(--text-primary); margin-bottom: 4px; letter-spacing: -0.01em; }
-        .portfolio-desc { font-size: 0.825rem; color: var(--text-secondary); line-height: 1.5; }
-
-        /* ── Contact Section ────────────── */
-        .contact-section { padding: 70px 0 90px; text-align: center; }
-
-        .contact-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(var(--glass-blur));
-            -webkit-backdrop-filter: blur(var(--glass-blur));
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-lg);
-            padding: 40px 32px;
-            max-width: 600px;
-            margin: 0 auto;
-            box-shadow: var(--shadow-card);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .contact-card::after {
-            content: '';
-            position: absolute;
-            top: -60px;
-            right: -60px;
-            width: 180px;
-            height: 180px;
-            background: var(--accent-glow);
+        .btn {
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
-            filter: blur(60px);
-            pointer-events: none;
-            opacity: 0.5;
-        }
-        .contact-card > * { position: relative; z-index: 1; }
-
-        .contact-methods {
-            display: flex;
-            gap: 14px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 22px;
+            display: inline-block;
         }
 
-        .contact-method {
-            background: rgba(17, 17, 21, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 25px;
-            padding: 10px 20px;
+        .close { background: #ff5f56; }
+        .minimize { background: #ffbd2e; }
+        .maximize { background: #27ca40; }
+
+        .title {
+            margin-left: 12px;
+            color: #a0b0ff;
             font-size: 0.85rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: var(--transition);
-            font-family: var(--font-sans);
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
+            letter-spacing: 0.5px;
         }
 
-        .contact-method:hover {
-            border-color: var(--accent-muted);
-            color: var(--text-primary);
-            background: rgba(26, 28, 33, 0.7);
+        .terminal-body {
+            flex: 1;
+            padding: 16px 20px;
+            overflow-y: auto;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-color);
+            position: relative;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* ── Footer ────────────── */
-        .footer {
-            border-top: 1px solid var(--glass-border);
-            padding: 24px 28px;
-            text-align: center;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            font-family: var(--font-mono);
-            letter-spacing: 0.03em;
+        /* CRT Scanlines */
+        .terminal-body::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0, 255, 255, 0.03) 0px, rgba(0, 255, 255, 0.03) 1px, transparent 1px, transparent 3px);
+            pointer-events: none;
+            z-index: 3;
+            opacity: var(--crt-opacity);
+        }
+
+        .output {
+            white-space: pre-wrap;
+            word-break: break-word;
+            flex: 1;
             position: relative;
             z-index: 1;
         }
-        .footer span { color: var(--accent); opacity: 0.7; }
 
-        .divider { border: none; border-top: 1px solid var(--glass-border); margin: 0; position: relative; z-index: 1; }
+        .prompt-text {
+            color: var(--prompt-color);
+            text-shadow: 0 0 8px var(--glow-color);
+        }
 
-        /* ── Responsive ────────────── */
-        @media (max-width: 900px) {
-            .hero-inner { grid-template-columns: 1fr; gap: 36px; min-height: auto; }
-            .terminal-card { justify-self: center; max-width: 100%; }
-            .hero { padding: 50px 0 40px; }
-            .section { padding: 50px 0; }
-            .nav-links { gap: 14px; }
-            .skills-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
-            .portfolio-grid { grid-template-columns: 1fr; }
-            .services-grid { grid-template-columns: 1fr; }
+        .cmd {
+            color: #e0b0ff;
+            font-weight: bold;
+        }
+
+        .output-text {
+            color: var(--text-color);
+        }
+
+        .heading {
+            color: var(--heading-color);
+            font-weight: bold;
+            text-shadow: 0 0 6px var(--heading-color);
+        }
+
+        .highlight {
+            color: var(--highlight-color);
+        }
+
+        .glitch {
+            display: inline-block;
+            animation: glitch 1.5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 2px 2px 0 #ff00c1, -2px -2px 0 #00ffff; }
+            20% { text-shadow: -2px 2px 0 #ff00c1, 2px -2px 0 #00ffff; }
+            40% { text-shadow: 2px -2px 0 #ff00c1, -2px 2px 0 #00ffff; }
+            60% { text-shadow: -2px -2px 0 #ff00c1, 2px 2px 0 #00ffff; }
+            80% { text-shadow: 2px 2px 0 #00ffff, -2px -2px 0 #ff00c1; }
+            100% { text-shadow: 2px -2px 0 #00ffff, -2px 2px 0 #ff00c1; }
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            background: var(--prompt-color);
+            color: transparent;
+            width: 0.6em;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .interactive-line {
+            display: flex;
+            align-items: center;
+            margin-top: 8px;
+            border-top: 1px dashed rgba(0,255,255,0.2);
+            padding-top: 8px;
+            z-index: 1;
+        }
+
+        #commandInput {
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            font-family: 'Fira Code', monospace;
+            font-size: 1rem;
+            flex: 1;
+            outline: none;
+            caret-color: var(--prompt-color);
+            margin-left: 8px;
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            color: rgba(0, 255, 255, 0.7);
+            font-family: 'Fira Code', monospace;
+            text-align: center;
+            animation: bounce 1.5s infinite;
+            transition: opacity 0.5s;
+            pointer-events: none;
+            font-size: 0.9rem;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-8px); }
+        }
+
+        .terminal-container {
+            animation: flicker 0.15s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.98; }
+            100% { opacity: 1; }
+        }
+
+        /* Progress bar styling */
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 2px 0;
+        }
+        .progress-label {
+            color: var(--text-color);
+            white-space: nowrap;
+            min-width: 160px;
+        }
+        .progress-bar {
+            flex: 1;
+            height: 1.2em;
+            background: var(--progress-bg);
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid rgba(0,255,255,0.2);
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0;
+            background: var(--progress-fill);
+            border-radius: 3px;
+            transition: width 1.2s ease-out;
+            box-shadow: 0 0 10px var(--glow-color);
+        }
+
+        /* Icon styles */
+        .contact-icons {
+            display: flex;
+            gap: 15px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+        .contact-icon {
+            fill: var(--neon-primary);
+            width: 28px;
+            height: 28px;
+            transition: transform 0.2s, filter 0.2s;
+            filter: drop-shadow(0 0 5px var(--glow-color));
+        }
+        .contact-icon:hover {
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 12px var(--glow-color));
         }
 
         @media (max-width: 600px) {
-            .nav-inner { height: auto; padding: 12px 0; gap: 10px; }
-            .hero-title { font-size: 1.8rem; }
-            .hero-buttons { flex-direction: column; gap: 10px; }
-            .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
-            .section-title { font-size: 1.5rem; }
-            .contact-card { padding: 28px 18px; }
-            .main-container { padding: 0 16px; }
-            .nav { padding: 0 16px; }
-            .bg-code-texture pre { font-size: 8px; transform: rotate(-6deg) scale(1.1); }
+            .terminal-container {
+                width: 95%;
+                max-height: 75vh;
+            }
+            .terminal-body {
+                font-size: 0.85rem;
+                padding: 12px;
+            }
+            .scroll-indicator {
+                bottom: 20px;
+                font-size: 0.8rem;
+            }
+            .progress-label {
+                min-width: 120px;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="mouse-glow" id="mouseGlow"></div>
+    <div class="noise-overlay"></div>
+    <canvas id="particleCanvas"></canvas>
 
-    <!-- ═══════════════ Background Photo ═══════════════ -->
-    <div class="bg-photo" aria-hidden="true"></div>
+    <!-- نشانگر اسکرول -->
+    <div class="scroll-indicator" id="scrollIndicator">▼ Scroll Down</div>
 
-    <!-- ═══════════════ Background Texture ═══════════════ -->
-    <div class="bg-code-texture" aria-hidden="true">
-        <pre>
-<span class="line-dim">import os, django, docker</span>
-<span class="line-accent">SECRET_KEY = os.environ.get("DJANGO_SECRET")</span>
-<span class="line-blue">client = docker.from_env()</span>
-<span class="line-accent">DEBUG = False</span>
-<span class="line-blue">nginx -t && systemctl reload nginx</span>
-<span class="line-accent">burp_scan = scanner.scan(target_url)</span>
-<span class="line-blue">gunicorn --bind 0.0.0.0:8000 wsgi:application</span>
-<span class="line-accent">def secure_endpoint(request):</span>
-<span class="line-blue">docker-compose up -d --build</span>
-        </pre>
+    <div class="scroll-sections">
+        <section data-index="0"></section>
+        <section data-index="1"></section>
+        <section data-index="2"></section>
+        <section data-index="3"></section>
     </div>
-    <div class="grid-overlay" aria-hidden="true"></div>
 
-    <!-- ═══════════════ Navigation ═══════════════ -->
-    <nav class="nav" role="navigation" aria-label="Main navigation">
-        <div class="nav-inner">
-            <a href="#" class="nav-brand" aria-label="Home">
-                <span class="nav-brand-dot" aria-hidden="true"></span>
-                &lt;dev/sec&gt;
-            </a>
-            <ul class="nav-links">
-                <li><a href="#skills"><span class="lang-en">Skills</span><span class="lang-fa">مهارت‌ها</span></a></li>
-                <li><a href="#services"><span class="lang-en">Services</span><span class="lang-fa">خدمات</span></a></li>
-                <li><a href="#portfolio"><span class="lang-en">Portfolio</span><span class="lang-fa">نمونه‌کارها</span></a></li>
-                <li><a href="#contact" class="nav-cta"><span class="lang-en">Get in Touch</span><span class="lang-fa">تماس بگیرید</span></a></li>
-                <li>
-                    <button class="lang-toggle" id="langToggle" aria-label="Switch language">
-                        <span class="lang-en"><span class="active-lang">EN</span> / FA</span>
-                        <span class="lang-fa">FA / <span class="active-lang">EN</span></span>
-                    </button>
-                </li>
-            </ul>
+    <div class="terminal-container" id="terminalContainer">
+        <div class="terminal-header">
+            <span class="btn close"></span>
+            <span class="btn minimize"></span>
+            <span class="btn maximize"></span>
+            <span class="title">majid@portfolio — bash — 80×24</span>
         </div>
-    </nav>
-
-    <!-- ═══════════════ Main Content ═══════════════ -->
-    <div class="main-container">
-
-        <!-- ── Hero Section ────────────── -->
-        <section class="hero" aria-labelledby="hero-heading">
-            <div class="hero-inner">
-                <div class="hero-text">
-                    <div class="hero-badge">
-                        <span class="hero-badge-dot" aria-hidden="true"></span>
-                        <span class="lang-en">AVAILABLE FOR PROJECTS</span>
-                        <span class="lang-fa">آماده همکاری</span>
-                    </div>
-                    <h1 id="hero-heading" class="hero-title">
-                        <span class="lang-en">Backend &amp;<br><span class="accent">Security</span> Developer</span>
-                        <span class="lang-fa">توسعه‌دهنده <span class="accent">بک‌اند</span><br>و <span class="accent">امنیت</span></span>
-                    </h1>
-                    <p class="hero-subtitle">
-                        <span class="lang-en">I build hardened backend systems, secure APIs, and deploy infrastructure that scales. Python, Django, Docker, and Ubuntu — engineered for reliability.</span>
-                        <span class="lang-fa">سیستم‌های بک‌اند مقاوم، APIهای امن و زیرساخت‌های مقیاس‌پذیر می‌سازم. Python، Django، Docker و Ubuntu — مهندسی‌شده برای قابلیت اطمینان.</span>
-                    </p>
-                    <div class="hero-buttons">
-                        <a href="#contact" class="btn-primary">
-                            <span class="lang-en">Start a Project</span>
-                            <span class="lang-fa">شروع پروژه</span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                        </a>
-                        <a href="#portfolio" class="btn-secondary">
-                            <span class="lang-en">View Work</span>
-                            <span class="lang-fa">مشاهده نمونه‌کارها</span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Terminal Card -->
-                <div class="terminal-card" aria-label="Terminal preview">
-                    <div class="terminal-card-header">
-                        <span class="terminal-dot red" aria-hidden="true"></span>
-                        <span class="terminal-dot yellow" aria-hidden="true"></span>
-                        <span class="terminal-dot green" aria-hidden="true"></span>
-                        <span class="terminal-card-title">session — /home/dev</span>
-                    </div>
-                    <div class="terminal-card-body">
-                        <div><span class="terminal-prompt">dev@secure:~$</span> whoami<span class="terminal-cursor" aria-hidden="true"></span></div>
-                        <div class="terminal-output">backend_security_engineer</div>
-                        <div style="margin-top:6px;"><span class="terminal-prompt">dev@secure:~$</span> cat /etc/skills</div>
-                        <div class="terminal-output">
-                            <span class="key">python</span> <span class="val">3.11+</span> ·
-                            <span class="key">django</span> <span class="val">4.2 LTS</span> ·
-                            <span class="key">docker</span> <span class="val">24.x</span><br>
-                            <span class="key">ubuntu</span> <span class="val">22.04/24.04</span> ·
-                            <span class="key">burp</span> <span class="val">suite pro</span> ·
-                            <span class="key">api</span> <span class="val">REST/gRPC</span>
-                        </div>
-                        <div style="margin-top:6px;color:#5a5a66;"># security-first mindset · zero-trust architecture</div>
-                    </div>
-                </div>
+        <div class="terminal-body" id="terminalBody">
+            <div class="output" id="output"></div>
+            <div class="interactive-line">
+                <span class="prompt-text">guest@majid:~$</span>
+                <input type="text" id="commandInput" placeholder="type command..." autofocus>
             </div>
-        </section>
-
-        <!-- ── Skills Section ────────────── -->
-        <section class="section" id="skills" aria-labelledby="skills-heading">
-            <span class="section-label">// <span class="lang-en">competencies</span><span class="lang-fa">مهارت‌ها</span></span>
-            <h2 class="section-title" id="skills-heading"><span class="lang-en">Core Technology Stack</span><span class="lang-fa">فناوری‌های اصلی</span></h2>
-            <p class="section-desc">
-                <span class="lang-en">Tools and platforms I work with daily — selected for performance, security, and maintainability in production environments.</span>
-                <span class="lang-fa">ابزارها و پلتفرم‌هایی که روزانه با آن‌ها کار می‌کنم — انتخاب‌شده برای کارایی، امنیت و نگهداری‌پذیری در محیط‌های عملیاتی.</span>
-            </p>
-            <div class="skills-grid">
-                <div class="skill-card"><span class="skill-icon">🐍</span><div class="skill-name">Python</div><span class="skill-tag">3.11+ · asyncio</span></div>
-                <div class="skill-card"><span class="skill-icon">🟢</span><div class="skill-name">Django</div><span class="skill-tag">4.2 LTS · DRF</span></div>
-                <div class="skill-card"><span class="skill-icon">🐳</span><div class="skill-name">Docker</div><span class="skill-tag">Compose · Swarm</span></div>
-                <div class="skill-card"><span class="skill-icon">🐧</span><div class="skill-name">Ubuntu Server</div><span class="skill-tag">22.04/24.04 LTS</span></div>
-                <div class="skill-card"><span class="skill-icon">🔗</span><div class="skill-name"><span class="lang-en">API Development</span><span class="lang-fa">توسعه API</span></div><span class="skill-tag">REST · gRPC · GraphQL</span></div>
-                <div class="skill-card"><span class="skill-icon">🛡️</span><div class="skill-name"><span class="lang-en">Security Testing</span><span class="lang-fa">تست امنیت</span></div><span class="skill-tag">Burp Suite · OWASP</span></div>
-                <div class="skill-card"><span class="skill-icon">⚙️</span><div class="skill-name">Nginx</div><span class="skill-tag">Reverse Proxy · TLS</span></div>
-                <div class="skill-card"><span class="skill-icon">📊</span><div class="skill-name">PostgreSQL</div><span class="skill-tag">Optimization · Replication</span></div>
-            </div>
-        </section>
-
-        <!-- ── Services Section ────────────── -->
-        <section class="section" id="services" aria-labelledby="services-heading">
-            <span class="section-label">// <span class="lang-en">what I offer</span><span class="lang-fa">خدمات</span></span>
-            <h2 class="section-title" id="services-heading"><span class="lang-en">Services & Specialization</span><span class="lang-fa">خدمات و تخصص‌ها</span></h2>
-            <p class="section-desc">
-                <span class="lang-en">End-to-end backend engineering with a security-first approach. Every line of code is written with threat modeling in mind.</span>
-                <span class="lang-fa">مهندسی بک‌اند کامل با رویکرد امنیت‌محور. هر خط کد با در نظر گرفتن مدل‌سازی تهدید نوشته می‌شود.</span>
-            </p>
-            <div class="services-grid">
-                <div class="service-card"><span class="service-num">01</span><div class="service-title"><span class="lang-en">Backend Development</span><span class="lang-fa">توسعه بک‌اند</span></div><p class="service-desc"><span class="lang-en">Robust server-side applications with Python & Django. Clean architecture, thorough testing, and documentation that engineering teams appreciate.</span><span class="lang-fa">برنامه‌های سمت سرور مقاوم با Python و Django. معماری تمیز، تست کامل و مستنداتی که تیم‌های مهندسی قدردان آن هستند.</span></p></div>
-                <div class="service-card"><span class="service-num">02</span><div class="service-title"><span class="lang-en">API Design & Integration</span><span class="lang-fa">طراحی و یکپارچه‌سازی API</span></div><p class="service-desc"><span class="lang-en">RESTful and gRPC APIs designed for performance. Authentication flows, rate limiting, versioning, and comprehensive OpenAPI specs.</span><span class="lang-fa">APIهای RESTful و gRPC طراحی‌شده برای عملکرد بالا. جریان‌های احراز هویت، محدودیت نرخ، نسخه‌بندی و مستندات OpenAPI کامل.</span></p></div>
-                <div class="service-card"><span class="service-num">03</span><div class="service-title"><span class="lang-en">Bot Development</span><span class="lang-fa">توسعه بات</span></div><p class="service-desc"><span class="lang-en">Custom automation bots and workers — Telegram, Discord, Slack integrations, task queues, and cron-based pipelines.</span><span class="lang-fa">بات‌ها و کارگرهای اتوماسیون سفارشی — یکپارچه‌سازی Telegram، Discord، Slack، صف‌های وظیفه و پایپ‌لاین‌های مبتنی بر cron.</span></p></div>
-                <div class="service-card"><span class="service-num">04</span><div class="service-title"><span class="lang-en">Server Deployment</span><span class="lang-fa">استقرار سرور</span></div><p class="service-desc"><span class="lang-en">Dockerized deployments on Ubuntu. Nginx reverse proxies, TLS cert management, CI/CD pipelines, and infrastructure hardening.</span><span class="lang-fa">استقرار مبتنی بر Docker روی Ubuntu. پروکسی معکوس Nginx، مدیریت گواهی TLS، خطوط CI/CD و ایمن‌سازی زیرساخت.</span></p></div>
-                <div class="service-card"><span class="service-num">05</span><div class="service-title"><span class="lang-en">Security Auditing</span><span class="lang-fa">ممیزی امنیت</span></div><p class="service-desc"><span class="lang-en">Web application penetration testing with Burp Suite. Vulnerability assessment, OWASP Top 10 analysis, and actionable remediation reports.</span><span class="lang-fa">تست نفوذ برنامه‌های وب با Burp Suite. ارزیابی آسیب‌پذیری، تحلیل OWASP Top 10 و گزارش‌های اصلاحی عملی.</span></p></div>
-                <div class="service-card"><span class="service-num">06</span><div class="service-title"><span class="lang-en">Code Review & Hardening</span><span class="lang-fa">بازبینی کد و ایمن‌سازی</span></div><p class="service-desc"><span class="lang-en">Security-focused code reviews. Input validation, dependency auditing, secrets management, and secure coding best practices.</span><span class="lang-fa">بازبینی کد با تمرکز بر امنیت. اعتبارسنجی ورودی، ممیزی وابستگی‌ها، مدیریت اسرار و بهترین شیوه‌های کدنویسی امن.</span></p></div>
-            </div>
-        </section>
-
-        <!-- ── Portfolio Section ────────────── -->
-        <section class="section" id="portfolio" aria-labelledby="portfolio-heading">
-            <span class="section-label">// <span class="lang-en">recent work</span><span class="lang-fa">نمونه‌کارهای اخیر</span></span>
-            <h2 class="section-title" id="portfolio-heading"><span class="lang-en">Project Portfolio</span><span class="lang-fa">نمونه‌کارها</span></h2>
-            <p class="section-desc">
-                <span class="lang-en">Selected projects demonstrating backend architecture, security implementation, and infrastructure deployment.</span>
-                <span class="lang-fa">پروژه‌های منتخب که معماری بک‌اند، پیاده‌سازی امنیت و استقرار زیرساخت را نشان می‌دهند.</span>
-            </p>
-            <div class="portfolio-grid">
-                <div class="portfolio-card" tabindex="0">
-                    <div class="portfolio-preview"><span class="code-snippet"><span class="hl">@require_https</span><br><span class="hl-blue">def</span> process_payment(request):<br>&nbsp;&nbsp;payload = <span class="hl">validate_jwt</span>(...)<br>&nbsp;&nbsp;<span class="hl-blue">return</span> stripe.Charge.create(...)</span></div>
-                    <div class="portfolio-info">
-                        <span class="portfolio-tag"><span class="lang-en">Fintech</span><span class="lang-fa">فین‌تک</span></span>
-                        <div class="portfolio-name"><span class="lang-en">Secure Payment API Gateway</span><span class="lang-fa">درگاه پرداخت امن API</span></div>
-                        <p class="portfolio-desc"><span class="lang-en">PCI-compliant payment processor with Django REST, Stripe integration, and comprehensive audit logging.</span><span class="lang-fa">پردازش‌گر پرداخت منطبق با PCI با Django REST، یکپارچه‌سازی Stripe و ثبت گزارش‌های ممیزی کامل.</span></p>
-                    </div>
-                </div>
-                <div class="portfolio-card" tabindex="0">
-                    <div class="portfolio-preview"><span class="code-snippet"><span class="hl-blue">version:</span> <span class="hl">'3.8'</span><br><span class="hl-blue">services:</span><br>&nbsp;&nbsp;<span class="hl">api_gateway:</span><br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="hl-blue">image:</span> nginx:alpine</span></div>
-                    <div class="portfolio-info">
-                        <span class="portfolio-tag"><span class="lang-en">Infrastructure</span><span class="lang-fa">زیرساخت</span></span>
-                        <div class="portfolio-name"><span class="lang-en">Dockerized Microservices Cluster</span><span class="lang-fa">کلاستر میکروسرویس Dockerized</span></div>
-                        <p class="portfolio-desc"><span class="lang-en">Multi-service architecture with Docker Compose, internal networking, and health-check monitoring on Ubuntu.</span><span class="lang-fa">معماری چندسرویسی با Docker Compose، شبکه داخلی و پایش سلامت روی Ubuntu.</span></p>
-                    </div>
-                </div>
-                <div class="portfolio-card" tabindex="0">
-                    <div class="portfolio-preview"><span class="code-snippet"><span class="hl">burp_report</span> = {<br>&nbsp;&nbsp;<span class="hl-blue">"xss"</span>: <span class="hl">"patched"</span>,<br>&nbsp;&nbsp;<span class="hl-blue">"csrf"</span>: <span class="hl">"token_implemented"</span><br>}</span></div>
-                    <div class="portfolio-info">
-                        <span class="portfolio-tag"><span class="lang-en">Security Audit</span><span class="lang-fa">ممیزی امنیت</span></span>
-                        <div class="portfolio-name"><span class="lang-en">Web Security Audit Dashboard</span><span class="lang-fa">داشبورد ممیزی امنیت وب</span></div>
-                        <p class="portfolio-desc"><span class="lang-en">Internal tool aggregating Burp Suite scan results with remediation tracking and risk scoring.</span><span class="lang-fa">ابزار داخلی برای تجمیع نتایج اسکن Burp Suite با پیگیری اصلاح و امتیازدهی ریسک.</span></p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ── Contact Section ────────────── -->
-        <section class="contact-section" id="contact" aria-labelledby="contact-heading">
-            <span class="section-label">// <span class="lang-en">start a conversation</span><span class="lang-fa">شروع گفتگو</span></span>
-            <h2 class="section-title" id="contact-heading"><span class="lang-en">Let's Build Something Secure</span><span class="lang-fa">بیایید چیزی امن بسازیم</span></h2>
-            <p class="section-desc" style="margin:0 auto 30px; text-align:center;">
-                <span class="lang-en">Whether you need a hardened backend, a security audit, or infrastructure that won't fail under pressure — I'm available for select freelance engagements.</span>
-                <span class="lang-fa">چه به یک بک‌اند مقاوم، ممیزی امنیت یا زیرساختی که تحت فشار خراب نشود نیاز داشته باشید — برای پروژه‌های فریلنسری منتخب در دسترس هستم.</span>
-            </p>
-            <div class="contact-card">
-                <span class="section-label" style="margin-bottom:4px;">// <span class="lang-en">connect via</span><span class="lang-fa">ارتباط از طریق</span></span>
-                <div class="contact-methods" style="margin-top: 12px;">
-                    <a href="https://t.me/M4j1D_0xDEAD" target="_blank" rel="noopener noreferrer" class="contact-method" aria-label="Telegram">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18.69-.963 4.425-1.363 5.874-.168.645-.502.86-.825.88-.703.065-1.238-.463-1.92-.91-1.068-.698-1.67-1.133-2.705-1.814-1.195-.787-.42-1.22.26-1.926.178-.184 3.27-2.998 3.33-3.254.008-.032.014-.15-.056-.213-.07-.063-.173-.04-.248-.023-.105.023-1.78 1.132-5.027 3.323-.476.327-.907.487-1.293.478-.425-.01-1.245-.24-1.855-.438-.747-.243-1.34-.372-1.29-.785.027-.215.325-.436.895-.66 3.506-1.527 5.844-2.534 7.014-3.022 3.34-1.39 4.035-1.63 4.487-1.638.1-.002.323.023.467.14.12.098.153.23.17.337.016.108.037.353.02.546z"/></svg>
-                        Telegram
-                    </a>
-                    <a href="https://github.com/lucyferoops-blip" target="_blank" rel="noopener noreferrer" class="contact-method" aria-label="GitHub">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.418-1.305.762-1.604-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
-                        GitHub
-                    </a>
-                    <span class="contact-method" aria-label="Discord username">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z"/></svg>
-                        Discord: majidvsx
-                    </span>
-                </div>
-            </div>
-        </section>
+        </div>
     </div>
-
-    <hr class="divider" aria-hidden="true">
-
-    <!-- ═══════════════ Footer ═══════════════ -->
-    <footer class="footer">
-        <p>&copy; <span id="current-year"></span> Backend & Security Developer. <span class="lang-en">All rights reserved.</span><span class="lang-fa">تمامی حقوق محفوظ است.</span> &nbsp;|&nbsp; PGP: <span>0xABCD1234</span></p>
-    </footer>
 
     <script>
-        document.getElementById('current-year').textContent = new Date().getFullYear();
+        (function() {
+            // ---------- Mouse glow ----------
+            const mouseGlow = document.getElementById('mouseGlow');
+            document.addEventListener('mousemove', (e) => {
+                mouseGlow.style.setProperty('--mouse-x', e.clientX + 'px');
+                mouseGlow.style.setProperty('--mouse-y', e.clientY + 'px');
+            });
 
-        const html = document.documentElement;
-        const toggleBtn = document.getElementById('langToggle');
+            // ---------- ذرات پس‌زمینه ----------
+            const canvas = document.getElementById('particleCanvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            const particleCount = 60;
+            const connectionDistance = 120;
 
-        function setLang(lang) {
-            html.setAttribute('lang', lang);
-            localStorage.setItem('preferredLang', lang);
-        }
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
 
-        toggleBtn.addEventListener('click', () => {
-            const currentLang = html.getAttribute('lang') || 'en';
-            const newLang = currentLang === 'en' ? 'fa' : 'en';
-            setLang(newLang);
-        });
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.vx = (Math.random() - 0.5) * 0.5;
+                    this.vy = (Math.random() - 0.5) * 0.5;
+                    this.radius = Math.random() * 2 + 1;
+                    this.opacity = Math.random() * 0.5 + 0.3;
+                }
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(0, 255, 255, ${this.opacity})`;
+                    ctx.fill();
+                }
+            }
 
-        const savedLang = localStorage.getItem('preferredLang') || 'en';
-        setLang(savedLang);
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
 
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                const target = document.querySelector(targetId);
-                if (target) {
-                    e.preventDefault();
-                    const navHeight = document.querySelector('.nav').offsetHeight;
-                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight - 16;
-                    window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+            function connectParticles() {
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < connectionDistance) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(180, 0, 255, ${0.15 * (1 - dist / connectionDistance)})`;
+                            ctx.lineWidth = 0.6;
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                connectParticles();
+                requestAnimationFrame(animateParticles);
+            }
+            animateParticles();
+
+            // ---------- مدیریت ترمینال ----------
+            const outputDiv = document.getElementById('output');
+            const terminalBody = document.getElementById('terminalBody');
+            const terminalContainer = document.getElementById('terminalContainer');
+            const commandInput = document.getElementById('commandInput');
+            const scrollIndicator = document.getElementById('scrollIndicator');
+            let typingTimeout = null;
+            let isTyping = false;
+            let manualMode = false;
+            const completedSections = new Set();
+            let exitMode = false;
+            let currentTheme = 'cyan';
+
+            // GitHub API cache
+            let githubRepos = [];
+
+            // Fetch GitHub repos on load
+            fetch('https://api.github.com/users/lucyferoops-blip/repos?per_page=100&sort=updated')
+                .then(res => res.json())
+                .then(data => {
+                    if (Array.isArray(data)) githubRepos = data;
+                })
+                .catch(() => {});
+
+            // ---------- Theme System ----------
+            const themes = {
+                cyan: {
+                    '--neon-primary': '#0ff',
+                    '--neon-secondary': '#c200ff',
+                    '--glow-color': 'rgba(0, 255, 255, 0.6)',
+                    '--text-color': '#c0f0ff',
+                    '--heading-color': '#ff79c6',
+                    '--highlight-color': '#ffb86c',
+                    '--prompt-color': '#0ff',
+                    '--progress-fill': '#0ff',
+                    '--border-glow': 'rgba(0, 255, 255, 0.3)',
+                    '--hover-glow': 'rgba(0, 255, 255, 0.3)'
+                },
+                green: {
+                    '--neon-primary': '#0f0',
+                    '--neon-secondary': '#0f0',
+                    '--glow-color': 'rgba(0, 255, 0, 0.6)',
+                    '--text-color': '#b0ffb0',
+                    '--heading-color': '#0f0',
+                    '--highlight-color': '#0f0',
+                    '--prompt-color': '#0f0',
+                    '--progress-fill': '#0f0',
+                    '--border-glow': 'rgba(0, 255, 0, 0.3)',
+                    '--hover-glow': 'rgba(0, 255, 0, 0.3)'
+                },
+                purple: {
+                    '--neon-primary': '#b400ff',
+                    '--neon-secondary': '#b400ff',
+                    '--glow-color': 'rgba(180, 0, 255, 0.6)',
+                    '--text-color': '#e0c0ff',
+                    '--heading-color': '#ff79c6',
+                    '--highlight-color': '#ff79c6',
+                    '--prompt-color': '#b400ff',
+                    '--progress-fill': '#b400ff',
+                    '--border-glow': 'rgba(180, 0, 255, 0.3)',
+                    '--hover-glow': 'rgba(180, 0, 255, 0.3)'
+                },
+                red: {
+                    '--neon-primary': '#ff3333',
+                    '--neon-secondary': '#ff3333',
+                    '--glow-color': 'rgba(255, 51, 51, 0.6)',
+                    '--text-color': '#ffb0b0',
+                    '--heading-color': '#ff5555',
+                    '--highlight-color': '#ff5555',
+                    '--prompt-color': '#ff3333',
+                    '--progress-fill': '#ff3333',
+                    '--border-glow': 'rgba(255, 51, 51, 0.3)',
+                    '--hover-glow': 'rgba(255, 51, 51, 0.3)'
+                }
+            };
+
+            function applyTheme(themeName) {
+                const theme = themes[themeName];
+                if (!theme) return;
+                const root = document.documentElement;
+                Object.entries(theme).forEach(([prop, value]) => {
+                    root.style.setProperty(prop, value);
+                });
+                currentTheme = themeName;
+            }
+
+            // ---------- تایپ کردن قطعات ----------
+            function appendChar(cls, char) {
+                const span = document.createElement('span');
+                span.className = cls;
+                span.textContent = char;
+                outputDiv.appendChild(span);
+            }
+
+            function appendElement(element) {
+                outputDiv.appendChild(element);
+            }
+
+            function typeSegments(segments, onComplete) {
+                if (!segments || segments.length === 0) {
+                    if (onComplete) onComplete();
+                    return;
+                }
+                let segIdx = 0;
+                let charIdx = 0;
+
+                function nextChar() {
+                    if (segIdx >= segments.length) {
+                        if (onComplete) onComplete();
+                        return;
+                    }
+                    const seg = segments[segIdx];
+
+                    // Special handling for progress bar segments
+                    if (seg.type === 'progress') {
+                        // Create progress bar element
+                        const container = document.createElement('div');
+                        container.className = 'progress-container';
+                        const label = document.createElement('span');
+                        label.className = 'progress-label';
+                        label.textContent = seg.label;
+                        const bar = document.createElement('div');
+                        bar.className = 'progress-bar';
+                        const fill = document.createElement('div');
+                        fill.className = 'progress-fill';
+                        bar.appendChild(fill);
+                        container.appendChild(label);
+                        container.appendChild(bar);
+                        appendElement(container);
+                        // Animate fill after a tiny delay to allow DOM insertion
+                        setTimeout(() => {
+                            fill.style.width = seg.percent + '%';
+                        }, 10);
+                        segIdx++;
+                        charIdx = 0;
+                        // Schedule next segment with a small pause to let animation start
+                        setTimeout(nextChar, 200);
+                        return;
+                    }
+
+                    if (charIdx >= seg.text.length) {
+                        segIdx++;
+                        charIdx = 0;
+                        // If there's a custom delay for next segment, use it
+                        const delay = seg.nextDelay || 0;
+                        if (delay > 0) {
+                            setTimeout(nextChar, delay);
+                        } else {
+                            nextChar();
+                        }
+                        return;
+                    }
+                    const ch = seg.text[charIdx];
+                    appendChar(seg.cls, ch);
+                    charIdx++;
+                    terminalBody.scrollTop = terminalBody.scrollHeight;
+                    const speed = seg.speed || 18;
+                    typingTimeout = setTimeout(nextChar, speed);
+                }
+                nextChar();
+            }
+
+            function stopTyping() {
+                if (typingTimeout) {
+                    clearTimeout(typingTimeout);
+                    typingTimeout = null;
+                }
+            }
+
+            // ---------- بخش‌های اسکرول ----------
+            // تعریف محتوا برای هر بخش
+            const sectionsContent = [
+                // بخش ۰: درباره من (با بوت استایل)
+                [
+                    { cls: 'output-text', text: 'Booting Portfolio OS...\n', speed: 30, nextDelay: 200 },
+                    { cls: 'output-text', text: '[ OK ] Loading profile\n', speed: 20, nextDelay: 100 },
+                    { cls: 'output-text', text: '[ OK ] Connecting GitHub\n', speed: 20, nextDelay: 100 },
+                    { cls: 'output-text', text: '[ OK ] Initializing Portfolio\n\n', speed: 20, nextDelay: 300 },
+                    { cls: 'prompt-text', text: 'guest@majid:~$' },
+                    { cls: 'output-text', text: ' cat about.txt\n', speed: 18 },
+                    { cls: 'heading glitch', text: 'Majid\n', speed: 18 },
+                    { cls: 'highlight', text: 'Python Developer | Backend Developer | Cyber Security Enthusiast\n\n', speed: 18 },
+                    { cls: 'output-text', text: 'I build secure, scalable backend systems with Python.\nPassionate about open-source, automation, and ethical hacking.\nTurning coffee into code since forever.\n', speed: 18 },
+                    { cls: 'prompt-text', text: 'guest@majid:~$' }
+                ],
+                // بخش ۱: مهارت‌ها (با progress bar)
+                [
+                    { cls: 'prompt-text', text: 'guest@majid:~$' },
+                    { cls: 'output-text', text: ' skills --verbose\n', speed: 18 },
+                    { cls: 'output-text', text: 'Scanning skill matrix...\n\n', speed: 18, nextDelay: 200 },
+                    { type: 'progress', label: 'Python         ', percent: 95 },
+                    { type: 'progress', label: 'FastAPI        ', percent: 90 },
+                    { type: 'progress', label: 'Linux          ', percent: 85 },
+                    { type: 'progress', label: 'Docker         ', percent: 80 },
+                    { type: 'progress', label: 'Cyber Security ', percent: 85 },
+                    { type: 'progress', label: 'Git/GitHub     ', percent: 92 },
+                    { cls: 'output-text', text: '\n', speed: 5 },
+                    { cls: 'prompt-text', text: 'guest@majid:~$' }
+                ],
+                // بخش ۲: پروژه‌ها (با ساختار درختی واقعی)
+                [
+                    { cls: 'prompt-text', text: 'guest@majid:~$' },
+                    { cls: 'output-text', text: ' ls projects/\n', speed: 18 },
+                    { cls: 'highlight', text: 'telegram-superbot  HackerLab  Jamshid-AI  Portfolio\n\n', speed: 18 },
+                    { cls: 'prompt-text', text: 'guest@majid:~$' },
+                    { cls: 'output-text', text: ' cd HackerLab\n', speed: 18 },
+                    { cls: 'prompt-text', text: 'guest@majid:~/HackerLab$' },
+                    { cls: 'output-text', text: ' tree\n', speed: 18 },
+                    { cls: 'output-text', text: 'HackerLab/\n├── app/\n├── modules/\n├── scanners/\n├── reports/\n├── utils/\n├── config/\n├── requirements.txt\n├── README.md\n└── main.py\n\n', speed: 18 },
+                    { cls: 'output-text', text: 'A modular Python project for security analysis and automation.\n', speed: 18 },
+                    { cls: 'prompt-text', text: 'guest@majid:~$' }
+                ],
+                // بخش ۳: سناریوی پایان
+                [
+                    { cls: 'prompt-text', text: 'guest@majid:~$' },
+                    { cls: 'output-text', text: ' whoami\n', speed: 18 },
+                    { cls: 'heading', text: 'Majid\n', speed: 18 },
+                    { cls: 'output-text', text: 'Python Developer\nBackend Developer\nOpen Source Enthusiast\nAlways Building Something...\n\n', speed: 18 },
+                    { cls: 'prompt-text', text: 'guest@majid:~$' },
+                    { cls: 'output-text', text: ' exit\n', speed: 18 },
+                    { cls: 'output-text', text: 'logout\n', speed: 18 },
+                    { cls: 'output-text', text: 'Connection Closed...\n', speed: 18 },
+                    { cls: 'output-text', text: 'Press ENTER to Restart\n', speed: 18 }
+                ]
+            ];
+
+            function startAutoSection(index) {
+                if (completedSections.has(index) || manualMode || exitMode) return;
+                completedSections.add(index);
+                const content = sectionsContent[index];
+                if (index > 0) {
+                    appendChar('output-text', '\n');
+                }
+                typeSegments(content, () => {
+                    if (index === sectionsContent.length - 1) {
+                        exitMode = true;
+                        commandInput.disabled = true;
+                    }
+                });
+            }
+
+            // ---------- اسکرول و انیمیشن تغییر بخش ----------
+            const sections = document.querySelectorAll('.scroll-sections section');
+            function getCurrentIndex() {
+                const scrollY = window.scrollY;
+                const vh = window.innerHeight;
+                const index = Math.round(scrollY / vh);
+                return Math.min(index, sections.length - 1);
+            }
+
+            let lastSection = -1;
+            function handleScroll() {
+                if (manualMode || exitMode) return;
+                const idx = getCurrentIndex();
+                if (idx !== lastSection) {
+                    // Trigger transition animation
+                    terminalContainer.classList.add('section-transition');
+                    setTimeout(() => terminalContainer.classList.remove('section-transition'), 300);
+                    lastSection = idx;
+                    startAutoSection(idx);
+                }
+                // مخفی کردن نشانگر
+                if (window.scrollY > 50) {
+                    scrollIndicator.style.opacity = '0';
+                } else {
+                    scrollIndicator.style.opacity = '1';
+                }
+            }
+
+            window.addEventListener('load', () => {
+                window.scrollTo(0, 0);
+                lastSection = 0;
+                startAutoSection(0);
+                commandInput.disabled = true;
+            });
+
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        handleScroll();
+                        ticking = false;
+                    });
+                    ticking = true;
                 }
             });
-        });
 
-        const bgTexture = document.querySelector('.bg-code-texture pre');
-        if (bgTexture && window.innerWidth > 768) {
-            document.addEventListener('mousemove', function(e) {
-                const x = (e.clientX / window.innerWidth - 0.5) * 6;
-                const y = (e.clientY / window.innerHeight - 0.5) * 6;
-                bgTexture.style.transform = `rotate(-8deg) scale(1.05) translate(${x}px, ${y}px)`;
-            });
-        }
-
-        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -30px 0px' };
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
+            // ---------- حالت تعاملی ----------
+            commandInput.addEventListener('focus', () => {
+                if (!manualMode && !exitMode) {
+                    manualMode = true;
+                    stopTyping();
+                    commandInput.disabled = false;
+                    scrollIndicator.style.opacity = '0';
+                    appendChar('output-text', '\n');
+                    appendChar('prompt-text', 'guest@majid:~$ ');
                 }
             });
-        }, observerOptions);
 
-        document.querySelectorAll('.skill-card, .service-card, .portfolio-card').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(16px)';
-            el.style.transition = 'opacity 0.5s ease, transform 0.5s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease';
-            observer.observe(el);
-        });
+            function processCommand(cmd) {
+                const lower = cmd.toLowerCase().trim();
+                let outputSegments = [];
 
-        setTimeout(() => {
-            document.querySelectorAll('.skill-card, .service-card, .portfolio-card').forEach(el => {
-                const rect = el.getBoundingClientRect();
-                if (rect.top < window.innerHeight) {
-                    el.style.opacity = '1';
-                    el.style.transform = 'translateY(0)';
+                // Theme change
+                if (lower.startsWith('theme ')) {
+                    const theme = lower.split(' ')[1];
+                    applyTheme(theme);
+                    outputSegments = [
+                        { cls: 'output-text', text: `Theme changed to ${theme}\n` }
+                    ];
+                    typeSegments(outputSegments, showPrompt);
+                    return;
+                }
+
+                switch (lower) {
+                    case 'help':
+                        outputSegments = [
+                            { cls: 'heading', text: 'Available commands:\n' },
+                            { cls: 'output-text', text: '  about      - About me\n' },
+                            { cls: 'output-text', text: '  skills     - Technical skills (progress bars)\n' },
+                            { cls: 'output-text', text: '  projects   - Live GitHub projects\n' },
+                            { cls: 'output-text', text: '  contact    - Get in touch\n' },
+                            { cls: 'output-text', text: '  whoami     - Identity\n' },
+                            { cls: 'output-text', text: '  clear      - Clear terminal\n' },
+                            { cls: 'output-text', text: '  theme <name> - Change theme (cyan/green/purple/red)\n' },
+                            { cls: 'output-text', text: '  neofetch   - System info\n' },
+                            { cls: 'output-text', text: '  uptime     - Session uptime\n' },
+                            { cls: 'output-text', text: '  status     - Connection status\n' },
+                            { cls: 'output-text', text: '  version    - Terminal version\n' },
+                            { cls: 'output-text', text: '  system     - System details\n' }
+                        ];
+                        break;
+                    case 'about':
+                        outputSegments = [
+                            { cls: 'output-text', text: 'Loading about.txt...\n' },
+                            { cls: 'heading glitch', text: 'Majid\n' },
+                            { cls: 'highlight', text: 'Python Developer | Backend Developer | Cyber Security Enthusiast\n\n' },
+                            { cls: 'output-text', text: 'I build secure, scalable backend systems with Python.\nPassionate about open-source, automation, and ethical hacking.\n' }
+                        ];
+                        break;
+                    case 'skills':
+                        // Skills with progress bars (manual command)
+                        appendChar('output-text', 'Scanning skill matrix...\n\n');
+                        const skillBars = [
+                            { label: 'Python         ', percent: 95 },
+                            { label: 'FastAPI        ', percent: 90 },
+                            { label: 'Linux          ', percent: 85 },
+                            { label: 'Docker         ', percent: 80 },
+                            { label: 'Cyber Security ', percent: 85 },
+                            { label: 'Git/GitHub     ', percent: 92 }
+                        ];
+                        skillBars.forEach(skill => {
+                            const container = document.createElement('div');
+                            container.className = 'progress-container';
+                            const label = document.createElement('span');
+                            label.className = 'progress-label';
+                            label.textContent = skill.label;
+                            const bar = document.createElement('div');
+                            bar.className = 'progress-bar';
+                            const fill = document.createElement('div');
+                            fill.className = 'progress-fill';
+                            bar.appendChild(fill);
+                            container.appendChild(label);
+                            container.appendChild(bar);
+                            appendElement(container);
+                            setTimeout(() => {
+                                fill.style.width = skill.percent + '%';
+                            }, 10);
+                        });
+                        appendChar('output-text', '\n');
+                        appendChar('prompt-text', 'guest@majid:~$ ');
+                        commandInput.disabled = false;
+                        commandInput.focus();
+                        return;
+                    case 'projects':
+                        // Dynamic GitHub projects
+                        appendChar('output-text', 'Fetching live data from GitHub...\n');
+                        if (githubRepos.length > 0) {
+                            githubRepos.forEach(repo => {
+                                const stars = repo.stargazers_count || 0;
+                                const forks = repo.forks_count || 0;
+                                const updated = new Date(repo.updated_at).toLocaleDateString();
+                                const line = `${repo.name} (★${stars} ⑂${forks}) - ${updated}\n`;
+                                appendChar('highlight', line);
+                            });
+                        } else {
+                            appendChar('output-text', 'Could not fetch repos (rate limit?).\n');
+                        }
+                        appendChar('prompt-text', '\nguest@majid:~$ ');
+                        commandInput.disabled = false;
+                        commandInput.focus();
+                        return;
+                    case 'contact':
+                        appendChar('output-text', 'Secure channels established.\n');
+                        const iconsContainer = document.createElement('div');
+                        iconsContainer.className = 'contact-icons';
+                        // SVG icons
+                        const githubIcon = `<svg class="contact-icon" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>`;
+                        const telegramIcon = `<svg class="contact-icon" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>`;
+                        const emailIcon = `<svg class="contact-icon" viewBox="0 0 24 24"><path d="M12 12.713l-11.985-9.713h23.97l-11.985 9.713zm0 2.574l-12-9.725v15.438h24v-15.438l-12 9.725z"/></svg>`;
+                        const resumeIcon = `<svg class="contact-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM8 13h8v2H8v-2zm0 4h8v2H8v-2z"/></svg>`;
+
+                        const links = [
+                            { url: 'https://github.com/lucyferoops-blip', icon: githubIcon },
+                            { url: 'https://t.me/M4j1D_0xDEAD', icon: telegramIcon },
+                            { url: 'mailto:majid@example.com', icon: emailIcon },
+                            { url: 'resume.pdf', icon: resumeIcon }
+                        ];
+                        links.forEach(link => {
+                            const a = document.createElement('a');
+                            a.href = link.url;
+                            a.target = '_blank';
+                            a.innerHTML = link.icon;
+                            iconsContainer.appendChild(a);
+                        });
+                        appendElement(iconsContainer);
+                        appendChar('output-text', '\n');
+                        appendChar('prompt-text', 'guest@majid:~$ ');
+                        commandInput.disabled = false;
+                        commandInput.focus();
+                        return;
+                    case 'whoami':
+                        outputSegments = [
+                            { cls: 'output-text', text: 'Identity confirmed:\n' },
+                            { cls: 'heading', text: 'Majid\n' },
+                            { cls: 'output-text', text: 'Python Developer\nBackend Developer\nOpen Source Enthusiast\nAlways Building Something...\n' }
+                        ];
+                        break;
+                    case 'clear':
+                        outputDiv.innerHTML = '';
+                        appendChar('prompt-text', 'guest@majid:~$ ');
+                        commandInput.disabled = false;
+                        commandInput.focus();
+                        return;
+                    case 'neofetch':
+                        const ascii = 
+`${'guest@majid:~$'.replace(/./g,' ')}    ███╗   ███╗ █████╗      ██╗██╗██████╗ 
+${'guest@majid:~$'.replace(/./g,' ')}    ████╗ ████║██╔══██╗     ██║██║██╔══██╗
+${'guest@majid:~$'.replace(/./g,' ')}    ██╔████╔██║███████║     ██║██║██║  ██║
+${'guest@majid:~$'.replace(/./g,' ')}    ██║╚██╔╝██║██╔══██║██   ██║██║██║  ██║
+${'guest@majid:~$'.replace(/./g,' ')}    ██║ ╚═╝ ██║██║  ██║╚█████╔╝██║██████╔╝
+${'guest@majid:~$'.replace(/./g,' ')}    ╚═╝     ╚═╝╚═╝  ╚═╝ ╚════╝ ╚═╝╚═════╝ \n`;
+                        outputSegments = [
+                            { cls: 'output-text', text: ascii },
+                            { cls: 'heading', text: 'Majid\n' },
+                            { cls: 'output-text', text: 'Backend Developer\nPython Developer\nLinux\nFastAPI\nDocker\nGitHub\nTelegram Bots\n' }
+                        ];
+                        break;
+                    case 'uptime':
+                        const uptimeMs = Date.now() - performance.timing.navigationStart;
+                        const sec = Math.floor(uptimeMs / 1000);
+                        const min = Math.floor(sec / 60);
+                        const hours = Math.floor(min / 60);
+                        const remainingMin = min % 60;
+                        outputSegments = [
+                            { cls: 'output-text', text: `Uptime: ${hours}h ${remainingMin}m\n` }
+                        ];
+                        break;
+                    case 'status':
+                        outputSegments = [
+                            { cls: 'output-text', text: 'System online. All services nominal.\n' }
+                        ];
+                        break;
+                    case 'version':
+                        outputSegments = [
+                            { cls: 'output-text', text: 'Terminal Portfolio v2.0\n' }
+                        ];
+                        break;
+                    case 'system':
+                        outputSegments = [
+                            { cls: 'output-text', text: `User Agent: ${navigator.userAgent}\n` },
+                            { cls: 'output-text', text: `Screen: ${window.screen.width}x${window.screen.height}\n` }
+                        ];
+                        break;
+                    default:
+                        outputSegments = [
+                            { cls: 'output-text', text: `command not found: ${cmd}\n` },
+                            { cls: 'output-text', text: 'Type "help" for available commands.\n' }
+                        ];
+                }
+                typeSegments(outputSegments, showPrompt);
+            }
+
+            function showPrompt() {
+                appendChar('prompt-text', 'guest@majid:~$ ');
+                commandInput.disabled = false;
+                commandInput.focus();
+            }
+
+            commandInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    const cmd = commandInput.value.trim();
+                    if (cmd === '') return;
+                    commandInput.value = '';
+                    commandInput.disabled = true;
+                    appendChar('prompt-text', 'guest@majid:~$ ');
+                    appendChar('output-text', cmd + '\n');
+                    if (exitMode) {
+                        // Restart portfolio
+                        exitMode = false;
+                        manualMode = false;
+                        completedSections.clear();
+                        outputDiv.innerHTML = '';
+                        window.scrollTo(0, 0);
+                        lastSection = 0;
+                        startAutoSection(0);
+                        commandInput.disabled = true;
+                        return;
+                    }
+                    processCommand(cmd);
                 }
             });
-        }, 150);
+
+            // Restart on Enter in exit mode (global)
+            document.addEventListener('keydown', function(e) {
+                if (exitMode && e.key === 'Enter' && document.activeElement !== commandInput) {
+                    exitMode = false;
+                    manualMode = false;
+                    completedSections.clear();
+                    outputDiv.innerHTML = '';
+                    window.scrollTo(0, 0);
+                    lastSection = 0;
+                    startAutoSection(0);
+                    commandInput.disabled = true;
+                }
+            });
+
+            // اطمینان از فوکوس اینپوت در صورت کلیک روی ترمینال
+            terminalContainer.addEventListener('click', () => {
+                if (!exitMode) commandInput.focus();
+            });
+
+        })();
     </script>
 </body>
 </html>
