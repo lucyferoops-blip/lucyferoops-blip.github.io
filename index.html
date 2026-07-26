@@ -1,321 +1,993 @@
 <!DOCTYPE html>
-<html lang="fa" dir="ltr" prefix="og: http://ogp.me/ns#">
+<html lang="fa" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Majid Dev | Terminal Portfolio</title>
-    <meta name="description" content="Majid - Python & Backend Developer, Cyber Security Enthusiast. Interactive hacker terminal portfolio.">
-    <meta property="og:title" content="Majid Dev | Terminal Portfolio">
-    <meta property="og:description" content="Majid - Python Developer. Interactive terminal portfolio.">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <link rel="canonical" href="https://majid.dev">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-code@v1.0.0/dist/font-face.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Majid Dev | Interactive Terminal Portfolio</title>
     <style>
         :root {
-            --bg: #0a0a0f; --terminal-bg: rgba(10,10,25,0.85); --border: rgba(0,255,255,0.3);
-            --text: #c0f0ff; --prompt: #0ff; --heading: #ff79c6; --highlight: #ffb86c; --neon: #0ff;
+            --neon-primary: #0ff;
+            --neon-secondary: #c200ff;
+            --glow-color: rgba(0, 255, 255, 0.6);
+            --bg-color: #0a0a0f;
+            --text-color: #c0f0ff;
+            --heading-color: #ff79c6;
+            --highlight-color: #ffb86c;
+            --prompt-color: #0ff;
+            --progress-bg: #1a1a2e;
+            --progress-fill: #0ff;
+            --terminal-bg: rgba(10, 10, 25, 0.75);
+            --border-glow: rgba(0, 255, 255, 0.3);
+            --hover-glow: rgba(0, 255, 255, 0.3);
+            --noise-opacity: 0.03;
+            --crt-opacity: 0.08;
         }
-        .theme-hacker { --bg:#000; --terminal-bg:rgba(0,0,0,0.92); --border:#0f0; --text:#0f0; --prompt:#0f0; --heading:#0f0; --highlight:#0f0; --neon:#0f0; }
-        .theme-cyberpunk { --bg:#0d0221; --terminal-bg:rgba(20,0,40,0.85); --border:#f0f; --text:#ffb3ff; --prompt:#f0f; --heading:#f0c; --highlight:#ff0; --neon:#f0f; }
-        .theme-dracula { --bg:#282a36; --terminal-bg:rgba(40,42,54,0.9); --border:#bd93f9; --text:#f8f8f2; --prompt:#50fa7b; --heading:#ff79c6; --highlight:#f1fa8c; --neon:#bd93f9; }
-        .theme-nord { --bg:#2e3440; --terminal-bg:rgba(46,52,64,0.9); --border:#88c0d0; --text:#d8dee9; --prompt:#81a1c1; --heading:#b48ead; --highlight:#ebcb8b; --neon:#88c0d0; }
-        .theme-tokyonight { --bg:#1a1b27; --terminal-bg:rgba(26,27,39,0.9); --border:#7aa2f7; --text:#c0caf5; --prompt:#7dcfff; --heading:#bb9af7; --highlight:#e0af68; --neon:#7aa2f7; }
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{
-            background:var(--bg); font-family:'Vazir Code','Fira Code',monospace; height:100vh; overflow:hidden;
-            position:relative; -webkit-tap-highlight-color:transparent; transition:background .3s, color .3s;
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        #bootScreen{position:fixed;inset:0;background:#000;color:#0f0;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:1000;font-family:'Courier New',monospace;transition:opacity .8s;pointer-events:all;padding:20px;}
-        #bootScreen.hidden{opacity:0;pointer-events:none}
-        .boot-line{white-space:pre-wrap;margin:2px 0}
-        canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
-        #matrixCanvas{display:none}
-        .scroll-container{position:fixed;top:0;left:0;width:100%;height:100%;overflow-y:auto;z-index:1;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
-        .scroll-sections{height:100%}
-        .scroll-sections section{height:100vh;width:100%;pointer-events:auto}
-        .terminal-wrapper{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(92%,900px);max-height:78vh;z-index:2;display:flex;flex-direction:column;background:var(--terminal-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:16px;box-shadow:0 0 40px rgba(0,255,255,0.15);transition:border-color .3s,box-shadow .3s}
-        .terminal-header{display:flex;align-items:center;padding:10px 16px;background:rgba(0,0,0,0.4);border-bottom:1px solid var(--border);gap:8px;flex-shrink:0}
-        .win-btn{width:12px;height:12px;border-radius:50%}
-        .close{background:#ff5f56}.minimize{background:#ffbd2e}.maximize{background:#27ca40}
-        .term-title{margin-left:10px;color:var(--text);font-size:.8rem;opacity:.7}
-        .terminal-body{flex:1;padding:14px 18px;overflow-y:auto;font-size:.95rem;line-height:1.7;color:var(--text);position:relative;display:flex;flex-direction:column;-webkit-overflow-scrolling:touch}
-        .terminal-body::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,255,255,0.03)0px,rgba(0,255,255,0.03)1px,transparent 1px,transparent 3px);pointer-events:none;z-index:3}
-        .output{white-space:pre-wrap;word-break:break-word;flex:1;z-index:1}
-        .prompt{color:var(--prompt)}.cmd{color:var(--heading)}.out{color:var(--text)}.heading{color:var(--heading);font-weight:bold}.highlight{color:var(--highlight)}
-        .input-line{display:flex;align-items:center;border-top:1px dashed var(--border);padding-top:10px;z-index:1;flex-shrink:0}
-        #cmdInput{background:transparent;border:none;color:var(--text);font-family:inherit;font-size:inherit;flex:1;outline:none;caret-color:var(--prompt);margin-left:8px;-webkit-appearance:none;padding:4px 0}
-        .status-bar{position:fixed;bottom:0;left:0;width:100%;height:24px;background:rgba(0,0,0,0.7);backdrop-filter:blur(5px);z-index:10;display:flex;align-items:center;justify-content:space-between;padding:0 15px;font-size:.7rem;color:var(--text);border-top:1px solid var(--border)}
-        .contact-bar{position:fixed;bottom:30px;right:20px;display:flex;gap:12px;z-index:9;background:rgba(0,0,0,0.5);backdrop-filter:blur(8px);padding:6px 15px;border-radius:30px;border:1px solid var(--border)}
-        .contact-icon{width:24px;height:24px;display:flex;align-items:center;justify-content:center;transition:.2s}
-        .contact-icon:hover{transform:scale(1.15);filter:drop-shadow(0 0 6px var(--neon))}
-        .contact-icon svg{width:20px;height:20px;fill:var(--prompt)}
-        .util-buttons{position:fixed;top:15px;right:15px;z-index:10;display:flex;gap:8px;flex-wrap:wrap}
-        .util-btn{background:rgba(0,0,0,0.6);border:1px solid var(--border);color:var(--text);padding:4px 10px;border-radius:15px;cursor:pointer;font-family:inherit;font-size:.75rem;transition:.2s}
-        .util-btn:hover{background:var(--neon);color:#000}
-        @media(max-width:600px){.terminal-wrapper{width:96%;max-height:75vh;top:45%}.terminal-body{font-size:.8rem;padding:10px}.contact-bar{bottom:20px;right:10px;gap:8px}.util-buttons{top:10px;right:10px}}
+
+        body {
+            background: var(--bg-color);
+            font-family: 'Fira Code', 'Courier New', monospace;
+            overflow-x: hidden;
+            height: 100vh;
+            position: relative;
+            cursor: default;
+        }
+
+        /* Mouse glow */
+        .mouse-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background: radial-gradient(circle 300px at var(--mouse-x, 0) var(--mouse-y, 0), rgba(0, 255, 255, 0.08), transparent 70%);
+            transition: opacity 0.3s;
+        }
+
+        /* Noise overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: var(--noise-opacity);
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E");
+            background-size: 200px 200px;
+        }
+
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .scroll-sections {
+            position: relative;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .scroll-sections section {
+            height: 100vh;
+            width: 100%;
+            pointer-events: auto;
+        }
+
+        .terminal-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(90%, 850px);
+            max-height: 80vh;
+            background: var(--terminal-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.15), 0 0 15px rgba(200, 0, 255, 0.2);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s, border-color 0.3s;
+        }
+
+        .terminal-container:hover {
+            box-shadow: 0 0 50px var(--hover-glow), 0 0 25px rgba(200, 0, 255, 0.4);
+            border-color: rgba(200, 0, 255, 0.6);
+        }
+
+        .section-transition {
+            transform: translate(-50%, -50%) scale(0.98) rotate(0.5deg);
+            filter: blur(1px);
+            opacity: 0.8;
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(20, 20, 35, 0.7);
+            border-bottom: 1px solid var(--border-glow);
+            gap: 8px;
+        }
+
+        .btn {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .close { background: #ff5f56; }
+        .minimize { background: #ffbd2e; }
+        .maximize { background: #27ca40; }
+
+        .title {
+            margin-left: 12px;
+            color: #a0b0ff;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        .terminal-body {
+            flex: 1;
+            padding: 16px 20px;
+            overflow-y: auto;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-color);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* CRT Scanlines */
+        .terminal-body::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0, 255, 255, 0.03) 0px, rgba(0, 255, 255, 0.03) 1px, transparent 1px, transparent 3px);
+            pointer-events: none;
+            z-index: 3;
+            opacity: var(--crt-opacity);
+        }
+
+        .output {
+            white-space: pre-wrap;
+            word-break: break-word;
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .prompt-text {
+            color: var(--prompt-color);
+            text-shadow: 0 0 8px var(--glow-color);
+        }
+
+        .cmd {
+            color: #e0b0ff;
+            font-weight: bold;
+        }
+
+        .output-text {
+            color: var(--text-color);
+        }
+
+        .heading {
+            color: var(--heading-color);
+            font-weight: bold;
+            text-shadow: 0 0 6px var(--heading-color);
+        }
+
+        .highlight {
+            color: var(--highlight-color);
+        }
+
+        .glitch {
+            display: inline-block;
+            animation: glitch 1.5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 2px 2px 0 #ff00c1, -2px -2px 0 #00ffff; }
+            20% { text-shadow: -2px 2px 0 #ff00c1, 2px -2px 0 #00ffff; }
+            40% { text-shadow: 2px -2px 0 #ff00c1, -2px 2px 0 #00ffff; }
+            60% { text-shadow: -2px -2px 0 #ff00c1, 2px 2px 0 #00ffff; }
+            80% { text-shadow: 2px 2px 0 #00ffff, -2px -2px 0 #ff00c1; }
+            100% { text-shadow: 2px -2px 0 #00ffff, -2px 2px 0 #ff00c1; }
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            background: var(--prompt-color);
+            color: transparent;
+            width: 0.6em;
+            animation: blink 1s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .interactive-line {
+            display: flex;
+            align-items: center;
+            margin-top: 8px;
+            border-top: 1px dashed rgba(0,255,255,0.2);
+            padding-top: 8px;
+            z-index: 1;
+        }
+
+        #commandInput {
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            font-family: 'Fira Code', monospace;
+            font-size: 1rem;
+            flex: 1;
+            outline: none;
+            caret-color: var(--prompt-color);
+            margin-left: 8px;
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            color: rgba(0, 255, 255, 0.7);
+            font-family: 'Fira Code', monospace;
+            text-align: center;
+            animation: bounce 1.5s infinite;
+            transition: opacity 0.5s;
+            pointer-events: none;
+            font-size: 0.9rem;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-8px); }
+        }
+
+        .terminal-container {
+            animation: flicker 0.15s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.98; }
+            100% { opacity: 1; }
+        }
+
+        /* Progress bar styling */
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 2px 0;
+        }
+        .progress-label {
+            color: var(--text-color);
+            white-space: nowrap;
+            min-width: 160px;
+        }
+        .progress-bar {
+            flex: 1;
+            height: 1.2em;
+            background: var(--progress-bg);
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid rgba(0,255,255,0.2);
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0;
+            background: var(--progress-fill);
+            border-radius: 3px;
+            transition: width 1.2s ease-out;
+            box-shadow: 0 0 10px var(--glow-color);
+        }
+
+        /* Icon styles */
+        .contact-icons {
+            display: flex;
+            gap: 15px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+        .contact-icon {
+            fill: var(--neon-primary);
+            width: 28px;
+            height: 28px;
+            transition: transform 0.2s, filter 0.2s;
+            filter: drop-shadow(0 0 5px var(--glow-color));
+        }
+        .contact-icon:hover {
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 12px var(--glow-color));
+        }
+
+        @media (max-width: 600px) {
+            .terminal-container {
+                width: 95%;
+                max-height: 75vh;
+            }
+            .terminal-body {
+                font-size: 0.85rem;
+                padding: 12px;
+            }
+            .scroll-indicator {
+                bottom: 20px;
+                font-size: 0.8rem;
+            }
+            .progress-label {
+                min-width: 120px;
+            }
+        }
     </style>
 </head>
-<body class="theme-dark">
-    <div id="bootScreen"><div id="bootText"></div></div>
+<body>
+    <div class="mouse-glow" id="mouseGlow"></div>
+    <div class="noise-overlay"></div>
     <canvas id="particleCanvas"></canvas>
-    <canvas id="gridCanvas"></canvas>
-    <canvas id="matrixCanvas"></canvas>
-    <div class="scroll-container" id="scrollContainer">
-        <div class="scroll-sections">
-            <section data-index="0"></section><section data-index="1"></section>
-            <section data-index="2"></section><section data-index="3"></section>
-        </div>
+
+    <!-- نشانگر اسکرول -->
+    <div class="scroll-indicator" id="scrollIndicator">▼ Scroll Down</div>
+
+    <div class="scroll-sections">
+        <section data-index="0"></section>
+        <section data-index="1"></section>
+        <section data-index="2"></section>
+        <section data-index="3"></section>
     </div>
-    <div class="terminal-wrapper" role="application" aria-label="Interactive Terminal">
+
+    <div class="terminal-container" id="terminalContainer">
         <div class="terminal-header">
-            <span class="win-btn close"></span><span class="win-btn minimize"></span><span class="win-btn maximize"></span>
-            <span class="term-title">majid@portfolio — bash</span>
+            <span class="btn close"></span>
+            <span class="btn minimize"></span>
+            <span class="btn maximize"></span>
+            <span class="title">majid@portfolio — bash — 80×24</span>
         </div>
         <div class="terminal-body" id="terminalBody">
             <div class="output" id="output"></div>
-            <div class="input-line">
-                <span class="prompt" id="promptSign">guest@majid:~$</span>
-                <input type="text" id="cmdInput" placeholder="type command..." autofocus autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
+            <div class="interactive-line">
+                <span class="prompt-text">guest@majid:~$</span>
+                <input type="text" id="commandInput" placeholder="type command..." autofocus>
             </div>
         </div>
     </div>
-    <div class="status-bar" id="statusBar"><span id="clockDisplay">00:00</span><span>⚡ Online</span></div>
-    <div class="contact-bar">
-        <a href="https://github.com/lucyferoops-blip" target="_blank" class="contact-icon" title="GitHub"><svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.418-1.305.762-1.604-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg></a>
-        <a href="https://t.me/M4j1D_0xDEAD" target="_blank" class="contact-icon" title="Telegram"><svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.87 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.94z"/></svg></a>
-        <a href="mailto:majid@example.com" class="contact-icon" title="Email"><svg viewBox="0 0 24 24"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg></a>
-        <a href="resume.pdf" target="_blank" class="contact-icon" title="Resume"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm2-6h2v4H8zm4 0h2v4h-2zm-4-6h2v4H8zm4 0h2v4h-2z"/></svg></a>
-    </div>
-    <div class="util-buttons">
-        <button class="util-btn" onclick="setTheme('dark')">Dark</button>
-        <button class="util-btn" onclick="setTheme('hacker')">Hacker</button>
-        <button class="util-btn" onclick="setTheme('cyberpunk')">Cyber</button>
-        <button class="util-btn" onclick="setTheme('dracula')">Dracula</button>
-        <button class="util-btn" onclick="setTheme('nord')">Nord</button>
-        <button class="util-btn" onclick="setTheme('tokyonight')">Tokyo</button>
-        <button class="util-btn" id="soundToggle" onclick="toggleSound()">🔊</button>
-        <button class="util-btn" id="matrixToggle" onclick="toggleMatrix()">⏃</button>
-    </div>
+
     <script>
         (function() {
-            // State
-            const S = {
-                sound: true, matrixActive: false, currentTheme: 'dark',
-                commandHistory: [], historyIndex: -1, sectionsDone: new Set(),
-                manual: false, typingQueue: [], typing: false, typingTimer: null, audioCtx: null
+            // ---------- Mouse glow ----------
+            const mouseGlow = document.getElementById('mouseGlow');
+            document.addEventListener('mousemove', (e) => {
+                mouseGlow.style.setProperty('--mouse-x', e.clientX + 'px');
+                mouseGlow.style.setProperty('--mouse-y', e.clientY + 'px');
+            });
+
+            // ---------- ذرات پس‌زمینه ----------
+            const canvas = document.getElementById('particleCanvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            const particleCount = 60;
+            const connectionDistance = 120;
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.vx = (Math.random() - 0.5) * 0.5;
+                    this.vy = (Math.random() - 0.5) * 0.5;
+                    this.radius = Math.random() * 2 + 1;
+                    this.opacity = Math.random() * 0.5 + 0.3;
+                }
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(0, 255, 255, ${this.opacity})`;
+                    ctx.fill();
+                }
+            }
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+
+            function connectParticles() {
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < connectionDistance) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(180, 0, 255, ${0.15 * (1 - dist / connectionDistance)})`;
+                            ctx.lineWidth = 0.6;
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                connectParticles();
+                requestAnimationFrame(animateParticles);
+            }
+            animateParticles();
+
+            // ---------- مدیریت ترمینال ----------
+            const outputDiv = document.getElementById('output');
+            const terminalBody = document.getElementById('terminalBody');
+            const terminalContainer = document.getElementById('terminalContainer');
+            const commandInput = document.getElementById('commandInput');
+            const scrollIndicator = document.getElementById('scrollIndicator');
+            let typingTimeout = null;
+            let isTyping = false;
+            let manualMode = false;
+            const completedSections = new Set();
+            let exitMode = false;
+            let currentTheme = 'cyan';
+
+            // GitHub API cache
+            let githubRepos = [];
+
+            // Fetch GitHub repos on load
+            fetch('https://api.github.com/users/lucyferoops-blip/repos?per_page=100&sort=updated')
+                .then(res => res.json())
+                .then(data => {
+                    if (Array.isArray(data)) githubRepos = data;
+                })
+                .catch(() => {});
+
+            // ---------- Theme System ----------
+            const themes = {
+                cyan: {
+                    '--neon-primary': '#0ff',
+                    '--neon-secondary': '#c200ff',
+                    '--glow-color': 'rgba(0, 255, 255, 0.6)',
+                    '--text-color': '#c0f0ff',
+                    '--heading-color': '#ff79c6',
+                    '--highlight-color': '#ffb86c',
+                    '--prompt-color': '#0ff',
+                    '--progress-fill': '#0ff',
+                    '--border-glow': 'rgba(0, 255, 255, 0.3)',
+                    '--hover-glow': 'rgba(0, 255, 255, 0.3)'
+                },
+                green: {
+                    '--neon-primary': '#0f0',
+                    '--neon-secondary': '#0f0',
+                    '--glow-color': 'rgba(0, 255, 0, 0.6)',
+                    '--text-color': '#b0ffb0',
+                    '--heading-color': '#0f0',
+                    '--highlight-color': '#0f0',
+                    '--prompt-color': '#0f0',
+                    '--progress-fill': '#0f0',
+                    '--border-glow': 'rgba(0, 255, 0, 0.3)',
+                    '--hover-glow': 'rgba(0, 255, 0, 0.3)'
+                },
+                purple: {
+                    '--neon-primary': '#b400ff',
+                    '--neon-secondary': '#b400ff',
+                    '--glow-color': 'rgba(180, 0, 255, 0.6)',
+                    '--text-color': '#e0c0ff',
+                    '--heading-color': '#ff79c6',
+                    '--highlight-color': '#ff79c6',
+                    '--prompt-color': '#b400ff',
+                    '--progress-fill': '#b400ff',
+                    '--border-glow': 'rgba(180, 0, 255, 0.3)',
+                    '--hover-glow': 'rgba(180, 0, 255, 0.3)'
+                },
+                red: {
+                    '--neon-primary': '#ff3333',
+                    '--neon-secondary': '#ff3333',
+                    '--glow-color': 'rgba(255, 51, 51, 0.6)',
+                    '--text-color': '#ffb0b0',
+                    '--heading-color': '#ff5555',
+                    '--highlight-color': '#ff5555',
+                    '--prompt-color': '#ff3333',
+                    '--progress-fill': '#ff3333',
+                    '--border-glow': 'rgba(255, 51, 51, 0.3)',
+                    '--hover-glow': 'rgba(255, 51, 51, 0.3)'
+                }
             };
-            function loadSettings() {
-                try {
-                    const s = JSON.parse(localStorage.getItem('majid-term'));
-                    if (s) { S.sound = s.sound ?? true; S.matrixActive = s.matrix ?? false; S.currentTheme = s.theme ?? 'dark'; }
-                } catch(e) {}
-                applySettings();
-            }
-            function saveSettings() { localStorage.setItem('majid-term', JSON.stringify({sound:S.sound, matrix:S.matrixActive, theme:S.currentTheme})); }
-            function applySettings() {
-                document.body.className = document.body.className.replace(/theme-\w+/g, '');
-                document.body.classList.add('theme-' + S.currentTheme);
-                document.getElementById('soundToggle').textContent = S.sound ? '🔊' : '🔇';
-                document.getElementById('matrixToggle').textContent = S.matrixActive ? '⏃' : '⏃';
-                if (S.matrixActive) startMatrix(); else stopMatrix();
-            }
-            window.setTheme = (t) => { S.currentTheme = t; applySettings(); saveSettings(); };
-            window.toggleSound = () => { S.sound = !S.sound; applySettings(); saveSettings(); };
-            window.toggleMatrix = () => { S.matrixActive = !S.matrixActive; applySettings(); saveSettings(); };
 
-            // Audio
-            function beep(f=800, d=0.05) {
-                if (!S.sound) return;
-                if (!S.audioCtx) S.audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-                const o = S.audioCtx.createOscillator(), g = S.audioCtx.createGain();
-                o.type='square'; o.frequency.value=f; g.gain.value=0.08;
-                o.connect(g); g.connect(S.audioCtx.destination); o.start(); o.stop(S.audioCtx.currentTime+d);
+            function applyTheme(themeName) {
+                const theme = themes[themeName];
+                if (!theme) return;
+                const root = document.documentElement;
+                Object.entries(theme).forEach(([prop, value]) => {
+                    root.style.setProperty(prop, value);
+                });
+                currentTheme = themeName;
             }
 
-            // Boot
-            const bootLines = ["Booting Linux 5.15.0-majid...","Loading kernel modules... [OK]","Starting systemd... [OK]","Configuring network... [OK]","Decrypting portfolio...","Access Granted.","Welcome, Majid."];
-            const bootDiv = document.getElementById('bootText'), bootScreen = document.getElementById('bootScreen');
-            async function runBoot() {
-                for (let line of bootLines) { await typeBoot(line, 35); }
-                await new Promise(r => setTimeout(r, 500));
-                bootScreen.classList.add('hidden');
+            // ---------- تایپ کردن قطعات ----------
+            function appendChar(cls, char) {
+                const span = document.createElement('span');
+                span.className = cls;
+                span.textContent = char;
+                outputDiv.appendChild(span);
             }
-            function typeBoot(text, delay) {
-                return new Promise(res => {
-                    const p = document.createElement('div'); p.className='boot-line'; bootDiv.appendChild(p);
-                    let i = 0;
-                    const iv = setInterval(() => {
-                        if (i < text.length) { p.textContent += text[i]; i++; beep(600, 0.02); }
-                        else { clearInterval(iv); res(); }
-                    }, delay);
+
+            function appendElement(element) {
+                outputDiv.appendChild(element);
+            }
+
+            function typeSegments(segments, onComplete) {
+                if (!segments || segments.length === 0) {
+                    if (onComplete) onComplete();
+                    return;
+                }
+                let segIdx = 0;
+                let charIdx = 0;
+
+                function nextChar() {
+                    if (segIdx >= segments.length) {
+                        if (onComplete) onComplete();
+                        return;
+                    }
+                    const seg = segments[segIdx];
+
+                    // Special handling for progress bar segments
+                    if (seg.type === 'progress') {
+                        // Create progress bar element
+                        const container = document.createElement('div');
+                        container.className = 'progress-container';
+                        const label = document.createElement('span');
+                        label.className = 'progress-label';
+                        label.textContent = seg.label;
+                        const bar = document.createElement('div');
+                        bar.className = 'progress-bar';
+                        const fill = document.createElement('div');
+                        fill.className = 'progress-fill';
+                        bar.appendChild(fill);
+                        container.appendChild(label);
+                        container.appendChild(bar);
+                        appendElement(container);
+                        // Animate fill after a tiny delay to allow DOM insertion
+                        setTimeout(() => {
+                            fill.style.width = seg.percent + '%';
+                        }, 10);
+                        segIdx++;
+                        charIdx = 0;
+                        // Schedule next segment with a small pause to let animation start
+                        setTimeout(nextChar, 200);
+                        return;
+                    }
+
+                    if (charIdx >= seg.text.length) {
+                        segIdx++;
+                        charIdx = 0;
+                        // If there's a custom delay for next segment, use it
+                        const delay = seg.nextDelay || 0;
+                        if (delay > 0) {
+                            setTimeout(nextChar, delay);
+                        } else {
+                            nextChar();
+                        }
+                        return;
+                    }
+                    const ch = seg.text[charIdx];
+                    appendChar(seg.cls, ch);
+                    charIdx++;
+                    terminalBody.scrollTop = terminalBody.scrollHeight;
+                    const speed = seg.speed || 18;
+                    typingTimeout = setTimeout(nextChar, speed);
+                }
+                nextChar();
+            }
+
+            function stopTyping() {
+                if (typingTimeout) {
+                    clearTimeout(typingTimeout);
+                    typingTimeout = null;
+                }
+            }
+
+            // ---------- بخش‌های اسکرول ----------
+            // تعریف محتوا برای هر بخش
+            const sectionsContent = [
+                // بخش ۰: درباره من (با بوت استایل)
+                [
+                    { cls: 'output-text', text: 'Booting Portfolio OS...\n', speed: 30, nextDelay: 200 },
+                    { cls: 'output-text', text: '[ OK ] Loading profile\n', speed: 20, nextDelay: 100 },
+                    { cls: 'output-text', text: '[ OK ] Connecting GitHub\n', speed: 20, nextDelay: 100 },
+                    { cls: 'output-text', text: '[ OK ] Initializing Portfolio\n\n', speed: 20, nextDelay: 300 },
+                    { cls: 'prompt-text', text: 'guest@majid:~$' },
+                    { cls: 'output-text', text: ' cat about.txt\n', speed: 18 },
+                    { cls: 'heading glitch', text: 'Majid\n', speed: 18 },
+                    { cls: 'highlight', text: 'Python Developer | Backend Developer | Cyber Security Enthusiast\n\n', speed: 18 },
+                    { cls: 'output-text', text: 'I build secure, scalable backend systems with Python.\nPassionate about open-source, automation, and ethical hacking.\nTurning coffee into code since forever.\n', speed: 18 },
+                    { cls: 'prompt-text', text: 'guest@majid:~$' }
+                ],
+                // بخش ۱: مهارت‌ها (با progress bar)
+                [
+                    { cls: 'prompt-text', text: 'guest@majid:~$' },
+                    { cls: 'output-text', text: ' skills --verbose\n', speed: 18 },
+                    { cls: 'output-text', text: 'Scanning skill matrix...\n\n', speed: 18, nextDelay: 200 },
+                    { type: 'progress', label: 'Python         ', percent: 95 },
+                    { type: 'progress', label: 'FastAPI        ', percent: 90 },
+                    { type: 'progress', label: 'Linux          ', percent: 85 },
+                    { type: 'progress', label: 'Docker         ', percent: 80 },
+                    { type: 'progress', label: 'Cyber Security ', percent: 85 },
+                    { type: 'progress', label: 'Git/GitHub     ', percent: 92 },
+                    { cls: 'output-text', text: '\n', speed: 5 },
+                    { cls: 'prompt-text', text: 'guest@majid:~$' }
+                ],
+                // بخش ۲: پروژه‌ها (با ساختار درختی واقعی)
+                [
+                    { cls: 'prompt-text', text: 'guest@majid:~$' },
+                    { cls: 'output-text', text: ' ls projects/\n', speed: 18 },
+                    { cls: 'highlight', text: 'telegram-superbot  HackerLab  Jamshid-AI  Portfolio\n\n', speed: 18 },
+                    { cls: 'prompt-text', text: 'guest@majid:~$' },
+                    { cls: 'output-text', text: ' cd HackerLab\n', speed: 18 },
+                    { cls: 'prompt-text', text: 'guest@majid:~/HackerLab$' },
+                    { cls: 'output-text', text: ' tree\n', speed: 18 },
+                    { cls: 'output-text', text: 'HackerLab/\n├── app/\n├── modules/\n├── scanners/\n├── reports/\n├── utils/\n├── config/\n├── requirements.txt\n├── README.md\n└── main.py\n\n', speed: 18 },
+                    { cls: 'output-text', text: 'A modular Python project for security analysis and automation.\n', speed: 18 },
+                    { cls: 'prompt-text', text: 'guest@majid:~$' }
+                ],
+                // بخش ۳: سناریوی پایان
+                [
+                    { cls: 'prompt-text', text: 'guest@majid:~$' },
+                    { cls: 'output-text', text: ' whoami\n', speed: 18 },
+                    { cls: 'heading', text: 'Majid\n', speed: 18 },
+                    { cls: 'output-text', text: 'Python Developer\nBackend Developer\nOpen Source Enthusiast\nAlways Building Something...\n\n', speed: 18 },
+                    { cls: 'prompt-text', text: 'guest@majid:~$' },
+                    { cls: 'output-text', text: ' exit\n', speed: 18 },
+                    { cls: 'output-text', text: 'logout\n', speed: 18 },
+                    { cls: 'output-text', text: 'Connection Closed...\n', speed: 18 },
+                    { cls: 'output-text', text: 'Press ENTER to Restart\n', speed: 18 }
+                ]
+            ];
+
+            function startAutoSection(index) {
+                if (completedSections.has(index) || manualMode || exitMode) return;
+                completedSections.add(index);
+                const content = sectionsContent[index];
+                if (index > 0) {
+                    appendChar('output-text', '\n');
+                }
+                typeSegments(content, () => {
+                    if (index === sectionsContent.length - 1) {
+                        exitMode = true;
+                        commandInput.disabled = true;
+                    }
                 });
             }
 
-            // Canvases
-            const pCanvas = document.getElementById('particleCanvas'), pCtx = pCanvas.getContext('2d');
-            const gCanvas = document.getElementById('gridCanvas'), gCtx = gCanvas.getContext('2d');
-            const mCanvas = document.getElementById('matrixCanvas'), mCtx = mCanvas.getContext('2d');
-            let particles = [], matrixChars = [], mInterval = null;
-            function resizeCanvases() {
-                pCanvas.width = gCanvas.width = mCanvas.width = window.innerWidth;
-                pCanvas.height = gCanvas.height = mCanvas.height = window.innerHeight;
-            }
-            window.addEventListener('resize', resizeCanvases); resizeCanvases();
-            for (let i=0;i<70;i++) particles.push({x:Math.random()*pCanvas.width,y:Math.random()*pCanvas.height,vx:(Math.random()-0.5)*0.5,vy:(Math.random()-0.5)*0.5,r:Math.random()*2+1});
-            function drawParticles() {
-                pCtx.clearRect(0,0,pCanvas.width,pCanvas.height);
-                particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>pCanvas.width)p.vx*=-1;if(p.y<0||p.y>pCanvas.height)p.vy*=-1;pCtx.beginPath();pCtx.arc(p.x,p.y,p.r,0,Math.PI*2);pCtx.fillStyle='rgba(0,255,255,0.6)';pCtx.fill()});
-                requestAnimationFrame(drawParticles);
-            }
-            function drawGrid() {
-                gCtx.clearRect(0,0,gCanvas.width,gCanvas.height); gCtx.strokeStyle='rgba(0,255,255,0.08)'; gCtx.lineWidth=1;
-                for(let x=0;x<gCanvas.width;x+=40){gCtx.beginPath();gCtx.moveTo(x,0);gCtx.lineTo(x,gCanvas.height);gCtx.stroke()}
-                for(let y=0;y<gCanvas.height;y+=40){gCtx.beginPath();gCtx.moveTo(0,y);gCtx.lineTo(gCanvas.width,y);gCtx.stroke()}
-                requestAnimationFrame(drawGrid);
-            }
-            function startMatrix() {
-                mCanvas.style.display='block'; matrixChars=[];
-                const chars='アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789';
-                const fontSize=14, cols=mCanvas.width/fontSize;
-                for(let i=0;i<cols;i++) matrixChars.push({x:i*fontSize,y:Math.random()*mCanvas.height,char:chars[Math.floor(Math.random()*chars.length)],speed:Math.random()*3+2});
-                function draw(){mCtx.fillStyle='rgba(0,0,0,0.05)';mCtx.fillRect(0,0,mCanvas.width,mCanvas.height);mCtx.fillStyle='#0f0';mCtx.font=fontSize+'px monospace';matrixChars.forEach(c=>{mCtx.fillText(c.char,c.x,c.y);c.y+=c.speed;if(c.y>mCanvas.height){c.y=-fontSize;c.char=chars[Math.floor(Math.random()*chars.length)]}});mInterval=requestAnimationFrame(draw)}
-                draw();
-            }
-            function stopMatrix() { mCanvas.style.display='none'; if(mInterval) cancelAnimationFrame(mInterval); }
-            drawParticles(); drawGrid();
-
-            // Terminal
-            const outDiv = document.getElementById('output'), termBody = document.getElementById('terminalBody');
-            const cmdInput = document.getElementById('cmdInput'), promptSign = document.getElementById('promptSign');
-
-            const sectionsContent = [
-                [{cls:'prompt',text:'guest@majid:~$'},{cls:'out',text:' cat about.txt\n'},{cls:'out',text:'Loading... [████████████] 100%\n\n'},{cls:'heading',text:'Majid\n'},{cls:'highlight',text:'Python Developer | Backend Developer | Cyber Security Enthusiast\n\n'},{cls:'out',text:'I build secure, scalable backend systems with Python.\nPassionate about open-source, automation, and ethical hacking.\n'},{cls:'out',text:'توسعه‌دهنده پایتون | عاشق امنیت سایبری\nکد می‌زنم، خلق می‌کنم.\n'},{cls:'prompt',text:'guest@majid:~$'}],
-                [{cls:'prompt',text:'guest@majid:~$'},{cls:'out',text:' skills --list\n'},{cls:'out',text:'Initializing... [████████] 100%\n\n'},{cls:'heading',text:'Languages:'},{cls:'out',text:'  Python, JavaScript, Bash\n'},{cls:'heading',text:'Frameworks:'},{cls:'out',text:'  FastAPI, Django, Flask\n'},{cls:'heading',text:'Databases:'},{cls:'out',text:'  PostgreSQL, SQLite, Redis\n'},{cls:'prompt',text:'guest@majid:~$'}],
-                [{cls:'prompt',text:'guest@majid:~$'},{cls:'out',text:' ls projects/\n'},{cls:'highlight',text:'telegram-superbot  HackerLab  Jamshid-AI  Portfolio\n\n'},{cls:'prompt',text:'guest@majid:~$'},{cls:'out',text:' cd HackerLab\n'},{cls:'prompt',text:'guest@majid:~/HackerLab$'},{cls:'out',text:' tree\n'},{cls:'out',text:'HackerLab/\n├── scanner.py\n├── exploit.py\n└── README.md\n'},{cls:'prompt',text:'guest@majid:~$'}],
-                [{cls:'prompt',text:'guest@majid:~$'},{cls:'out',text:' whoami\n'},{cls:'heading',text:'Majid\n'},{cls:'out',text:'Python Developer\nBackend Developer\nOpen Source Enthusiast\n'},{cls:'out',text:'همیشه در حال ساختن چیزی...\n\n'},{cls:'prompt',text:'guest@majid:~$'},{cls:'out',text:' exit\n'},{cls:'out',text:'logout\nConnection Closed...\n'}]
-            ];
-
-            function addChar(cls, char) { const s=document.createElement('span'); s.className=cls; s.textContent=char; outDiv.appendChild(s); termBody.scrollTop=termBody.scrollHeight; }
-            function stopType() { if(S.typingTimer){clearTimeout(S.typingTimer); S.typingTimer=null;} S.typing=false; }
-            function typeSegs(segs, cb) {
-                if(!segs||!segs.length){if(cb)cb();return}
-                stopType(); let si=0, ci=0; S.typing=true;
-                function next() {
-                    if(si>=segs.length){S.typing=false;if(cb)cb();return}
-                    const seg=segs[si];
-                    if(ci>=seg.text.length){si++;ci=0;next();return}
-                    addChar(seg.cls, seg.text[ci]); ci++; beep(800,0.02);
-                    S.typingTimer=setTimeout(next, 15+Math.random()*10);
-                }
-                next();
-            }
-            function processQueue() {
-                if(S.typingQueue.length && !S.typing && !S.manual){ const idx=S.typingQueue.shift(); startAuto(idx); }
-            }
-            function startAuto(idx) {
-                if(S.sectionsDone.has(idx)||S.manual){processQueue();return}
-                if(S.typing){S.typingQueue.push(idx);return}
-                S.sectionsDone.add(idx); if(idx>0)addChar('out','\n');
-                typeSegs(sectionsContent[idx], ()=>{ if(idx===3){cmdInput.disabled=false;cmdInput.focus()} processQueue(); });
-            }
-
+            // ---------- اسکرول و انیمیشن تغییر بخش ----------
             const sections = document.querySelectorAll('.scroll-sections section');
-            function getIdx(){ return Math.min(Math.round(document.getElementById('scrollContainer').scrollTop/window.innerHeight), sections.length-1); }
-            let lastIdx=-1;
-            function onScroll(){
-                if(S.manual)return;
-                const idx=getIdx(); if(idx!==lastIdx){lastIdx=idx; startAuto(idx);}
-            }
-            document.getElementById('scrollContainer').addEventListener('scroll', ()=>requestAnimationFrame(onScroll));
-
-            // Command system
-            const cmdList = ['help','about','skills','projects','contact','whoami','theme','clear','date','time','pwd','ls','cat','sudo','hack','matrix','coffee','hello','easteregg','history'];
-            const cmdAliases = { '?':'help', 'who':'whoami', 'ls':'projects', 'list':'projects' };
-            const cmdOutputs = {
-                help: [{cls:'heading',text:'Available commands:\n'},{cls:'out',text:'about skills projects contact whoami theme clear date time pwd ls cat sudo hack matrix coffee hello easteregg history\n'}],
-                about: sectionsContent[0].slice(1),
-                skills: sectionsContent[1].slice(1),
-                projects: sectionsContent[2].slice(1),
-                whoami: [{cls:'heading',text:'Majid\n'},{cls:'out',text:'Python Developer | Backend Developer | Cyber Security Enthusiast\nهمیشه در حال ساختن چیزی...\n'}],
-                date: [{cls:'out',text: new Date().toString()+'\n'}],
-                time: [{cls:'out',text: new Date().toLocaleTimeString()+'\n'}],
-                pwd: [{cls:'out',text:'/home/majid\n'}],
-                ls: [{cls:'highlight',text:'telegram-superbot  HackerLab  Jamshid-AI  Portfolio\n'}],
-                contact: [{cls:'out',text:'📡 Contact links below the terminal ↓\nGitHub | Telegram | Email | Resume\n'}],
-                matrix: ()=>{ if(!S.matrixActive) toggleMatrix(); return [{cls:'out',text:'Entering Matrix...\n'}]; },
-                hack: [{cls:'out',text:'Hacking mainframe...\n'},{cls:'highlight',text:'Access Granted.\n'}],
-                coffee: [{cls:'out',text:'☕ Brewing coffee...\n'}],
-                hello: [{cls:'heading',text:'Hello Majid! Welcome back.\n'}],
-                easteregg: [{cls:'out',text:'You found an Easter Egg! 🥚\n'}],
-                sudo: [{cls:'out',text:'Permission denied. Nice try! 😄\n'}],
-                clear: 'CLEAR'
-            };
-
-            function getSuggestions(input) {
-                const lower=input.toLowerCase();
-                return cmdList.filter(c=>c.startsWith(lower) && c!==lower).slice(0,3);
+            function getCurrentIndex() {
+                const scrollY = window.scrollY;
+                const vh = window.innerHeight;
+                const index = Math.round(scrollY / vh);
+                return Math.min(index, sections.length - 1);
             }
 
-            function runCommand(raw) {
-                const lower=raw.toLowerCase().trim();
-                const cmd = cmdAliases[lower] || lower;
-                if (cmd === 'clear') { outDiv.innerHTML=''; addChar('prompt','guest@majid:~$ '); cmdInput.disabled=false; cmdInput.focus(); return; }
-                if (typeof cmdOutputs[cmd] === 'function') { typeSegs(cmdOutputs[cmd](), finishInput); return; }
-                const segs = cmdOutputs[cmd] || null;
-                if (segs) { typeSegs(segs, finishInput); }
-                else {
-                    const sug = getSuggestions(lower);
-                    let msg = `command not found: ${lower}\n`;
-                    if (sug.length) msg += `Did you mean: ${sug.join(', ')}?\n`;
-                    typeSegs([{cls:'out',text:msg}], finishInput);
+            let lastSection = -1;
+            function handleScroll() {
+                if (manualMode || exitMode) return;
+                const idx = getCurrentIndex();
+                if (idx !== lastSection) {
+                    // Trigger transition animation
+                    terminalContainer.classList.add('section-transition');
+                    setTimeout(() => terminalContainer.classList.remove('section-transition'), 300);
+                    lastSection = idx;
+                    startAutoSection(idx);
+                }
+                // مخفی کردن نشانگر
+                if (window.scrollY > 50) {
+                    scrollIndicator.style.opacity = '0';
+                } else {
+                    scrollIndicator.style.opacity = '1';
                 }
             }
-            function finishInput() { addChar('prompt','guest@majid:~$ '); cmdInput.disabled=false; cmdInput.focus(); }
 
-            // Input handling
-            cmdInput.addEventListener('keydown', function(e) {
+            window.addEventListener('load', () => {
+                window.scrollTo(0, 0);
+                lastSection = 0;
+                startAutoSection(0);
+                commandInput.disabled = true;
+            });
+
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        handleScroll();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+
+            // ---------- حالت تعاملی ----------
+            commandInput.addEventListener('focus', () => {
+                if (!manualMode && !exitMode) {
+                    manualMode = true;
+                    stopTyping();
+                    commandInput.disabled = false;
+                    scrollIndicator.style.opacity = '0';
+                    appendChar('output-text', '\n');
+                    appendChar('prompt-text', 'guest@majid:~$ ');
+                }
+            });
+
+            function processCommand(cmd) {
+                const lower = cmd.toLowerCase().trim();
+                let outputSegments = [];
+
+                // Theme change
+                if (lower.startsWith('theme ')) {
+                    const theme = lower.split(' ')[1];
+                    applyTheme(theme);
+                    outputSegments = [
+                        { cls: 'output-text', text: `Theme changed to ${theme}\n` }
+                    ];
+                    typeSegments(outputSegments, showPrompt);
+                    return;
+                }
+
+                switch (lower) {
+                    case 'help':
+                        outputSegments = [
+                            { cls: 'heading', text: 'Available commands:\n' },
+                            { cls: 'output-text', text: '  about      - About me\n' },
+                            { cls: 'output-text', text: '  skills     - Technical skills (progress bars)\n' },
+                            { cls: 'output-text', text: '  projects   - Live GitHub projects\n' },
+                            { cls: 'output-text', text: '  contact    - Get in touch\n' },
+                            { cls: 'output-text', text: '  whoami     - Identity\n' },
+                            { cls: 'output-text', text: '  clear      - Clear terminal\n' },
+                            { cls: 'output-text', text: '  theme <name> - Change theme (cyan/green/purple/red)\n' },
+                            { cls: 'output-text', text: '  neofetch   - System info\n' },
+                            { cls: 'output-text', text: '  uptime     - Session uptime\n' },
+                            { cls: 'output-text', text: '  status     - Connection status\n' },
+                            { cls: 'output-text', text: '  version    - Terminal version\n' },
+                            { cls: 'output-text', text: '  system     - System details\n' }
+                        ];
+                        break;
+                    case 'about':
+                        outputSegments = [
+                            { cls: 'output-text', text: 'Loading about.txt...\n' },
+                            { cls: 'heading glitch', text: 'Majid\n' },
+                            { cls: 'highlight', text: 'Python Developer | Backend Developer | Cyber Security Enthusiast\n\n' },
+                            { cls: 'output-text', text: 'I build secure, scalable backend systems with Python.\nPassionate about open-source, automation, and ethical hacking.\n' }
+                        ];
+                        break;
+                    case 'skills':
+                        // Skills with progress bars (manual command)
+                        appendChar('output-text', 'Scanning skill matrix...\n\n');
+                        const skillBars = [
+                            { label: 'Python         ', percent: 95 },
+                            { label: 'FastAPI        ', percent: 90 },
+                            { label: 'Linux          ', percent: 85 },
+                            { label: 'Docker         ', percent: 80 },
+                            { label: 'Cyber Security ', percent: 85 },
+                            { label: 'Git/GitHub     ', percent: 92 }
+                        ];
+                        skillBars.forEach(skill => {
+                            const container = document.createElement('div');
+                            container.className = 'progress-container';
+                            const label = document.createElement('span');
+                            label.className = 'progress-label';
+                            label.textContent = skill.label;
+                            const bar = document.createElement('div');
+                            bar.className = 'progress-bar';
+                            const fill = document.createElement('div');
+                            fill.className = 'progress-fill';
+                            bar.appendChild(fill);
+                            container.appendChild(label);
+                            container.appendChild(bar);
+                            appendElement(container);
+                            setTimeout(() => {
+                                fill.style.width = skill.percent + '%';
+                            }, 10);
+                        });
+                        appendChar('output-text', '\n');
+                        appendChar('prompt-text', 'guest@majid:~$ ');
+                        commandInput.disabled = false;
+                        commandInput.focus();
+                        return;
+                    case 'projects':
+                        // Dynamic GitHub projects
+                        appendChar('output-text', 'Fetching live data from GitHub...\n');
+                        if (githubRepos.length > 0) {
+                            githubRepos.forEach(repo => {
+                                const stars = repo.stargazers_count || 0;
+                                const forks = repo.forks_count || 0;
+                                const updated = new Date(repo.updated_at).toLocaleDateString();
+                                const line = `${repo.name} (★${stars} ⑂${forks}) - ${updated}\n`;
+                                appendChar('highlight', line);
+                            });
+                        } else {
+                            appendChar('output-text', 'Could not fetch repos (rate limit?).\n');
+                        }
+                        appendChar('prompt-text', '\nguest@majid:~$ ');
+                        commandInput.disabled = false;
+                        commandInput.focus();
+                        return;
+                    case 'contact':
+                        appendChar('output-text', 'Secure channels established.\n');
+                        const iconsContainer = document.createElement('div');
+                        iconsContainer.className = 'contact-icons';
+                        // SVG icons
+                        const githubIcon = `<svg class="contact-icon" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>`;
+                        const telegramIcon = `<svg class="contact-icon" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>`;
+                        const emailIcon = `<svg class="contact-icon" viewBox="0 0 24 24"><path d="M12 12.713l-11.985-9.713h23.97l-11.985 9.713zm0 2.574l-12-9.725v15.438h24v-15.438l-12 9.725z"/></svg>`;
+                        const resumeIcon = `<svg class="contact-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM8 13h8v2H8v-2zm0 4h8v2H8v-2z"/></svg>`;
+
+                        const links = [
+                            { url: 'https://github.com/lucyferoops-blip', icon: githubIcon },
+                            { url: 'https://t.me/M4j1D_0xDEAD', icon: telegramIcon },
+                            { url: 'mailto:majid@example.com', icon: emailIcon },
+                            { url: 'resume.pdf', icon: resumeIcon }
+                        ];
+                        links.forEach(link => {
+                            const a = document.createElement('a');
+                            a.href = link.url;
+                            a.target = '_blank';
+                            a.innerHTML = link.icon;
+                            iconsContainer.appendChild(a);
+                        });
+                        appendElement(iconsContainer);
+                        appendChar('output-text', '\n');
+                        appendChar('prompt-text', 'guest@majid:~$ ');
+                        commandInput.disabled = false;
+                        commandInput.focus();
+                        return;
+                    case 'whoami':
+                        outputSegments = [
+                            { cls: 'output-text', text: 'Identity confirmed:\n' },
+                            { cls: 'heading', text: 'Majid\n' },
+                            { cls: 'output-text', text: 'Python Developer\nBackend Developer\nOpen Source Enthusiast\nAlways Building Something...\n' }
+                        ];
+                        break;
+                    case 'clear':
+                        outputDiv.innerHTML = '';
+                        appendChar('prompt-text', 'guest@majid:~$ ');
+                        commandInput.disabled = false;
+                        commandInput.focus();
+                        return;
+                    case 'neofetch':
+                        const ascii = 
+`${'guest@majid:~$'.replace(/./g,' ')}    ███╗   ███╗ █████╗      ██╗██╗██████╗ 
+${'guest@majid:~$'.replace(/./g,' ')}    ████╗ ████║██╔══██╗     ██║██║██╔══██╗
+${'guest@majid:~$'.replace(/./g,' ')}    ██╔████╔██║███████║     ██║██║██║  ██║
+${'guest@majid:~$'.replace(/./g,' ')}    ██║╚██╔╝██║██╔══██║██   ██║██║██║  ██║
+${'guest@majid:~$'.replace(/./g,' ')}    ██║ ╚═╝ ██║██║  ██║╚█████╔╝██║██████╔╝
+${'guest@majid:~$'.replace(/./g,' ')}    ╚═╝     ╚═╝╚═╝  ╚═╝ ╚════╝ ╚═╝╚═════╝ \n`;
+                        outputSegments = [
+                            { cls: 'output-text', text: ascii },
+                            { cls: 'heading', text: 'Majid\n' },
+                            { cls: 'output-text', text: 'Backend Developer\nPython Developer\nLinux\nFastAPI\nDocker\nGitHub\nTelegram Bots\n' }
+                        ];
+                        break;
+                    case 'uptime':
+                        const uptimeMs = Date.now() - performance.timing.navigationStart;
+                        const sec = Math.floor(uptimeMs / 1000);
+                        const min = Math.floor(sec / 60);
+                        const hours = Math.floor(min / 60);
+                        const remainingMin = min % 60;
+                        outputSegments = [
+                            { cls: 'output-text', text: `Uptime: ${hours}h ${remainingMin}m\n` }
+                        ];
+                        break;
+                    case 'status':
+                        outputSegments = [
+                            { cls: 'output-text', text: 'System online. All services nominal.\n' }
+                        ];
+                        break;
+                    case 'version':
+                        outputSegments = [
+                            { cls: 'output-text', text: 'Terminal Portfolio v2.0\n' }
+                        ];
+                        break;
+                    case 'system':
+                        outputSegments = [
+                            { cls: 'output-text', text: `User Agent: ${navigator.userAgent}\n` },
+                            { cls: 'output-text', text: `Screen: ${window.screen.width}x${window.screen.height}\n` }
+                        ];
+                        break;
+                    default:
+                        outputSegments = [
+                            { cls: 'output-text', text: `command not found: ${cmd}\n` },
+                            { cls: 'output-text', text: 'Type "help" for available commands.\n' }
+                        ];
+                }
+                typeSegments(outputSegments, showPrompt);
+            }
+
+            function showPrompt() {
+                appendChar('prompt-text', 'guest@majid:~$ ');
+                commandInput.disabled = false;
+                commandInput.focus();
+            }
+
+            commandInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
-                    const cmd = cmdInput.value.trim(); if (!cmd) return;
-                    S.commandHistory.push(cmd); S.historyIndex = S.commandHistory.length;
-                    cmdInput.value=''; cmdInput.disabled=true;
-                    addChar('prompt','guest@majid:~$ '); addChar('out',cmd+'\n');
-                    if (!S.manual) { S.manual=true; stopType(); S.typingQueue=[]; }
-                    runCommand(cmd);
-                } else if (e.key === 'Tab') {
-                    e.preventDefault();
-                    const val = cmdInput.value.trim().toLowerCase();
-                    const sug = getSuggestions(val);
-                    if (sug.length === 1) cmdInput.value = sug[0];
-                    else if (sug.length > 1) { addChar('out','\n'+sug.join('  ')+'\n'); addChar('prompt','guest@majid:~$ '); cmdInput.value = val; }
-                } else if (e.key === 'ArrowUp') {
-                    e.preventDefault();
-                    if (S.commandHistory.length) {
-                        S.historyIndex = Math.max(0, S.historyIndex - 1);
-                        cmdInput.value = S.commandHistory[S.historyIndex] || '';
+                    const cmd = commandInput.value.trim();
+                    if (cmd === '') return;
+                    commandInput.value = '';
+                    commandInput.disabled = true;
+                    appendChar('prompt-text', 'guest@majid:~$ ');
+                    appendChar('output-text', cmd + '\n');
+                    if (exitMode) {
+                        // Restart portfolio
+                        exitMode = false;
+                        manualMode = false;
+                        completedSections.clear();
+                        outputDiv.innerHTML = '';
+                        window.scrollTo(0, 0);
+                        lastSection = 0;
+                        startAutoSection(0);
+                        commandInput.disabled = true;
+                        return;
                     }
-                } else if (e.key === 'ArrowDown') {
-                    e.preventDefault();
-                    if (S.commandHistory.length) {
-                        S.historyIndex = Math.min(S.commandHistory.length, S.historyIndex + 1);
-                        cmdInput.value = S.commandHistory[S.historyIndex] || '';
-                    }
+                    processCommand(cmd);
                 }
             });
 
-            // Clock
-            function updateClock() { document.getElementById('clockDisplay').textContent = new Date().toLocaleTimeString(); }
-            setInterval(updateClock, 1000); updateClock();
-
-            // Init
-            window.addEventListener('load', async () => {
-                loadSettings();
-                await runBoot();
-                S.manual=false; lastIdx=0;
-                startAuto(0);
-                cmdInput.disabled=true;
+            // Restart on Enter in exit mode (global)
+            document.addEventListener('keydown', function(e) {
+                if (exitMode && e.key === 'Enter' && document.activeElement !== commandInput) {
+                    exitMode = false;
+                    manualMode = false;
+                    completedSections.clear();
+                    outputDiv.innerHTML = '';
+                    window.scrollTo(0, 0);
+                    lastSection = 0;
+                    startAutoSection(0);
+                    commandInput.disabled = true;
+                }
             });
+
+            // اطمینان از فوکوس اینپوت در صورت کلیک روی ترمینال
+            terminalContainer.addEventListener('click', () => {
+                if (!exitMode) commandInput.focus();
+            });
+
         })();
     </script>
 </body>
