@@ -38,7 +38,6 @@
             cursor: default;
         }
 
-        /* Mouse glow */
         .mouse-glow {
             position: fixed;
             top: 0;
@@ -51,7 +50,6 @@
             transition: opacity 0.3s;
         }
 
-        /* Noise overlay */
         .noise-overlay {
             position: fixed;
             top: 0;
@@ -155,7 +153,6 @@
             flex-direction: column;
         }
 
-        /* CRT Scanlines */
         .terminal-body::after {
             content: "";
             position: absolute;
@@ -180,11 +177,6 @@
         .prompt-text {
             color: var(--prompt-color);
             text-shadow: 0 0 8px var(--glow-color);
-        }
-
-        .cmd {
-            color: #e0b0ff;
-            font-weight: bold;
         }
 
         .output-text {
@@ -215,61 +207,6 @@
             100% { text-shadow: 2px -2px 0 #00ffff, -2px 2px 0 #ff00c1; }
         }
 
-        .cursor-blink {
-            display: inline-block;
-            background: var(--prompt-color);
-            color: transparent;
-            width: 0.6em;
-            animation: blink 1s step-end infinite;
-            vertical-align: text-bottom;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        .interactive-line {
-            display: flex;
-            align-items: center;
-            margin-top: 8px;
-            border-top: 1px dashed rgba(0,255,255,0.2);
-            padding-top: 8px;
-            z-index: 1;
-        }
-
-        #commandInput {
-            background: transparent;
-            border: none;
-            color: var(--text-color);
-            font-family: 'Fira Code', monospace;
-            font-size: 1rem;
-            flex: 1;
-            outline: none;
-            caret-color: var(--prompt-color);
-            margin-left: 8px;
-        }
-
-        .scroll-indicator {
-            position: fixed;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 5;
-            color: rgba(0, 255, 255, 0.7);
-            font-family: 'Fira Code', monospace;
-            text-align: center;
-            animation: bounce 1.5s infinite;
-            transition: opacity 0.5s;
-            pointer-events: none;
-            font-size: 0.9rem;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(-8px); }
-        }
-
         .terminal-container {
             animation: flicker 0.15s infinite alternate;
         }
@@ -279,7 +216,6 @@
             100% { opacity: 1; }
         }
 
-        /* Progress bar styling */
         .progress-container {
             display: flex;
             align-items: center;
@@ -308,26 +244,87 @@
             box-shadow: 0 0 10px var(--glow-color);
         }
 
-        /* Icon styles */
-        .contact-icons {
-            display: flex;
-            gap: 15px;
-            margin: 10px 0;
-            flex-wrap: wrap;
+        .scroll-indicator {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            color: rgba(0, 255, 255, 0.7);
+            font-family: 'Fira Code', monospace;
+            text-align: center;
+            animation: bounce 1.5s infinite;
+            transition: opacity 0.5s;
+            pointer-events: none;
+            font-size: 0.9rem;
         }
-        .contact-icon {
-            fill: var(--neon-primary);
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-8px); }
+        }
+
+        /* Telegram float top left */
+        .telegram-float {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(10, 10, 25, 0.8);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            border-radius: 50px;
+            padding: 10px 20px 10px 16px;
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.25), 0 0 10px rgba(200, 0, 255, 0.2);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--neon-primary);
+            font-family: 'Fira Code', monospace;
+        }
+
+        .telegram-float:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 35px rgba(0, 255, 255, 0.5), 0 0 20px rgba(200, 0, 255, 0.4);
+            border-color: rgba(0, 255, 255, 0.8);
+        }
+
+        .telegram-icon {
             width: 28px;
             height: 28px;
-            transition: transform 0.2s, filter 0.2s;
-            filter: drop-shadow(0 0 5px var(--glow-color));
+            fill: currentColor;
+            filter: drop-shadow(0 0 6px var(--glow-color));
+            transition: transform 0.2s;
         }
-        .contact-icon:hover {
-            transform: scale(1.2);
-            filter: drop-shadow(0 0 12px var(--glow-color));
+
+        .telegram-float:hover .telegram-icon {
+            transform: scale(1.15);
+        }
+
+        .telegram-handle {
+            font-size: 1rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px var(--glow-color);
+            margin-left: 2px;
         }
 
         @media (max-width: 600px) {
+            .telegram-float {
+                top: 16px;
+                left: 16px;
+                padding: 8px 16px;
+                gap: 6px;
+            }
+            .telegram-icon {
+                width: 22px;
+                height: 22px;
+            }
+            .telegram-handle {
+                font-size: 0.85rem;
+            }
             .terminal-container {
                 width: 95%;
                 max-height: 75vh;
@@ -351,7 +348,14 @@
     <div class="noise-overlay"></div>
     <canvas id="particleCanvas"></canvas>
 
-    <!-- نشانگر اسکرول -->
+    <!-- Telegram floating icon top left -->
+    <a href="https://t.me/M4j1D_0xDEAD" target="_blank" class="telegram-float" title="ارتباط در تلگرام">
+        <svg class="telegram-icon" viewBox="0 0 24 24">
+            <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+        </svg>
+        <span class="telegram-handle">@M4j1D_0xDEAD</span>
+    </a>
+
     <div class="scroll-indicator" id="scrollIndicator">▼ Scroll Down</div>
 
     <div class="scroll-sections">
@@ -370,10 +374,6 @@
         </div>
         <div class="terminal-body" id="terminalBody">
             <div class="output" id="output"></div>
-            <div class="interactive-line">
-                <span class="prompt-text">guest@majid:~$</span>
-                <input type="text" id="commandInput" placeholder="type command..." autofocus>
-            </div>
         </div>
     </div>
 
@@ -386,163 +386,89 @@
                 mouseGlow.style.setProperty('--mouse-y', e.clientY + 'px');
             });
 
-            // ---------- ذرات پس‌زمینه ----------
+            // ---------- Scrolling Code Background ----------
             const canvas = document.getElementById('particleCanvas');
             const ctx = canvas.getContext('2d');
-            let particles = [];
-            const particleCount = 60;
-            const connectionDistance = 120;
+            let width, height;
+            let lines = [];
 
             function resizeCanvas() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+                initLines();
             }
             window.addEventListener('resize', resizeCanvas);
-            resizeCanvas();
 
-            class Particle {
-                constructor() {
-                    this.x = Math.random() * canvas.width;
-                    this.y = Math.random() * canvas.height;
-                    this.vx = (Math.random() - 0.5) * 0.5;
-                    this.vy = (Math.random() - 0.5) * 0.5;
-                    this.radius = Math.random() * 2 + 1;
-                    this.opacity = Math.random() * 0.5 + 0.3;
-                }
-                update() {
-                    this.x += this.vx;
-                    this.y += this.vy;
-                    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-                    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-                }
-                draw() {
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(0, 255, 255, ${this.opacity})`;
-                    ctx.fill();
+            function generateRandomLine() {
+                const prefixes = [
+                    '[INFO]', '[WARN]', '[DEBUG]', '[LOG]', 'root@server:~#', 
+                    'guest@majid:~$', '>>>', '...', 'OK', 'FAIL', '200', '404',
+                    'import', 'def', 'class', 'return', 'if __name__'
+                ];
+                const suffixes = [
+                    'Processing...', 'Done.', 'Connection established.', 'Loading module...',
+                    'Syntax error near line 42.', 'Task completed successfully.',
+                    'fetching data from api.github.com', 'Running security scan...',
+                    'Open port 443 detected.', 'Encrypting payload...',
+                    'Decrypting response...', 'Access granted.', 'Permission denied.',
+                    'Uploading 4.2MB...', 'Downloading 6.7MB...', 'Cache cleared.',
+                    'Server response: 200 OK', 'Memory usage: 78%', 'CPU load: 45%',
+                    'Listening on 0.0.0.0:8080', 'User authenticated.'
+                ];
+                const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+                const suffix = suffixes[Math.floor(Math.random() * suffixes.length)];
+                return `${prefix} ${suffix}`;
+            }
+
+            function initLines() {
+                const fontSize = 13;
+                const lineHeight = fontSize * 1.4;
+                const numLines = Math.floor(height / lineHeight) + 5;
+                lines = [];
+                for (let i = 0; i < numLines; i++) {
+                    lines.push({
+                        text: generateRandomLine(),
+                        y: i * lineHeight,
+                        speed: 0.3 + Math.random() * 0.7,
+                        x: 10 + Math.random() * 30,
+                        opacity: 0.05 + Math.random() * 0.15,
+                        fontSize: fontSize
+                    });
                 }
             }
 
-            for (let i = 0; i < particleCount; i++) {
-                particles.push(new Particle());
-            }
-
-            function connectParticles() {
-                for (let i = 0; i < particles.length; i++) {
-                    for (let j = i + 1; j < particles.length; j++) {
-                        const dx = particles[i].x - particles[j].x;
-                        const dy = particles[i].y - particles[j].y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < connectionDistance) {
-                            ctx.beginPath();
-                            ctx.moveTo(particles[i].x, particles[i].y);
-                            ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.strokeStyle = `rgba(180, 0, 255, ${0.15 * (1 - dist / connectionDistance)})`;
-                            ctx.lineWidth = 0.6;
-                            ctx.stroke();
-                        }
+            function updateAndDrawLines() {
+                ctx.clearRect(0, 0, width, height);
+                const fontSize = 13;
+                const lineHeight = fontSize * 1.4;
+                ctx.font = `${fontSize}px 'Fira Code', monospace`;
+                
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i];
+                    line.y -= line.speed;
+                    if (line.y + lineHeight < 0) {
+                        line.y = height + Math.random() * 50;
+                        line.text = generateRandomLine();
+                        line.speed = 0.3 + Math.random() * 0.7;
+                        line.opacity = 0.05 + Math.random() * 0.15;
                     }
+                    ctx.fillStyle = `rgba(0, 255, 255, ${line.opacity})`;
+                    ctx.fillText(line.text, line.x, line.y);
                 }
+                requestAnimationFrame(updateAndDrawLines);
             }
 
-            function animateParticles() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                particles.forEach(p => {
-                    p.update();
-                    p.draw();
-                });
-                connectParticles();
-                requestAnimationFrame(animateParticles);
-            }
-            animateParticles();
+            resizeCanvas();
+            updateAndDrawLines();
 
-            // ---------- مدیریت ترمینال ----------
+            // ---------- Terminal typewriter ----------
             const outputDiv = document.getElementById('output');
             const terminalBody = document.getElementById('terminalBody');
             const terminalContainer = document.getElementById('terminalContainer');
-            const commandInput = document.getElementById('commandInput');
             const scrollIndicator = document.getElementById('scrollIndicator');
             let typingTimeout = null;
-            let isTyping = false;
-            let manualMode = false;
             const completedSections = new Set();
-            let exitMode = false;
-            let currentTheme = 'cyan';
 
-            // GitHub API cache
-            let githubRepos = [];
-
-            // Fetch GitHub repos on load
-            fetch('https://api.github.com/users/lucyferoops-blip/repos?per_page=100&sort=updated')
-                .then(res => res.json())
-                .then(data => {
-                    if (Array.isArray(data)) githubRepos = data;
-                })
-                .catch(() => {});
-
-            // ---------- Theme System ----------
-            const themes = {
-                cyan: {
-                    '--neon-primary': '#0ff',
-                    '--neon-secondary': '#c200ff',
-                    '--glow-color': 'rgba(0, 255, 255, 0.6)',
-                    '--text-color': '#c0f0ff',
-                    '--heading-color': '#ff79c6',
-                    '--highlight-color': '#ffb86c',
-                    '--prompt-color': '#0ff',
-                    '--progress-fill': '#0ff',
-                    '--border-glow': 'rgba(0, 255, 255, 0.3)',
-                    '--hover-glow': 'rgba(0, 255, 255, 0.3)'
-                },
-                green: {
-                    '--neon-primary': '#0f0',
-                    '--neon-secondary': '#0f0',
-                    '--glow-color': 'rgba(0, 255, 0, 0.6)',
-                    '--text-color': '#b0ffb0',
-                    '--heading-color': '#0f0',
-                    '--highlight-color': '#0f0',
-                    '--prompt-color': '#0f0',
-                    '--progress-fill': '#0f0',
-                    '--border-glow': 'rgba(0, 255, 0, 0.3)',
-                    '--hover-glow': 'rgba(0, 255, 0, 0.3)'
-                },
-                purple: {
-                    '--neon-primary': '#b400ff',
-                    '--neon-secondary': '#b400ff',
-                    '--glow-color': 'rgba(180, 0, 255, 0.6)',
-                    '--text-color': '#e0c0ff',
-                    '--heading-color': '#ff79c6',
-                    '--highlight-color': '#ff79c6',
-                    '--prompt-color': '#b400ff',
-                    '--progress-fill': '#b400ff',
-                    '--border-glow': 'rgba(180, 0, 255, 0.3)',
-                    '--hover-glow': 'rgba(180, 0, 255, 0.3)'
-                },
-                red: {
-                    '--neon-primary': '#ff3333',
-                    '--neon-secondary': '#ff3333',
-                    '--glow-color': 'rgba(255, 51, 51, 0.6)',
-                    '--text-color': '#ffb0b0',
-                    '--heading-color': '#ff5555',
-                    '--highlight-color': '#ff5555',
-                    '--prompt-color': '#ff3333',
-                    '--progress-fill': '#ff3333',
-                    '--border-glow': 'rgba(255, 51, 51, 0.3)',
-                    '--hover-glow': 'rgba(255, 51, 51, 0.3)'
-                }
-            };
-
-            function applyTheme(themeName) {
-                const theme = themes[themeName];
-                if (!theme) return;
-                const root = document.documentElement;
-                Object.entries(theme).forEach(([prop, value]) => {
-                    root.style.setProperty(prop, value);
-                });
-                currentTheme = themeName;
-            }
-
-            // ---------- تایپ کردن قطعات ----------
             function appendChar(cls, char) {
                 const span = document.createElement('span');
                 span.className = cls;
@@ -569,9 +495,7 @@
                     }
                     const seg = segments[segIdx];
 
-                    // Special handling for progress bar segments
                     if (seg.type === 'progress') {
-                        // Create progress bar element
                         const container = document.createElement('div');
                         container.className = 'progress-container';
                         const label = document.createElement('span');
@@ -585,13 +509,11 @@
                         container.appendChild(label);
                         container.appendChild(bar);
                         appendElement(container);
-                        // Animate fill after a tiny delay to allow DOM insertion
                         setTimeout(() => {
                             fill.style.width = seg.percent + '%';
                         }, 10);
                         segIdx++;
                         charIdx = 0;
-                        // Schedule next segment with a small pause to let animation start
                         setTimeout(nextChar, 200);
                         return;
                     }
@@ -599,7 +521,6 @@
                     if (charIdx >= seg.text.length) {
                         segIdx++;
                         charIdx = 0;
-                        // If there's a custom delay for next segment, use it
                         const delay = seg.nextDelay || 0;
                         if (delay > 0) {
                             setTimeout(nextChar, delay);
@@ -625,10 +546,8 @@
                 }
             }
 
-            // ---------- بخش‌های اسکرول ----------
-            // تعریف محتوا برای هر بخش
             const sectionsContent = [
-                // بخش ۰: درباره من (با بوت استایل)
+                // بخش ۰: بوت و درباره
                 [
                     { cls: 'output-text', text: 'Booting Portfolio OS...\n', speed: 30, nextDelay: 200 },
                     { cls: 'output-text', text: '[ OK ] Loading profile\n', speed: 20, nextDelay: 100 },
@@ -641,7 +560,7 @@
                     { cls: 'output-text', text: 'I build secure, scalable backend systems with Python.\nPassionate about open-source, automation, and ethical hacking.\nTurning coffee into code since forever.\n', speed: 18 },
                     { cls: 'prompt-text', text: 'guest@majid:~$' }
                 ],
-                // بخش ۱: مهارت‌ها (با progress bar)
+                // بخش ۱: مهارت‌ها
                 [
                     { cls: 'prompt-text', text: 'guest@majid:~$' },
                     { cls: 'output-text', text: ' skills --verbose\n', speed: 18 },
@@ -655,7 +574,7 @@
                     { cls: 'output-text', text: '\n', speed: 5 },
                     { cls: 'prompt-text', text: 'guest@majid:~$' }
                 ],
-                // بخش ۲: پروژه‌ها (با ساختار درختی واقعی)
+                // بخش ۲: پروژه‌ها
                 [
                     { cls: 'prompt-text', text: 'guest@majid:~$' },
                     { cls: 'output-text', text: ' ls projects/\n', speed: 18 },
@@ -668,36 +587,32 @@
                     { cls: 'output-text', text: 'A modular Python project for security analysis and automation.\n', speed: 18 },
                     { cls: 'prompt-text', text: 'guest@majid:~$' }
                 ],
-                // بخش ۳: سناریوی پایان
+                // بخش ۳: whoami با اطلاعات کامل و وضعیت
                 [
                     { cls: 'prompt-text', text: 'guest@majid:~$' },
                     { cls: 'output-text', text: ' whoami\n', speed: 18 },
                     { cls: 'heading', text: 'Majid\n', speed: 18 },
-                    { cls: 'output-text', text: 'Python Developer\nBackend Developer\nOpen Source Enthusiast\nAlways Building Something...\n\n', speed: 18 },
-                    { cls: 'prompt-text', text: 'guest@majid:~$' },
-                    { cls: 'output-text', text: ' exit\n', speed: 18 },
-                    { cls: 'output-text', text: 'logout\n', speed: 18 },
-                    { cls: 'output-text', text: 'Connection Closed...\n', speed: 18 },
-                    { cls: 'output-text', text: 'Press ENTER to Restart\n', speed: 18 }
+                    { cls: 'output-text', text: 'Python Developer\nBackend Developer\nCyber Security Enthusiast\n\n', speed: 18 },
+                    { cls: 'output-text', text: 'Status: ONLINE\n', speed: 18 },
+                    { cls: 'output-text', text: 'Available for Freelance Projects\n', speed: 18 },
+                    { cls: 'output-text', text: 'Open to Remote Collaboration\n', speed: 18 },
+                    { cls: 'output-text', text: 'Always Building Something...\n\n', speed: 18 },
+                    { cls: 'prompt-text', text: 'guest@majid:~$' }
                 ]
             ];
 
             function startAutoSection(index) {
-                if (completedSections.has(index) || manualMode || exitMode) return;
-                completedSections.add(index);
+                if (completedSections.has(index)) return;
+                stopTyping();
                 const content = sectionsContent[index];
                 if (index > 0) {
                     appendChar('output-text', '\n');
                 }
                 typeSegments(content, () => {
-                    if (index === sectionsContent.length - 1) {
-                        exitMode = true;
-                        commandInput.disabled = true;
-                    }
+                    completedSections.add(index);
                 });
             }
 
-            // ---------- اسکرول و انیمیشن تغییر بخش ----------
             const sections = document.querySelectorAll('.scroll-sections section');
             function getCurrentIndex() {
                 const scrollY = window.scrollY;
@@ -708,28 +623,21 @@
 
             let lastSection = -1;
             function handleScroll() {
-                if (manualMode || exitMode) return;
                 const idx = getCurrentIndex();
                 if (idx !== lastSection) {
-                    // Trigger transition animation
+                    stopTyping();
                     terminalContainer.classList.add('section-transition');
                     setTimeout(() => terminalContainer.classList.remove('section-transition'), 300);
                     lastSection = idx;
                     startAutoSection(idx);
                 }
-                // مخفی کردن نشانگر
-                if (window.scrollY > 50) {
-                    scrollIndicator.style.opacity = '0';
-                } else {
-                    scrollIndicator.style.opacity = '1';
-                }
+                scrollIndicator.style.opacity = window.scrollY > 50 ? '0' : '1';
             }
 
             window.addEventListener('load', () => {
                 window.scrollTo(0, 0);
                 lastSection = 0;
                 startAutoSection(0);
-                commandInput.disabled = true;
             });
 
             let ticking = false;
@@ -742,252 +650,6 @@
                     ticking = true;
                 }
             });
-
-            // ---------- حالت تعاملی ----------
-            commandInput.addEventListener('focus', () => {
-                if (!manualMode && !exitMode) {
-                    manualMode = true;
-                    stopTyping();
-                    commandInput.disabled = false;
-                    scrollIndicator.style.opacity = '0';
-                    appendChar('output-text', '\n');
-                    appendChar('prompt-text', 'guest@majid:~$ ');
-                }
-            });
-
-            function processCommand(cmd) {
-                const lower = cmd.toLowerCase().trim();
-                let outputSegments = [];
-
-                // Theme change
-                if (lower.startsWith('theme ')) {
-                    const theme = lower.split(' ')[1];
-                    applyTheme(theme);
-                    outputSegments = [
-                        { cls: 'output-text', text: `Theme changed to ${theme}\n` }
-                    ];
-                    typeSegments(outputSegments, showPrompt);
-                    return;
-                }
-
-                switch (lower) {
-                    case 'help':
-                        outputSegments = [
-                            { cls: 'heading', text: 'Available commands:\n' },
-                            { cls: 'output-text', text: '  about      - About me\n' },
-                            { cls: 'output-text', text: '  skills     - Technical skills (progress bars)\n' },
-                            { cls: 'output-text', text: '  projects   - Live GitHub projects\n' },
-                            { cls: 'output-text', text: '  contact    - Get in touch\n' },
-                            { cls: 'output-text', text: '  whoami     - Identity\n' },
-                            { cls: 'output-text', text: '  clear      - Clear terminal\n' },
-                            { cls: 'output-text', text: '  theme <name> - Change theme (cyan/green/purple/red)\n' },
-                            { cls: 'output-text', text: '  neofetch   - System info\n' },
-                            { cls: 'output-text', text: '  uptime     - Session uptime\n' },
-                            { cls: 'output-text', text: '  status     - Connection status\n' },
-                            { cls: 'output-text', text: '  version    - Terminal version\n' },
-                            { cls: 'output-text', text: '  system     - System details\n' }
-                        ];
-                        break;
-                    case 'about':
-                        outputSegments = [
-                            { cls: 'output-text', text: 'Loading about.txt...\n' },
-                            { cls: 'heading glitch', text: 'Majid\n' },
-                            { cls: 'highlight', text: 'Python Developer | Backend Developer | Cyber Security Enthusiast\n\n' },
-                            { cls: 'output-text', text: 'I build secure, scalable backend systems with Python.\nPassionate about open-source, automation, and ethical hacking.\n' }
-                        ];
-                        break;
-                    case 'skills':
-                        // Skills with progress bars (manual command)
-                        appendChar('output-text', 'Scanning skill matrix...\n\n');
-                        const skillBars = [
-                            { label: 'Python         ', percent: 95 },
-                            { label: 'FastAPI        ', percent: 90 },
-                            { label: 'Linux          ', percent: 85 },
-                            { label: 'Docker         ', percent: 80 },
-                            { label: 'Cyber Security ', percent: 85 },
-                            { label: 'Git/GitHub     ', percent: 92 }
-                        ];
-                        skillBars.forEach(skill => {
-                            const container = document.createElement('div');
-                            container.className = 'progress-container';
-                            const label = document.createElement('span');
-                            label.className = 'progress-label';
-                            label.textContent = skill.label;
-                            const bar = document.createElement('div');
-                            bar.className = 'progress-bar';
-                            const fill = document.createElement('div');
-                            fill.className = 'progress-fill';
-                            bar.appendChild(fill);
-                            container.appendChild(label);
-                            container.appendChild(bar);
-                            appendElement(container);
-                            setTimeout(() => {
-                                fill.style.width = skill.percent + '%';
-                            }, 10);
-                        });
-                        appendChar('output-text', '\n');
-                        appendChar('prompt-text', 'guest@majid:~$ ');
-                        commandInput.disabled = false;
-                        commandInput.focus();
-                        return;
-                    case 'projects':
-                        // Dynamic GitHub projects
-                        appendChar('output-text', 'Fetching live data from GitHub...\n');
-                        if (githubRepos.length > 0) {
-                            githubRepos.forEach(repo => {
-                                const stars = repo.stargazers_count || 0;
-                                const forks = repo.forks_count || 0;
-                                const updated = new Date(repo.updated_at).toLocaleDateString();
-                                const line = `${repo.name} (★${stars} ⑂${forks}) - ${updated}\n`;
-                                appendChar('highlight', line);
-                            });
-                        } else {
-                            appendChar('output-text', 'Could not fetch repos (rate limit?).\n');
-                        }
-                        appendChar('prompt-text', '\nguest@majid:~$ ');
-                        commandInput.disabled = false;
-                        commandInput.focus();
-                        return;
-                    case 'contact':
-                        appendChar('output-text', 'Secure channels established.\n');
-                        const iconsContainer = document.createElement('div');
-                        iconsContainer.className = 'contact-icons';
-                        // SVG icons
-                        const githubIcon = `<svg class="contact-icon" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>`;
-                        const telegramIcon = `<svg class="contact-icon" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>`;
-                        const emailIcon = `<svg class="contact-icon" viewBox="0 0 24 24"><path d="M12 12.713l-11.985-9.713h23.97l-11.985 9.713zm0 2.574l-12-9.725v15.438h24v-15.438l-12 9.725z"/></svg>`;
-                        const resumeIcon = `<svg class="contact-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM8 13h8v2H8v-2zm0 4h8v2H8v-2z"/></svg>`;
-
-                        const links = [
-                            { url: 'https://github.com/lucyferoops-blip', icon: githubIcon },
-                            { url: 'https://t.me/M4j1D_0xDEAD', icon: telegramIcon },
-                            { url: 'mailto:majid@example.com', icon: emailIcon },
-                            { url: 'resume.pdf', icon: resumeIcon }
-                        ];
-                        links.forEach(link => {
-                            const a = document.createElement('a');
-                            a.href = link.url;
-                            a.target = '_blank';
-                            a.innerHTML = link.icon;
-                            iconsContainer.appendChild(a);
-                        });
-                        appendElement(iconsContainer);
-                        appendChar('output-text', '\n');
-                        appendChar('prompt-text', 'guest@majid:~$ ');
-                        commandInput.disabled = false;
-                        commandInput.focus();
-                        return;
-                    case 'whoami':
-                        outputSegments = [
-                            { cls: 'output-text', text: 'Identity confirmed:\n' },
-                            { cls: 'heading', text: 'Majid\n' },
-                            { cls: 'output-text', text: 'Python Developer\nBackend Developer\nOpen Source Enthusiast\nAlways Building Something...\n' }
-                        ];
-                        break;
-                    case 'clear':
-                        outputDiv.innerHTML = '';
-                        appendChar('prompt-text', 'guest@majid:~$ ');
-                        commandInput.disabled = false;
-                        commandInput.focus();
-                        return;
-                    case 'neofetch':
-                        const ascii = 
-`${'guest@majid:~$'.replace(/./g,' ')}    ███╗   ███╗ █████╗      ██╗██╗██████╗ 
-${'guest@majid:~$'.replace(/./g,' ')}    ████╗ ████║██╔══██╗     ██║██║██╔══██╗
-${'guest@majid:~$'.replace(/./g,' ')}    ██╔████╔██║███████║     ██║██║██║  ██║
-${'guest@majid:~$'.replace(/./g,' ')}    ██║╚██╔╝██║██╔══██║██   ██║██║██║  ██║
-${'guest@majid:~$'.replace(/./g,' ')}    ██║ ╚═╝ ██║██║  ██║╚█████╔╝██║██████╔╝
-${'guest@majid:~$'.replace(/./g,' ')}    ╚═╝     ╚═╝╚═╝  ╚═╝ ╚════╝ ╚═╝╚═════╝ \n`;
-                        outputSegments = [
-                            { cls: 'output-text', text: ascii },
-                            { cls: 'heading', text: 'Majid\n' },
-                            { cls: 'output-text', text: 'Backend Developer\nPython Developer\nLinux\nFastAPI\nDocker\nGitHub\nTelegram Bots\n' }
-                        ];
-                        break;
-                    case 'uptime':
-                        const uptimeMs = Date.now() - performance.timing.navigationStart;
-                        const sec = Math.floor(uptimeMs / 1000);
-                        const min = Math.floor(sec / 60);
-                        const hours = Math.floor(min / 60);
-                        const remainingMin = min % 60;
-                        outputSegments = [
-                            { cls: 'output-text', text: `Uptime: ${hours}h ${remainingMin}m\n` }
-                        ];
-                        break;
-                    case 'status':
-                        outputSegments = [
-                            { cls: 'output-text', text: 'System online. All services nominal.\n' }
-                        ];
-                        break;
-                    case 'version':
-                        outputSegments = [
-                            { cls: 'output-text', text: 'Terminal Portfolio v2.0\n' }
-                        ];
-                        break;
-                    case 'system':
-                        outputSegments = [
-                            { cls: 'output-text', text: `User Agent: ${navigator.userAgent}\n` },
-                            { cls: 'output-text', text: `Screen: ${window.screen.width}x${window.screen.height}\n` }
-                        ];
-                        break;
-                    default:
-                        outputSegments = [
-                            { cls: 'output-text', text: `command not found: ${cmd}\n` },
-                            { cls: 'output-text', text: 'Type "help" for available commands.\n' }
-                        ];
-                }
-                typeSegments(outputSegments, showPrompt);
-            }
-
-            function showPrompt() {
-                appendChar('prompt-text', 'guest@majid:~$ ');
-                commandInput.disabled = false;
-                commandInput.focus();
-            }
-
-            commandInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    const cmd = commandInput.value.trim();
-                    if (cmd === '') return;
-                    commandInput.value = '';
-                    commandInput.disabled = true;
-                    appendChar('prompt-text', 'guest@majid:~$ ');
-                    appendChar('output-text', cmd + '\n');
-                    if (exitMode) {
-                        // Restart portfolio
-                        exitMode = false;
-                        manualMode = false;
-                        completedSections.clear();
-                        outputDiv.innerHTML = '';
-                        window.scrollTo(0, 0);
-                        lastSection = 0;
-                        startAutoSection(0);
-                        commandInput.disabled = true;
-                        return;
-                    }
-                    processCommand(cmd);
-                }
-            });
-
-            // Restart on Enter in exit mode (global)
-            document.addEventListener('keydown', function(e) {
-                if (exitMode && e.key === 'Enter' && document.activeElement !== commandInput) {
-                    exitMode = false;
-                    manualMode = false;
-                    completedSections.clear();
-                    outputDiv.innerHTML = '';
-                    window.scrollTo(0, 0);
-                    lastSection = 0;
-                    startAutoSection(0);
-                    commandInput.disabled = true;
-                }
-            });
-
-            // اطمینان از فوکوس اینپوت در صورت کلیک روی ترمینال
-            terminalContainer.addEventListener('click', () => {
-                if (!exitMode) commandInput.focus();
-            });
-
         })();
     </script>
 </body>
