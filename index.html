@@ -2,8 +2,8 @@
 <html lang="fa" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Majid Dev | Interactive Terminal Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Majid Dev | Terminal Portfolio</title>
     <style>
         :root {
             --neon-primary: #0ff;
@@ -36,6 +36,7 @@
             height: 100vh;
             position: relative;
             cursor: default;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .mouse-glow {
@@ -48,6 +49,7 @@
             z-index: 0;
             background: radial-gradient(circle 300px at var(--mouse-x, 0) var(--mouse-y, 0), rgba(0, 255, 255, 0.08), transparent 70%);
             transition: opacity 0.3s;
+            will-change: background;
         }
 
         .noise-overlay {
@@ -70,6 +72,7 @@
             width: 100%;
             height: 100%;
             z-index: 0;
+            pointer-events: none;
         }
 
         .scroll-sections {
@@ -77,7 +80,6 @@
             z-index: 1;
             pointer-events: none;
         }
-
         .scroll-sections section {
             height: 100vh;
             width: 100%;
@@ -88,11 +90,12 @@
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%) translateZ(0);
             width: min(90%, 850px);
             max-height: 80vh;
             background: var(--terminal-bg);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border-glow);
             border-radius: 16px;
             box-shadow: 0 0 40px rgba(0, 255, 255, 0.15), 0 0 15px rgba(200, 0, 255, 0.2);
@@ -101,6 +104,7 @@
             flex-direction: column;
             overflow: hidden;
             transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s, border-color 0.3s;
+            will-change: transform, filter;
         }
 
         .terminal-container:hover {
@@ -109,7 +113,7 @@
         }
 
         .section-transition {
-            transform: translate(-50%, -50%) scale(0.98) rotate(0.5deg);
+            transform: translate(-50%, -50%) scale(0.98) rotate(0.5deg) translateZ(0);
             filter: blur(1px);
             opacity: 0.8;
         }
@@ -129,7 +133,6 @@
             border-radius: 50%;
             display: inline-block;
         }
-
         .close { background: #ff5f56; }
         .minimize { background: #ffbd2e; }
         .maximize { background: #27ca40; }
@@ -145,6 +148,7 @@
             flex: 1;
             padding: 16px 20px;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
             font-size: 1rem;
             line-height: 1.6;
             color: var(--text-color);
@@ -196,6 +200,7 @@
         .glitch {
             display: inline-block;
             animation: glitch 1.5s infinite linear alternate-reverse;
+            will-change: text-shadow;
         }
 
         @keyframes glitch {
@@ -210,7 +215,6 @@
         .terminal-container {
             animation: flicker 0.15s infinite alternate;
         }
-
         @keyframes flicker {
             0% { opacity: 0.98; }
             100% { opacity: 1; }
@@ -248,7 +252,7 @@
             position: fixed;
             bottom: 40px;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%) translateZ(0);
             z-index: 5;
             color: rgba(0, 255, 255, 0.7);
             font-family: 'Fira Code', monospace;
@@ -257,74 +261,55 @@
             transition: opacity 0.5s;
             pointer-events: none;
             font-size: 0.9rem;
+            will-change: transform;
         }
 
         @keyframes bounce {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(-8px); }
+            0%, 100% { transform: translateX(-50%) translateY(0) translateZ(0); }
+            50% { transform: translateX(-50%) translateY(-8px) translateZ(0); }
         }
 
-        /* Telegram float top left */
-        .telegram-float {
+        /* Language switcher */
+        .lang-switch {
             position: fixed;
             top: 24px;
-            left: 24px;
+            right: 24px;
             z-index: 10;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(10, 10, 25, 0.8);
+            background: rgba(10, 10, 25, 0.85);
             backdrop-filter: blur(15px);
-            border: 1px solid rgba(0, 255, 255, 0.4);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 255, 255, 0.5);
             border-radius: 50px;
-            padding: 10px 20px 10px 16px;
+            padding: 8px 16px;
             box-shadow: 0 0 25px rgba(0, 255, 255, 0.25), 0 0 10px rgba(200, 0, 255, 0.2);
-            transition: all 0.3s ease;
-            text-decoration: none;
             color: var(--neon-primary);
             font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 6px var(--glow-color);
+            user-select: none;
         }
 
-        .telegram-float:hover {
-            transform: translateY(-3px);
+        .lang-switch:hover {
             box-shadow: 0 0 35px rgba(0, 255, 255, 0.5), 0 0 20px rgba(200, 0, 255, 0.4);
             border-color: rgba(0, 255, 255, 0.8);
         }
 
-        .telegram-icon {
-            width: 28px;
-            height: 28px;
-            fill: currentColor;
-            filter: drop-shadow(0 0 6px var(--glow-color));
-            transition: transform 0.2s;
+        /* Clickable terminal links */
+        .terminal-link {
+            color: var(--highlight-color);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--highlight-color);
+            transition: text-shadow 0.2s;
         }
-
-        .telegram-float:hover .telegram-icon {
-            transform: scale(1.15);
-        }
-
-        .telegram-handle {
-            font-size: 1rem;
-            font-weight: bold;
-            letter-spacing: 1px;
-            text-shadow: 0 0 10px var(--glow-color);
-            margin-left: 2px;
+        .terminal-link:hover {
+            text-shadow: 0 0 8px var(--highlight-color);
+            border-bottom-style: solid;
         }
 
         @media (max-width: 600px) {
-            .telegram-float {
-                top: 16px;
-                left: 16px;
-                padding: 8px 16px;
-                gap: 6px;
-            }
-            .telegram-icon {
-                width: 22px;
-                height: 22px;
-            }
-            .telegram-handle {
-                font-size: 0.85rem;
-            }
             .terminal-container {
                 width: 95%;
                 max-height: 75vh;
@@ -340,6 +325,12 @@
             .progress-label {
                 min-width: 120px;
             }
+            .lang-switch {
+                top: 16px;
+                right: 16px;
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -348,13 +339,7 @@
     <div class="noise-overlay"></div>
     <canvas id="particleCanvas"></canvas>
 
-    <!-- Telegram floating icon top left -->
-    <a href="https://t.me/M4j1D_0xDEAD" target="_blank" class="telegram-float" title="ارتباط در تلگرام">
-        <svg class="telegram-icon" viewBox="0 0 24 24">
-            <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
-        </svg>
-        <span class="telegram-handle">@M4j1D_0xDEAD</span>
-    </a>
+    <div class="lang-switch" id="langSwitch">FA</div>
 
     <div class="scroll-indicator" id="scrollIndicator">▼ Scroll Down</div>
 
@@ -363,14 +348,13 @@
         <section data-index="1"></section>
         <section data-index="2"></section>
         <section data-index="3"></section>
+        <section data-index="4"></section>
     </div>
 
     <div class="terminal-container" id="terminalContainer">
         <div class="terminal-header">
-            <span class="btn close"></span>
-            <span class="btn minimize"></span>
-            <span class="btn maximize"></span>
-            <span class="title">majid@portfolio — bash — 80×24</span>
+            <span class="btn close"></span><span class="btn minimize"></span><span class="btn maximize"></span>
+            <span class="title">Python Developer</span>
         </div>
         <div class="terminal-body" id="terminalBody">
             <div class="output" id="output"></div>
@@ -378,279 +362,381 @@
     </div>
 
     <script>
-        (function() {
-            // ---------- Mouse glow ----------
-            const mouseGlow = document.getElementById('mouseGlow');
-            document.addEventListener('mousemove', (e) => {
-                mouseGlow.style.setProperty('--mouse-x', e.clientX + 'px');
-                mouseGlow.style.setProperty('--mouse-y', e.clientY + 'px');
-            });
+    (function() {
+        const mouseGlow = document.getElementById('mouseGlow');
+        document.addEventListener('mousemove', (e) => {
+            mouseGlow.style.setProperty('--mouse-x', e.clientX + 'px');
+            mouseGlow.style.setProperty('--mouse-y', e.clientY + 'px');
+        });
 
-            // ---------- Scrolling Code Background ----------
-            const canvas = document.getElementById('particleCanvas');
-            const ctx = canvas.getContext('2d');
-            let width, height;
-            let lines = [];
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d', { alpha: false });
+        let width, height, lines = [];
+        const BASE_FONT_SIZE = 13;
+        const LINE_HEIGHT_RATIO = 1.4;
+        let lineHeight = BASE_FONT_SIZE * LINE_HEIGHT_RATIO;
 
-            function resizeCanvas() {
-                width = canvas.width = window.innerWidth;
-                height = canvas.height = window.innerHeight;
-                initLines();
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            const fontSize = width < 600 ? 11 : BASE_FONT_SIZE;
+            lineHeight = fontSize * LINE_HEIGHT_RATIO;
+            initLines(fontSize);
+        }
+
+        const prefixes = ['[INFO]','[WARN]','[DEBUG]','[LOG]','root@server:~#','guest@majid:~$','>>>','...','OK','FAIL','200','404','import','def','class','return','if __name__'];
+        const suffixes = ['Processing...','Done.','Connection established.','Loading module...','Syntax error near line 42.','Task completed successfully.','fetching data from api.github.com','Running security scan...','Open port 443 detected.','Encrypting payload...','Decrypting response...','Access granted.','Permission denied.','Uploading 4.2MB...','Downloading 6.7MB...','Cache cleared.','Server response: 200 OK','Memory usage: 78%','CPU load: 45%','Listening on 0.0.0.0:8080','User authenticated.'];
+
+        function randomLine() {
+            return prefixes[Math.random() * prefixes.length | 0] + ' ' + suffixes[Math.random() * suffixes.length | 0];
+        }
+
+        function initLines(fontSize) {
+            const numLines = Math.ceil(height / lineHeight) + 5;
+            lines.length = 0;
+            for (let i = 0; i < numLines; i++) {
+                lines.push({
+                    text: randomLine(),
+                    y: i * lineHeight,
+                    speed: 0.3 + Math.random() * 0.7,
+                    x: 10 + Math.random() * 30,
+                    opacity: 0.05 + Math.random() * 0.15
+                });
             }
-            window.addEventListener('resize', resizeCanvas);
+        }
 
-            function generateRandomLine() {
-                const prefixes = [
-                    '[INFO]', '[WARN]', '[DEBUG]', '[LOG]', 'root@server:~#', 
-                    'guest@majid:~$', '>>>', '...', 'OK', 'FAIL', '200', '404',
-                    'import', 'def', 'class', 'return', 'if __name__'
-                ];
-                const suffixes = [
-                    'Processing...', 'Done.', 'Connection established.', 'Loading module...',
-                    'Syntax error near line 42.', 'Task completed successfully.',
-                    'fetching data from api.github.com', 'Running security scan...',
-                    'Open port 443 detected.', 'Encrypting payload...',
-                    'Decrypting response...', 'Access granted.', 'Permission denied.',
-                    'Uploading 4.2MB...', 'Downloading 6.7MB...', 'Cache cleared.',
-                    'Server response: 200 OK', 'Memory usage: 78%', 'CPU load: 45%',
-                    'Listening on 0.0.0.0:8080', 'User authenticated.'
-                ];
-                const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
-                const suffix = suffixes[Math.floor(Math.random() * suffixes.length)];
-                return `${prefix} ${suffix}`;
+        let lastDrawTime = 0;
+        const FRAME_THROTTLE = 1000/30;
+
+        function drawLines(now) {
+            if (now - lastDrawTime < FRAME_THROTTLE) {
+                requestAnimationFrame(drawLines);
+                return;
             }
+            lastDrawTime = now;
 
-            function initLines() {
-                const fontSize = 13;
-                const lineHeight = fontSize * 1.4;
-                const numLines = Math.floor(height / lineHeight) + 5;
-                lines = [];
-                for (let i = 0; i < numLines; i++) {
-                    lines.push({
-                        text: generateRandomLine(),
-                        y: i * lineHeight,
-                        speed: 0.3 + Math.random() * 0.7,
-                        x: 10 + Math.random() * 30,
-                        opacity: 0.05 + Math.random() * 0.15,
-                        fontSize: fontSize
-                    });
+            ctx.clearRect(0, 0, width, height);
+            const fontSize = width < 600 ? 11 : BASE_FONT_SIZE;
+            ctx.font = `${fontSize}px 'Fira Code', monospace`;
+
+            for (let i = 0; i < lines.length; i++) {
+                const l = lines[i];
+                l.y -= l.speed;
+                if (l.y + lineHeight < 0) {
+                    l.y = height + Math.random() * 50;
+                    l.text = randomLine();
+                    l.speed = 0.3 + Math.random() * 0.7;
+                    l.opacity = 0.05 + Math.random() * 0.15;
                 }
+                ctx.globalAlpha = l.opacity;
+                ctx.fillStyle = '#0ff';
+                ctx.fillText(l.text, l.x, l.y);
             }
+            ctx.globalAlpha = 1;
+            requestAnimationFrame(drawLines);
+        }
 
-            function updateAndDrawLines() {
-                ctx.clearRect(0, 0, width, height);
-                const fontSize = 13;
-                const lineHeight = fontSize * 1.4;
-                ctx.font = `${fontSize}px 'Fira Code', monospace`;
-                
-                for (let i = 0; i < lines.length; i++) {
-                    const line = lines[i];
-                    line.y -= line.speed;
-                    if (line.y + lineHeight < 0) {
-                        line.y = height + Math.random() * 50;
-                        line.text = generateRandomLine();
-                        line.speed = 0.3 + Math.random() * 0.7;
-                        line.opacity = 0.05 + Math.random() * 0.15;
-                    }
-                    ctx.fillStyle = `rgba(0, 255, 255, ${line.opacity})`;
-                    ctx.fillText(line.text, line.x, line.y);
-                }
-                requestAnimationFrame(updateAndDrawLines);
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        requestAnimationFrame(drawLines);
+
+        // ---------- Terminal Typewriter ----------
+        const outputDiv = document.getElementById('output');
+        const terminalBody = document.getElementById('terminalBody');
+        const terminalContainer = document.getElementById('terminalContainer');
+        const scrollIndicator = document.getElementById('scrollIndicator');
+        const langSwitch = document.getElementById('langSwitch');
+        let typingTimeout = null;
+        let currentLang = 'en';
+        let currentSectionIndex = 0;
+        let completedSections = new Set();
+
+        function appendChar(cls, char) {
+            const span = document.createElement('span');
+            span.className = cls;
+            span.appendChild(document.createTextNode(char));
+            outputDiv.appendChild(span);
+        }
+
+        function appendElement(element) {
+            outputDiv.appendChild(element);
+        }
+
+        function typeSegments(segments, onComplete) {
+            if (!segments || segments.length === 0) {
+                if (onComplete) onComplete();
+                return;
             }
+            let segIdx = 0;
+            let charIdx = 0;
 
-            resizeCanvas();
-            updateAndDrawLines();
-
-            // ---------- Terminal typewriter ----------
-            const outputDiv = document.getElementById('output');
-            const terminalBody = document.getElementById('terminalBody');
-            const terminalContainer = document.getElementById('terminalContainer');
-            const scrollIndicator = document.getElementById('scrollIndicator');
-            let typingTimeout = null;
-            const completedSections = new Set();
-
-            function appendChar(cls, char) {
-                const span = document.createElement('span');
-                span.className = cls;
-                span.textContent = char;
-                outputDiv.appendChild(span);
-            }
-
-            function appendElement(element) {
-                outputDiv.appendChild(element);
-            }
-
-            function typeSegments(segments, onComplete) {
-                if (!segments || segments.length === 0) {
+            function nextChar() {
+                if (segIdx >= segments.length) {
                     if (onComplete) onComplete();
                     return;
                 }
-                let segIdx = 0;
-                let charIdx = 0;
+                const seg = segments[segIdx];
 
-                function nextChar() {
-                    if (segIdx >= segments.length) {
-                        if (onComplete) onComplete();
-                        return;
-                    }
-                    const seg = segments[segIdx];
-
-                    if (seg.type === 'progress') {
-                        const container = document.createElement('div');
-                        container.className = 'progress-container';
-                        const label = document.createElement('span');
-                        label.className = 'progress-label';
-                        label.textContent = seg.label;
-                        const bar = document.createElement('div');
-                        bar.className = 'progress-bar';
-                        const fill = document.createElement('div');
-                        fill.className = 'progress-fill';
-                        bar.appendChild(fill);
-                        container.appendChild(label);
-                        container.appendChild(bar);
-                        appendElement(container);
-                        setTimeout(() => {
-                            fill.style.width = seg.percent + '%';
-                        }, 10);
-                        segIdx++;
-                        charIdx = 0;
-                        setTimeout(nextChar, 200);
-                        return;
-                    }
-
-                    if (charIdx >= seg.text.length) {
-                        segIdx++;
-                        charIdx = 0;
-                        const delay = seg.nextDelay || 0;
-                        if (delay > 0) {
-                            setTimeout(nextChar, delay);
-                        } else {
-                            nextChar();
-                        }
-                        return;
-                    }
-                    const ch = seg.text[charIdx];
-                    appendChar(seg.cls, ch);
-                    charIdx++;
-                    terminalBody.scrollTop = terminalBody.scrollHeight;
-                    const speed = seg.speed || 18;
-                    typingTimeout = setTimeout(nextChar, speed);
+                if (seg.type === 'progress') {
+                    const container = document.createElement('div');
+                    container.className = 'progress-container';
+                    const label = document.createElement('span');
+                    label.className = 'progress-label';
+                    label.textContent = seg.label;
+                    const bar = document.createElement('div');
+                    bar.className = 'progress-bar';
+                    const fill = document.createElement('div');
+                    fill.className = 'progress-fill';
+                    bar.appendChild(fill);
+                    container.appendChild(label);
+                    container.appendChild(bar);
+                    appendElement(container);
+                    setTimeout(() => { fill.style.width = seg.percent + '%'; }, 10);
+                    segIdx++;
+                    charIdx = 0;
+                    typingTimeout = setTimeout(nextChar, 200);
+                    return;
                 }
-                nextChar();
-            }
 
-            function stopTyping() {
-                if (typingTimeout) {
-                    clearTimeout(typingTimeout);
-                    typingTimeout = null;
+                if (seg.type === 'link') {
+                    const a = document.createElement('a');
+                    a.href = seg.url;
+                    a.target = '_blank';
+                    a.className = 'terminal-link';
+                    a.textContent = seg.text;
+                    appendElement(a);
+                    segIdx++;
+                    charIdx = 0;
+                    typingTimeout = setTimeout(nextChar, seg.nextDelay || 0);
+                    return;
                 }
+
+                if (seg.type === 'html') {
+                    const wrapper = document.createElement('span');
+                    wrapper.innerHTML = seg.html;
+                    appendElement(wrapper);
+                    segIdx++;
+                    charIdx = 0;
+                    typingTimeout = setTimeout(nextChar, seg.nextDelay || 0);
+                    return;
+                }
+
+                if (charIdx >= seg.text.length) {
+                    segIdx++;
+                    charIdx = 0;
+                    const delay = seg.nextDelay || 0;
+                    typingTimeout = setTimeout(nextChar, delay || 0);
+                    return;
+                }
+                appendChar(seg.cls, seg.text.charAt(charIdx));
+                charIdx++;
+                terminalBody.scrollTop = terminalBody.scrollHeight;
+                typingTimeout = setTimeout(nextChar, seg.speed || 18);
             }
+            nextChar();
+        }
 
-            const sectionsContent = [
-                // بخش ۰: بوت و درباره
-                [
-                    { cls: 'output-text', text: 'Booting Portfolio OS...\n', speed: 30, nextDelay: 200 },
-                    { cls: 'output-text', text: '[ OK ] Loading profile\n', speed: 20, nextDelay: 100 },
-                    { cls: 'output-text', text: '[ OK ] Connecting GitHub\n', speed: 20, nextDelay: 100 },
-                    { cls: 'output-text', text: '[ OK ] Initializing Portfolio\n\n', speed: 20, nextDelay: 300 },
-                    { cls: 'prompt-text', text: 'guest@majid:~$' },
-                    { cls: 'output-text', text: ' cat about.txt\n', speed: 18 },
-                    { cls: 'heading glitch', text: 'Majid\n', speed: 18 },
-                    { cls: 'highlight', text: 'Python Developer | Backend Developer | Cyber Security Enthusiast\n\n', speed: 18 },
-                    { cls: 'output-text', text: 'I build secure, scalable backend systems with Python.\nPassionate about open-source, automation, and ethical hacking.\nTurning coffee into code since forever.\n', speed: 18 },
-                    { cls: 'prompt-text', text: 'guest@majid:~$' }
-                ],
-                // بخش ۱: مهارت‌ها
-                [
-                    { cls: 'prompt-text', text: 'guest@majid:~$' },
-                    { cls: 'output-text', text: ' skills --verbose\n', speed: 18 },
-                    { cls: 'output-text', text: 'Scanning skill matrix...\n\n', speed: 18, nextDelay: 200 },
-                    { type: 'progress', label: 'Python         ', percent: 95 },
-                    { type: 'progress', label: 'FastAPI        ', percent: 90 },
-                    { type: 'progress', label: 'Linux          ', percent: 85 },
-                    { type: 'progress', label: 'Docker         ', percent: 80 },
-                    { type: 'progress', label: 'Cyber Security ', percent: 85 },
-                    { type: 'progress', label: 'Git/GitHub     ', percent: 92 },
-                    { cls: 'output-text', text: '\n', speed: 5 },
-                    { cls: 'prompt-text', text: 'guest@majid:~$' }
-                ],
-                // بخش ۲: پروژه‌ها
-                [
-                    { cls: 'prompt-text', text: 'guest@majid:~$' },
-                    { cls: 'output-text', text: ' ls projects/\n', speed: 18 },
-                    { cls: 'highlight', text: 'telegram-superbot  HackerLab  Jamshid-AI  Portfolio\n\n', speed: 18 },
-                    { cls: 'prompt-text', text: 'guest@majid:~$' },
-                    { cls: 'output-text', text: ' cd HackerLab\n', speed: 18 },
-                    { cls: 'prompt-text', text: 'guest@majid:~/HackerLab$' },
-                    { cls: 'output-text', text: ' tree\n', speed: 18 },
-                    { cls: 'output-text', text: 'HackerLab/\n├── app/\n├── modules/\n├── scanners/\n├── reports/\n├── utils/\n├── config/\n├── requirements.txt\n├── README.md\n└── main.py\n\n', speed: 18 },
-                    { cls: 'output-text', text: 'A modular Python project for security analysis and automation.\n', speed: 18 },
-                    { cls: 'prompt-text', text: 'guest@majid:~$' }
-                ],
-                // بخش ۳: whoami با اطلاعات کامل و وضعیت
-                [
-                    { cls: 'prompt-text', text: 'guest@majid:~$' },
-                    { cls: 'output-text', text: ' whoami\n', speed: 18 },
-                    { cls: 'heading', text: 'Majid\n', speed: 18 },
-                    { cls: 'output-text', text: 'Python Developer\nBackend Developer\nCyber Security Enthusiast\n\n', speed: 18 },
-                    { cls: 'output-text', text: 'Status: ONLINE\n', speed: 18 },
-                    { cls: 'output-text', text: 'Available for Freelance Projects\n', speed: 18 },
-                    { cls: 'output-text', text: 'Open to Remote Collaboration\n', speed: 18 },
-                    { cls: 'output-text', text: 'Always Building Something...\n\n', speed: 18 },
-                    { cls: 'prompt-text', text: 'guest@majid:~$' }
-                ]
-            ];
+        function stopTyping() {
+            clearTimeout(typingTimeout);
+            typingTimeout = null;
+        }
 
-            function startAutoSection(index) {
-                if (completedSections.has(index)) return;
+        // Content: English and Persian versions
+        const sectionsEn = [
+            // 0 - Boot & About
+            [
+                { cls:'output-text', text:'Booting Portfolio OS...\n', speed:30, nextDelay:200 },
+                { cls:'output-text', text:'[ OK ] Loading profile\n', speed:20, nextDelay:100 },
+                { cls:'output-text', text:'[ OK ] Connecting GitHub\n', speed:20, nextDelay:100 },
+                { cls:'output-text', text:'[ OK ] Initializing Portfolio\n\n', speed:20, nextDelay:300 },
+                { cls:'prompt-text', text:'guest@majid:~$' },
+                { cls:'output-text', text:' cat about.txt\n', speed:18 },
+                { cls:'heading glitch', text:'Majid\n', speed:18 },
+                { cls:'highlight', text:'Python Developer | Backend Developer | Cyber Security Enthusiast\n\n', speed:18 },
+                { cls:'output-text', text:'I build secure, scalable backend systems with Python.\nPassionate about open-source, automation, and ethical hacking.\nTurning coffee into code since forever.\n', speed:18 },
+                { cls:'prompt-text', text:'guest@majid:~$' }
+            ],
+            // 1 - Skills
+            [
+                { cls:'prompt-text', text:'guest@majid:~$' },
+                { cls:'output-text', text:' skills --verbose\n', speed:18 },
+                { cls:'output-text', text:'Scanning skill matrix...\n\n', speed:18, nextDelay:200 },
+                { type:'progress', label:'Python         ', percent:95 },
+                { type:'progress', label:'FastAPI        ', percent:90 },
+                { type:'progress', label:'Linux          ', percent:85 },
+                { type:'progress', label:'Docker         ', percent:80 },
+                { type:'progress', label:'Cyber Security ', percent:85 },
+                { type:'progress', label:'Git/GitHub     ', percent:92 },
+                { cls:'output-text', text:'\n', speed:5 },
+                { cls:'prompt-text', text:'guest@majid:~$' }
+            ],
+            // 2 - Projects
+            [
+                { cls:'prompt-text', text:'guest@majid:~$' },
+                { cls:'output-text', text:' ls projects/\n', speed:18 },
+                { cls:'highlight', text:'telegram-superbot  HackerLab  Jamshid-AI  Portfolio\n\n', speed:18 },
+                { cls:'prompt-text', text:'guest@majid:~$' },
+                { cls:'output-text', text:' cd HackerLab\n', speed:18 },
+                { cls:'prompt-text', text:'guest@majid:~/HackerLab$' },
+                { cls:'output-text', text:' tree\n', speed:18 },
+                { cls:'output-text', text:'HackerLab/\n├── app/\n├── modules/\n├── scanners/\n├── reports/\n├── utils/\n├── config/\n├── requirements.txt\n├── README.md\n└── main.py\n\n', speed:18 },
+                { cls:'output-text', text:'A modular Python project for security analysis and automation.\n', speed:18 },
+                { cls:'prompt-text', text:'guest@majid:~$' }
+            ],
+            // 3 - Whoami
+            [
+                { cls:'prompt-text', text:'guest@majid:~$' },
+                { cls:'output-text', text:' whoami\n', speed:18 },
+                { cls:'heading', text:'Majid\n', speed:18 },
+                { cls:'output-text', text:'Python Developer\nBackend Developer\nCyber Security Enthusiast\n\n', speed:18 },
+                { cls:'output-text', text:'Current Status:\n', speed:18 },
+                { cls:'output-text', text:'🟢 Available for New Projects\n', speed:18 },
+                { cls:'output-text', text:'🟢 Open for Freelance Work\n', speed:18 },
+                { cls:'output-text', text:'🟢 Ready to Build Your Next Idea\n\n', speed:18 },
+                { cls:'prompt-text', text:'guest@majid:~$' }
+            ],
+            // 4 - Contact
+            [
+                { cls:'prompt-text', text:'guest@majid:~$' },
+                { cls:'output-text', text:' contact\n', speed:18 },
+                { cls:'output-text', text:'\nTelegram : ', speed:18 },
+                { type:'link', url:'https://t.me/M4j1D_0xDEAD', text:'@M4j1D_0xDEAD', nextDelay:0 },
+                { cls:'output-text', text:'\nGitHub   : ', speed:18 },
+                { type:'link', url:'https://github.com/lucyferoops-blip', text:'github.com/lucyferoops-blip', nextDelay:0 },
+                { cls:'output-text', text:'\n\nReady to build your next project.\n', speed:18 },
+                { cls:'prompt-text', text:'guest@majid:~$' }
+            ]
+        ];
+
+        const sectionsFa = [
+            // 0 - بوت و درباره
+            [
+                { cls:'output-text', text:'در حال راه‌اندازی سیستم Portfolio...\n', speed:30, nextDelay:200 },
+                { cls:'output-text', text:'[ OK ] بارگذاری پروفایل\n', speed:20, nextDelay:100 },
+                { cls:'output-text', text:'[ OK ] اتصال به GitHub\n', speed:20, nextDelay:100 },
+                { cls:'output-text', text:'[ OK ] راه‌اندازی نمونه کارها\n\n', speed:20, nextDelay:300 },
+                { cls:'prompt-text', text:'guest@majid:~$' },
+                { cls:'output-text', text:' cat about.txt\n', speed:18 },
+                { cls:'heading glitch', text:'مجید\n', speed:18 },
+                { cls:'highlight', text:'توسعه‌دهنده پایتون | برنامه‌نویس بک‌اند | علاقه‌مند به امنیت سایبری\n\n', speed:18 },
+                { cls:'output-text', text:'من سیستم‌های بک‌اند امن و مقیاس‌پذیر با پایتون می‌سازم.\nعاشق پروژه‌های متن‌باز، اتوماسیون و هک اخلاقی.\nاز همون اول قهوه رو تبدیل به کد می‌کنم.\n', speed:18 },
+                { cls:'prompt-text', text:'guest@majid:~$' }
+            ],
+            // 1 - مهارت‌ها
+            [
+                { cls:'prompt-text', text:'guest@majid:~$' },
+                { cls:'output-text', text:' skills --verbose\n', speed:18 },
+                { cls:'output-text', text:'اسکن ماتریس مهارت...\n\n', speed:18, nextDelay:200 },
+                { type:'progress', label:'Python         ', percent:95 },
+                { type:'progress', label:'FastAPI        ', percent:90 },
+                { type:'progress', label:'Linux          ', percent:85 },
+                { type:'progress', label:'Docker         ', percent:80 },
+                { type:'progress', label:'Cyber Security ', percent:85 },
+                { type:'progress', label:'Git/GitHub     ', percent:92 },
+                { cls:'output-text', text:'\n', speed:5 },
+                { cls:'prompt-text', text:'guest@majid:~$' }
+            ],
+            // 2 - پروژه‌ها
+            [
+                { cls:'prompt-text', text:'guest@majid:~$' },
+                { cls:'output-text', text:' ls projects/\n', speed:18 },
+                { cls:'highlight', text:'telegram-superbot  HackerLab  Jamshid-AI  Portfolio\n\n', speed:18 },
+                { cls:'prompt-text', text:'guest@majid:~$' },
+                { cls:'output-text', text:' cd HackerLab\n', speed:18 },
+                { cls:'prompt-text', text:'guest@majid:~/HackerLab$' },
+                { cls:'output-text', text:' tree\n', speed:18 },
+                { cls:'output-text', text:'HackerLab/\n├── app/\n├── modules/\n├── scanners/\n├── reports/\n├── utils/\n├── config/\n├── requirements.txt\n├── README.md\n└── main.py\n\n', speed:18 },
+                { cls:'output-text', text:'یک پروژه پایتون ماژولار برای تحلیل امنیت و اتوماسیون.\n', speed:18 },
+                { cls:'prompt-text', text:'guest@majid:~$' }
+            ],
+            // 3 - whoami
+            [
+                { cls:'prompt-text', text:'guest@majid:~$' },
+                { cls:'output-text', text:' whoami\n', speed:18 },
+                { cls:'heading', text:'مجید\n', speed:18 },
+                { cls:'output-text', text:'توسعه‌دهنده پایتون\nبرنامه‌نویس بک‌اند\nعلاقه‌مند به امنیت سایبری\n\n', speed:18 },
+                { cls:'output-text', text:'وضعیت فعلی:\n', speed:18 },
+                { cls:'output-text', text:'🟢 آماده برای پروژه‌های جدید\n', speed:18 },
+                { cls:'output-text', text:'🟢 باز برای کار فریلنسری\n', speed:18 },
+                { cls:'output-text', text:'🟢 آماده ساخت ایده بعدی شما\n\n', speed:18 },
+                { cls:'prompt-text', text:'guest@majid:~$' }
+            ],
+            // 4 - Contact
+            [
+                { cls:'prompt-text', text:'guest@majid:~$' },
+                { cls:'output-text', text:' contact\n', speed:18 },
+                { cls:'output-text', text:'\nتلگرام : ', speed:18 },
+                { type:'link', url:'https://t.me/M4j1D_0xDEAD', text:'@M4j1D_0xDEAD', nextDelay:0 },
+                { cls:'output-text', text:'\nگیتهاب   : ', speed:18 },
+                { type:'link', url:'https://github.com/lucyferoops-blip', text:'github.com/lucyferoops-blip', nextDelay:0 },
+                { cls:'output-text', text:'\n\nآماده ساخت پروژه بعدی شما.\n', speed:18 },
+                { cls:'prompt-text', text:'guest@majid:~$' }
+            ]
+        ];
+
+        function getSectionsForLang(lang) {
+            return lang === 'fa' ? sectionsFa : sectionsEn;
+        }
+
+        function startAutoSection(index, lang = currentLang) {
+            if (completedSections.has(index)) return;
+            stopTyping();
+            const content = getSectionsForLang(lang)[index];
+            if (index > 0) appendChar('output-text', '\n');
+            typeSegments(content, () => completedSections.add(index));
+        }
+
+        const sections = document.querySelectorAll('.scroll-sections section');
+        function getCurrentIndex() {
+            return Math.min(Math.round(window.scrollY / window.innerHeight), sections.length - 1);
+        }
+
+        let lastSection = -1;
+        function handleScroll() {
+            const idx = getCurrentIndex();
+            if (idx !== lastSection) {
                 stopTyping();
-                const content = sectionsContent[index];
-                if (index > 0) {
-                    appendChar('output-text', '\n');
-                }
-                typeSegments(content, () => {
-                    completedSections.add(index);
-                });
+                terminalContainer.classList.add('section-transition');
+                setTimeout(() => terminalContainer.classList.remove('section-transition'), 300);
+                lastSection = idx;
+                currentSectionIndex = idx;
+                startAutoSection(idx, currentLang);
             }
+            scrollIndicator.style.opacity = window.scrollY > 50 ? '0' : '1';
+        }
 
-            const sections = document.querySelectorAll('.scroll-sections section');
-            function getCurrentIndex() {
-                const scrollY = window.scrollY;
-                const vh = window.innerHeight;
-                const index = Math.round(scrollY / vh);
-                return Math.min(index, sections.length - 1);
+        function switchLanguage(newLang) {
+            if (newLang === currentLang) return;
+            stopTyping();
+            outputDiv.innerHTML = '';
+            completedSections.clear();
+            currentLang = newLang;
+            langSwitch.textContent = newLang === 'fa' ? 'EN' : 'FA';
+            lastSection = currentSectionIndex;
+            startAutoSection(currentSectionIndex, newLang);
+        }
+
+        langSwitch.addEventListener('click', () => {
+            const nextLang = currentLang === 'en' ? 'fa' : 'en';
+            switchLanguage(nextLang);
+        });
+
+        window.addEventListener('load', () => {
+            window.scrollTo(0, 0);
+            lastSection = 0;
+            currentSectionIndex = 0;
+            startAutoSection(0, 'en');
+            langSwitch.textContent = 'FA';
+        });
+
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(() => { handleScroll(); ticking = false; });
+                ticking = true;
             }
-
-            let lastSection = -1;
-            function handleScroll() {
-                const idx = getCurrentIndex();
-                if (idx !== lastSection) {
-                    stopTyping();
-                    terminalContainer.classList.add('section-transition');
-                    setTimeout(() => terminalContainer.classList.remove('section-transition'), 300);
-                    lastSection = idx;
-                    startAutoSection(idx);
-                }
-                scrollIndicator.style.opacity = window.scrollY > 50 ? '0' : '1';
-            }
-
-            window.addEventListener('load', () => {
-                window.scrollTo(0, 0);
-                lastSection = 0;
-                startAutoSection(0);
-            });
-
-            let ticking = false;
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    window.requestAnimationFrame(() => {
-                        handleScroll();
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            });
-        })();
+        }, { passive: true });
+    })();
     </script>
 </body>
 </html>
