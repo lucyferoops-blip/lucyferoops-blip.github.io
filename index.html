@@ -4,269 +4,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Majid Dev | Terminal Portfolio</title>
+    <meta name="description" content="Majid - Python Developer & Backend Specialist. Interactive hacker terminal portfolio.">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-code@v1.0.0/dist/font-face.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --bg: #0a0a0f;
+            --terminal-bg: rgba(10, 10, 25, 0.8);
+            --border: rgba(0, 255, 255, 0.3);
+            --text: #c0f0ff;
+            --prompt: #0ff;
+            --heading: #ff79c6;
+            --highlight: #ffb86c;
+            --neon: #0ff;
         }
-
-        body {
-            background: #0a0a0f;
-            font-family: 'Fira Code', 'Courier New', monospace;
-            overflow-x: hidden;
-            height: 100vh;
-            position: relative;
-            -webkit-tap-highlight-color: transparent;
-            cursor: default;
+        .theme-dark{}
+        .theme-cyberpunk{
+            --bg:#0d0221; --terminal-bg:rgba(20,0,40,0.8); --border:#f0f; --text:#ffb3ff; --prompt:#f0f; --heading:#f0c; --highlight:#ff0; --neon:#f0f;
         }
-
-        /* Mouse glow (desktop only) */
-        @media (hover: hover) and (pointer: fine) {
-            .mouse-glow {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                pointer-events: none;
-                z-index: 0;
-                background: radial-gradient(circle 300px at var(--mouse-x, 0) var(--mouse-y, 0), rgba(0, 255, 255, 0.08), transparent 70%);
-                transition: opacity 0.3s;
-            }
+        .theme-hacker{
+            --bg:#000; --terminal-bg:rgba(0,0,0,0.9); --border:#0f0; --text:#0f0; --prompt:#0f0; --heading:#0f0; --highlight:#0f0; --neon:#0f0;
         }
-
-        #particleCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{
+            background:var(--bg); font-family:'Vazir Code','Fira Code',monospace;
+            height:100vh; overflow-x:hidden; position:relative; -webkit-tap-highlight-color:transparent;
+            transition:background 0.3s;
         }
-
-        .scroll-sections {
-            position: relative;
-            z-index: 1;
-            pointer-events: none;
+        #bootScreen{
+            position:fixed;inset:0;background:#000;color:#0f0;display:flex;flex-direction:column;justify-content:center;align-items:center;
+            z-index:1000;font-family:'Courier New',monospace;transition:opacity 1s;pointer-events:all;
         }
-
-        .scroll-sections section {
-            height: 100vh;
-            width: 100%;
-            pointer-events: auto;
+        #bootScreen.hidden{opacity:0;pointer-events:none;}
+        .boot-line{white-space:pre-wrap;margin:4px 0;}
+        canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;}
+        #gridCanvas{opacity:0.15;}
+        #matrixCanvas{display:none;}
+        .scroll-sections{position:relative;z-index:1;pointer-events:none;}
+        .scroll-sections section{height:100vh;width:100%;pointer-events:auto;}
+        .terminal-container{
+            position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+            width:min(90%,850px);max-height:75vh;background:var(--terminal-bg);
+            backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+            border:1px solid var(--border);border-radius:16px;box-shadow:0 0 40px rgba(0,255,255,0.15);
+            z-index:2;display:flex;flex-direction:column;overflow:hidden;
         }
+        .terminal-header{display:flex;align-items:center;padding:12px 16px;background:rgba(20,20,35,0.7);border-bottom:1px solid var(--border);gap:8px;flex-shrink:0;}
+        .btn{width:14px;height:14px;border-radius:50%;}
+        .close{background:#ff5f56;}.minimize{background:#ffbd2e;}.maximize{background:#27ca40;}
+        .title{margin-left:12px;color:var(--text);font-size:0.85rem;}
+        .terminal-body{flex:1;padding:16px 20px;overflow-y:auto;font-size:1rem;line-height:1.8;color:var(--text);position:relative;display:flex;flex-direction:column;-webkit-overflow-scrolling:touch;}
+        .terminal-body::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,255,255,0.02)0px,rgba(0,255,255,0.02)1px,transparent 1px,transparent 3px);pointer-events:none;z-index:3;}
+        .output{white-space:pre-wrap;word-break:break-word;flex:1;z-index:1;}
+        .prompt-text{color:var(--prompt);}
+        .output-text{color:var(--text);}
+        .heading{color:var(--heading);font-weight:bold;}
+        .highlight{color:var(--highlight);}
+        .interactive-line{display:flex;align-items:center;border-top:1px dashed var(--border);padding-top:8px;z-index:1;flex-shrink:0;}
+        #commandInput{background:transparent;border:none;color:var(--text);font-family:inherit;font-size:1rem;flex:1;outline:none;caret-color:var(--prompt);margin-left:8px;-webkit-appearance:none;}
+        .util-bar{position:fixed;top:20px;right:20px;z-index:10;display:flex;gap:10px;}
+        .util-btn{background:rgba(0,0,0,0.5);border:1px solid var(--border);color:var(--text);padding:5px 10px;border-radius:5px;cursor:pointer;font-family:inherit;}
 
-        .terminal-container {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: min(90%, 850px);
-            max-height: 75vh;
-            background: rgba(10, 10, 25, 0.75);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 255, 255, 0.3);
-            border-radius: 16px;
-            box-shadow: 0 0 40px rgba(0, 255, 255, 0.15), 0 0 15px rgba(200, 0, 255, 0.2);
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            transition: box-shadow 0.3s, border-color 0.3s;
-        }
-
-        .terminal-container:hover {
-            box-shadow: 0 0 50px rgba(0, 255, 255, 0.3), 0 0 25px rgba(200, 0, 255, 0.4);
-            border-color: rgba(200, 0, 255, 0.6);
-        }
-
-        .terminal-header {
-            display: flex;
-            align-items: center;
-            padding: 12px 16px;
-            background: rgba(20, 20, 35, 0.7);
-            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
-            gap: 8px;
-            flex-shrink: 0;
-        }
-
-        .btn {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .close { background: #ff5f56; }
-        .minimize { background: #ffbd2e; }
-        .maximize { background: #27ca40; }
-
-        .title {
-            margin-left: 12px;
-            color: #a0b0ff;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
-        }
-
-        .terminal-body {
-            flex: 1;
-            padding: 16px 20px;
-            overflow-y: auto;
-            font-size: 1rem;
-            line-height: 1.6;
-            color: #c0f0ff;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        /* Scanline effect */
-        .terminal-body::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(0deg, rgba(0, 255, 255, 0.02) 0px, rgba(0, 255, 255, 0.02) 1px, transparent 1px, transparent 3px);
-            pointer-events: none;
-            z-index: 3;
-        }
-
-        .output {
-            white-space: pre-wrap;
-            word-break: break-word;
-            flex: 1;
-            position: relative;
-            z-index: 1;
-        }
-
-        .prompt-text {
-            color: #0ff;
-            text-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
-        }
-
-        .cmd {
-            color: #e0b0ff;
-            font-weight: bold;
-        }
-
-        .output-text {
-            color: #c0f0ff;
-        }
-
-        .heading {
-            color: #ff79c6;
-            font-weight: bold;
-            text-shadow: 0 0 6px #ff79c6;
-        }
-
-        .highlight {
-            color: #ffb86c;
-        }
-
-        .glitch {
-            display: inline-block;
-            animation: glitch 1.5s infinite linear alternate-reverse;
-        }
-
-        @keyframes glitch {
-            0% { text-shadow: 2px 2px 0 #ff00c1, -2px -2px 0 #00ffff; }
-            20% { text-shadow: -2px 2px 0 #ff00c1, 2px -2px 0 #00ffff; }
-            40% { text-shadow: 2px -2px 0 #ff00c1, -2px 2px 0 #00ffff; }
-            60% { text-shadow: -2px -2px 0 #ff00c1, 2px 2px 0 #00ffff; }
-            80% { text-shadow: 2px 2px 0 #00ffff, -2px -2px 0 #ff00c1; }
-            100% { text-shadow: 2px -2px 0 #00ffff, -2px 2px 0 #ff00c1; }
-        }
-
-        .cursor-blink {
-            display: inline-block;
-            background: #0ff;
-            color: transparent;
-            width: 0.6em;
-            animation: blink 1s step-end infinite;
-            vertical-align: text-bottom;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        .interactive-line {
-            display: flex;
-            align-items: center;
-            margin-top: 8px;
-            border-top: 1px dashed rgba(0,255,255,0.2);
-            padding-top: 8px;
-            z-index: 1;
-            flex-shrink: 0;
-        }
-
-        #commandInput {
-            background: transparent;
-            border: none;
-            color: #c0f0ff;
-            font-family: 'Fira Code', monospace;
-            font-size: 1rem;
-            flex: 1;
-            outline: none;
-            caret-color: #0ff;
-            margin-left: 8px;
-            -webkit-appearance: none;
-        }
-
-        .scroll-indicator {
-            position: fixed;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 5;
-            color: rgba(0, 255, 255, 0.7);
-            font-family: 'Fira Code', monospace;
-            text-align: center;
-            animation: bounce 1.5s infinite;
-            transition: opacity 0.5s;
-            pointer-events: none;
-            font-size: 0.9rem;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(-8px); }
-        }
-
-        /* Flicker effect for whole terminal */
-        .terminal-container {
-            animation: flicker 0.15s infinite alternate;
-        }
-
-        @keyframes flicker {
-            0% { opacity: 0.98; }
-            100% { opacity: 1; }
-        }
-
-        /* Contact bar outside terminal */
+        /* Contact Bar */
         .contact-bar {
             position: fixed;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
+            bottom: 20px;
+            right: 20px;
             display: flex;
-            gap: 20px;
+            gap: 15px;
             z-index: 10;
             background: rgba(10, 10, 25, 0.65);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             padding: 8px 20px;
             border-radius: 40px;
-            border: 1px solid rgba(0, 255, 255, 0.3);
+            border: 1px solid var(--border);
             box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
         }
-
         .contact-icon {
             width: 32px;
             height: 32px;
@@ -275,466 +88,249 @@
             justify-content: center;
             transition: transform 0.2s, filter 0.2s;
         }
-
         .contact-icon:hover {
             transform: scale(1.2);
-            filter: drop-shadow(0 0 8px #0ff);
+            filter: drop-shadow(0 0 8px var(--neon));
         }
-
         .contact-icon svg {
             width: 24px;
             height: 24px;
-            fill: rgba(0, 255, 255, 0.8);
+            fill: var(--prompt);
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 600px) {
-            .terminal-container {
-                width: 95%;
-                max-height: 70vh;
-                top: 45%;
-            }
-            .terminal-body {
-                font-size: 0.85rem;
-                padding: 12px;
-            }
-            .scroll-indicator {
-                bottom: 80px;
-                font-size: 0.8rem;
-            }
-            .contact-bar {
-                gap: 16px;
-                padding: 6px 16px;
-                bottom: 10px;
-            }
-            .contact-icon svg {
-                width: 22px;
-                height: 22px;
-            }
-            .title {
-                font-size: 0.75rem;
-            }
-            #commandInput {
-                font-size: 0.85rem;
-            }
-        }
-
-        @media (max-width: 400px) {
-            .terminal-body {
-                font-size: 0.8rem;
-                padding: 10px;
-            }
-            .contact-bar {
-                gap: 12px;
-                padding: 4px 12px;
-            }
+        @media(max-width:600px){
+            .terminal-container{width:95%;max-height:70vh;top:45%;}
+            .terminal-body{font-size:0.85rem;padding:12px;}
+            .contact-bar{bottom:10px;right:10px;gap:10px;padding:6px 14px;}
+            .contact-icon svg{width:20px;height:20px;}
         }
     </style>
 </head>
-<body>
-    <div class="mouse-glow" id="mouseGlow"></div>
-    <canvas id="particleCanvas"></canvas>
-
-    <!-- نشانگر اسکرول -->
-    <div class="scroll-indicator" id="scrollIndicator">▼ Scroll Down</div>
-
-    <div class="scroll-sections">
-        <section data-index="0"></section>
-        <section data-index="1"></section>
-        <section data-index="2"></section>
-        <section data-index="3"></section>
+<body class="theme-dark">
+    <div id="bootScreen"><div id="bootText"></div></div>
+    <div class="util-bar">
+        <button class="util-btn" onclick="setTheme('dark')">Dark</button>
+        <button class="util-btn" onclick="setTheme('cyberpunk')">Cyber</button>
+        <button class="util-btn" onclick="setTheme('hacker')">Hacker</button>
+        <button class="util-btn" id="soundToggle" onclick="toggleSound()">🔊</button>
     </div>
-
+    <canvas id="particleCanvas"></canvas>
+    <canvas id="gridCanvas"></canvas>
+    <canvas id="matrixCanvas"></canvas>
+    <div class="scroll-sections">
+        <section data-index="0"></section><section data-index="1"></section>
+        <section data-index="2"></section><section data-index="3"></section>
+    </div>
     <div class="terminal-container">
         <div class="terminal-header">
-            <span class="btn close"></span>
-            <span class="btn minimize"></span>
-            <span class="btn maximize"></span>
+            <span class="btn close"></span><span class="btn minimize"></span><span class="btn maximize"></span>
             <span class="title">majid@portfolio — bash — 80×24</span>
         </div>
         <div class="terminal-body" id="terminalBody">
             <div class="output" id="output"></div>
             <div class="interactive-line">
                 <span class="prompt-text">guest@majid:~$</span>
-                <input type="text" id="commandInput" placeholder="type command..." autofocus autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
+                <input type="text" id="commandInput" placeholder="type command..." autofocus autocomplete="off">
             </div>
         </div>
     </div>
 
-    <!-- نوار آیکون‌های تماس (خارج از ترمینال) -->
+    <!-- Contact Bar -->
     <div class="contact-bar">
         <a href="https://github.com/lucyferoops-blip" target="_blank" class="contact-icon" title="GitHub">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.418-1.305.762-1.604-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/>
-            </svg>
+            <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.418-1.305.762-1.604-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
         </a>
         <a href="https://t.me/M4j1D_0xDEAD" target="_blank" class="contact-icon" title="Telegram">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.87 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.94z"/>
-            </svg>
+            <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.87 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.94z"/></svg>
         </a>
         <a href="mailto:majid@example.com" class="contact-icon" title="Email">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
-            </svg>
+            <svg viewBox="0 0 24 24"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>
         </a>
-        <a href="resume.pdf" target="_blank" class="contact-icon" title="Resume (PDF)">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm2-6h2v4H8zm4 0h2v4h-2zm-4-6h2v4H8zm4 0h2v4h-2z"/>
-            </svg>
+        <a href="resume.pdf" target="_blank" class="contact-icon" title="Resume">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm2-6h2v4H8zm4 0h2v4h-2zm-4-6h2v4H8zm4 0h2v4h-2z"/></svg>
         </a>
     </div>
 
     <script>
-        (function() {
-            // ---------- Mouse glow ----------
-            const mouseGlow = document.getElementById('mouseGlow');
-            if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-                document.addEventListener('mousemove', (e) => {
-                    mouseGlow.style.setProperty('--mouse-x', e.clientX + 'px');
-                    mouseGlow.style.setProperty('--mouse-y', e.clientY + 'px');
+        // ---------- SOUND ----------
+        let soundEnabled = true;
+        let audioCtx = null;
+        function initAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
+        function playBeep(f=800,d=0.05){ if(!soundEnabled)return; initAudio(); const o=audioCtx.createOscillator(),g=audioCtx.createGain(); o.type='square';o.frequency.value=f;g.gain.value=0.1;o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+d); }
+        function toggleSound(){ soundEnabled=!soundEnabled; document.getElementById('soundToggle').textContent=soundEnabled?'🔊':'🔇'; }
+        window.toggleSound = toggleSound;
+
+        // ---------- THEME ----------
+        function setTheme(t){ document.body.className = document.body.className.replace(/theme-\w+/g,''); document.body.classList.add('theme-'+t); }
+        window.setTheme = setTheme;
+
+        // ---------- BOOT ----------
+        const bootLines = [
+            "Booting Linux 5.15.0-majid...",
+            "Loading kernel modules... [OK]",
+            "Initializing system daemons... [OK]",
+            "Decrypting portfolio data...",
+            "Access Granted.",
+            "Welcome, Majid."
+        ];
+        const bootDiv = document.getElementById('bootText');
+        const bootScreen = document.getElementById('bootScreen');
+        async function runBoot(){
+            for(let line of bootLines){
+                await typeLine(line, 40);
+            }
+            await new Promise(r=>setTimeout(r,600));
+            bootScreen.classList.add('hidden');
+        }
+        function typeLine(text,delay){
+            return new Promise(res=>{
+                const p = document.createElement('div'); p.className='boot-line'; bootDiv.appendChild(p);
+                let i=0;
+                const iv = setInterval(()=>{
+                    if(i<text.length){ p.textContent+=text[i]; i++; playBeep(700,0.02); }
+                    else{ clearInterval(iv); res(); }
+                },delay);
+            });
+        }
+
+        // ---------- CANVAS ----------
+        function initParticles(){
+            const c=document.getElementById('particleCanvas'), ctx=c.getContext('2d');
+            const particles=[];
+            function resize(){ c.width=window.innerWidth; c.height=window.innerHeight; }
+            window.addEventListener('resize',resize); resize();
+            for(let i=0;i<70;i++) particles.push({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-0.5)*0.5,vy:(Math.random()-0.5)*0.5,r:Math.random()*2+1});
+            function draw(){
+                ctx.clearRect(0,0,c.width,c.height);
+                particles.forEach(p=>{
+                    p.x+=p.vx; p.y+=p.vy;
+                    if(p.x<0||p.x>c.width)p.vx*=-1; if(p.y<0||p.y>c.height)p.vy*=-1;
+                    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle='rgba(0,255,255,0.6)'; ctx.fill();
                 });
-            } else {
-                mouseGlow.style.display = 'none';
+                requestAnimationFrame(draw);
             }
-
-            // ---------- ذرات پس‌زمینه (کاهش در موبایل) ----------
-            const canvas = document.getElementById('particleCanvas');
-            const ctx = canvas.getContext('2d');
-            let particles = [];
-            const isMobile = window.innerWidth < 768;
-            const particleCount = isMobile ? 30 : 80;
-            const connectionDistance = isMobile ? 80 : 120;
-
-            function resizeCanvas() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
+            draw();
+        }
+        function initGrid(){
+            const c=document.getElementById('gridCanvas'), ctx=c.getContext('2d');
+            function resize(){ c.width=window.innerWidth; c.height=window.innerHeight; }
+            window.addEventListener('resize',resize); resize();
+            function draw(){
+                ctx.clearRect(0,0,c.width,c.height);
+                ctx.strokeStyle='rgba(0,255,255,0.1)'; ctx.lineWidth=1;
+                for(let x=0;x<c.width;x+=40){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,c.height); ctx.stroke(); }
+                for(let y=0;y<c.height;y+=40){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(c.width,y); ctx.stroke(); }
+                requestAnimationFrame(draw);
             }
-            window.addEventListener('resize', resizeCanvas);
-            resizeCanvas();
+            draw();
+        }
 
-            class Particle {
-                constructor() {
-                    this.x = Math.random() * canvas.width;
-                    this.y = Math.random() * canvas.height;
-                    this.vx = (Math.random() - 0.5) * 0.6;
-                    this.vy = (Math.random() - 0.5) * 0.6;
-                    this.radius = Math.random() * 2 + 1;
-                    this.opacity = Math.random() * 0.5 + 0.3;
-                }
-                update() {
-                    this.x += this.vx;
-                    this.y += this.vy;
-                    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-                    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-                }
-                draw() {
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(0, 255, 255, ${this.opacity})`;
-                    ctx.fill();
-                }
+        // ---------- TERMINAL ENGINE ----------
+        const outputDiv = document.getElementById('output');
+        const terminalBody = document.getElementById('terminalBody');
+        const cmdInput = document.getElementById('commandInput');
+        let typingTimer=null, typingQueue=[], isTyping=false, manualMode=false;
+        const completedSections = new Set();
+
+        const sectionsContent = [
+            [ {cls:'prompt-text',text:'guest@majid:~$'},{cls:'output-text',text:' cat about.txt\n'},{cls:'output-text',text:'Loading... [████████████] 100%\n\n'},{cls:'heading glitch',text:'Majid\n'},{cls:'highlight',text:'Python Developer | Backend Developer | Cyber Security Enthusiast\n\n'},{cls:'output-text',text:'I build secure, scalable backend systems with Python.\nPassionate about open-source, automation, and ethical hacking.\n'},{cls:'output-text',text:'توسعه‌دهنده پایتون | عاشق امنیت سایبری\nکد می‌زنم، خلق می‌کنم.\n'},{cls:'prompt-text',text:'guest@majid:~$'} ],
+            [ {cls:'prompt-text',text:'guest@majid:~$'},{cls:'output-text',text:' skills --list\n'},{cls:'output-text',text:'Initializing... [████████] 100%\n\n'},{cls:'heading',text:'Languages:'},{cls:'output-text',text:'  Python, JavaScript, Bash\n'},{cls:'heading',text:'Frameworks:'},{cls:'output-text',text:'  FastAPI, Django, Flask\n'},{cls:'heading',text:'Databases:'},{cls:'output-text',text:'  PostgreSQL, SQLite, Redis\n'},{cls:'prompt-text',text:'guest@majid:~$'} ],
+            [ {cls:'prompt-text',text:'guest@majid:~$'},{cls:'output-text',text:' ls projects/\n'},{cls:'highlight',text:'telegram-superbot  HackerLab  Jamshid-AI  Portfolio\n\n'},{cls:'prompt-text',text:'guest@majid:~$'},{cls:'output-text',text:' cd HackerLab\n'},{cls:'prompt-text',text:'guest@majid:~/HackerLab$'},{cls:'output-text',text:' tree\n'},{cls:'output-text',text:'HackerLab/\n├── scanner.py\n├── exploit.py\n└── README.md\n'},{cls:'prompt-text',text:'guest@majid:~$'} ],
+            [ {cls:'prompt-text',text:'guest@majid:~$'},{cls:'output-text',text:' whoami\n'},{cls:'heading',text:'Majid\n'},{cls:'output-text',text:'Python Developer\nBackend Developer\nOpen Source Enthusiast\n'},{cls:'output-text',text:'همیشه در حال ساختن چیزی...\n\n'},{cls:'prompt-text',text:'guest@majid:~$'},{cls:'output-text',text:' exit\n'},{cls:'output-text',text:'logout\nConnection Closed...\n'} ]
+        ];
+
+        function appendChar(cls,char){ const s=document.createElement('span'); s.className=cls; s.textContent=char; outputDiv.appendChild(s); }
+        function stopTyping(){ if(typingTimer){clearTimeout(typingTimer);typingTimer=null;} isTyping=false; }
+        function typeSegments(segs,cb){
+            if(!segs||segs.length===0){if(cb)cb();return;}
+            stopTyping(); let si=0,ci=0;
+            isTyping=true;
+            function next(){
+                if(si>=segs.length){ isTyping=false; if(cb)cb(); return; }
+                const seg=segs[si];
+                if(ci>=seg.text.length){ si++; ci=0; next(); return; }
+                appendChar(seg.cls, seg.text[ci]); ci++;
+                terminalBody.scrollTop=terminalBody.scrollHeight;
+                typingTimer = setTimeout(next, 18);
             }
+            next();
+        }
 
-            for (let i = 0; i < particleCount; i++) {
-                particles.push(new Particle());
+        function processQueue(){
+            if(typingQueue.length>0 && !isTyping && !manualMode){
+                const idx=typingQueue.shift();
+                startAutoSection(idx);
             }
+        }
 
-            function connectParticles() {
-                for (let i = 0; i < particles.length; i++) {
-                    for (let j = i + 1; j < particles.length; j++) {
-                        const dx = particles[i].x - particles[j].x;
-                        const dy = particles[i].y - particles[j].y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < connectionDistance) {
-                            ctx.beginPath();
-                            ctx.moveTo(particles[i].x, particles[i].y);
-                            ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.strokeStyle = `rgba(180, 0, 255, ${0.15 * (1 - dist / connectionDistance)})`;
-                            ctx.lineWidth = 0.6;
-                            ctx.stroke();
-                        }
-                    }
-                }
-            }
+        function startAutoSection(idx){
+            if(completedSections.has(idx) || manualMode) { processQueue(); return; }
+            if(isTyping){ typingQueue.push(idx); return; }
+            completedSections.add(idx);
+            if(idx>0) appendChar('output-text','\n');
+            typeSegments(sectionsContent[idx], ()=>{
+                if(idx===sectionsContent.length-1){ cmdInput.disabled=false; cmdInput.focus(); }
+                processQueue();
+            });
+        }
 
-            function animateParticles() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                particles.forEach(p => {
-                    p.update();
-                    p.draw();
-                });
-                connectParticles();
-                requestAnimationFrame(animateParticles);
-            }
-            animateParticles();
-
-            // ---------- مدیریت ترمینال ----------
-            const outputDiv = document.getElementById('output');
-            const terminalBody = document.getElementById('terminalBody');
-            const commandInput = document.getElementById('commandInput');
-            const scrollIndicator = document.getElementById('scrollIndicator');
-            let typingInterval = null;
-            let isTyping = false;
-            let manualMode = false;
-            const completedSections = new Set();
-
-            const sectionsContent = [
-                [
-                    { cls: 'prompt-text', text: 'guest@majid:~$' },
-                    { cls: 'output-text', text: ' cat about.txt\n' },
-                    { cls: 'output-text', text: 'Loading... [████████████] 100%\n\n' },
-                    { cls: 'heading glitch', text: 'Majid' },
-                    { cls: 'output-text', text: '\n' },
-                    { cls: 'highlight', text: 'Python Developer | Backend Developer | Cyber Security Enthusiast\n\n' },
-                    { cls: 'output-text', text: 'I build secure, scalable backend systems with Python.\nPassionate about open-source, automation, and ethical hacking.\nTurning coffee into code since forever.\n' },
-                    { cls: 'prompt-text', text: 'guest@majid:~$' }
-                ],
-                [
-                    { cls: 'prompt-text', text: 'guest@majid:~$' },
-                    { cls: 'output-text', text: ' skills --list\n' },
-                    { cls: 'output-text', text: 'Initializing... [████████] 100%\n\n' },
-                    { cls: 'heading', text: 'Languages:' },
-                    { cls: 'output-text', text: '  Python, JavaScript, Bash\n' },
-                    { cls: 'heading', text: 'Frameworks:' },
-                    { cls: 'output-text', text: '  FastAPI, Django, Flask\n' },
-                    { cls: 'heading', text: 'Databases:' },
-                    { cls: 'output-text', text: '  PostgreSQL, SQLite, Redis\n' },
-                    { cls: 'heading', text: 'DevOps & Tools:' },
-                    { cls: 'output-text', text: '  Linux, Docker, Git, GitHub Actions\n' },
-                    { cls: 'heading', text: 'Specialties:' },
-                    { cls: 'output-text', text: '  Telegram Bot, REST API, Cyber Security\n' },
-                    { cls: 'prompt-text', text: 'guest@majid:~$' }
-                ],
-                [
-                    { cls: 'prompt-text', text: 'guest@majid:~$' },
-                    { cls: 'output-text', text: ' ls projects/\n' },
-                    { cls: 'highlight', text: 'telegram-superbot  HackerLab  Jamshid-AI  Portfolio\n\n' },
-                    { cls: 'prompt-text', text: 'guest@majid:~$' },
-                    { cls: 'output-text', text: ' cd HackerLab\n' },
-                    { cls: 'prompt-text', text: 'guest@majid:~/HackerLab$' },
-                    { cls: 'output-text', text: ' tree\n' },
-                    { cls: 'output-text', text: 'HackerLab/\n├── scanner.py\n├── exploit.py\n├── payloads/\n│   ├── reverse_shell.py\n│   └── keylogger.py\n├── requirements.txt\n└── README.md\n\n' },
-                    { cls: 'output-text', text: 'A modular penetration testing toolkit for educational purposes.\n' },
-                    { cls: 'prompt-text', text: 'guest@majid:~$' }
-                ],
-                [
-                    { cls: 'prompt-text', text: 'guest@majid:~$' },
-                    { cls: 'output-text', text: ' whoami\n' },
-                    { cls: 'heading', text: 'Majid\n' },
-                    { cls: 'output-text', text: 'Python Developer\nBackend Developer\nOpen Source Enthusiast\nAlways Building Something...\n\n' },
-                    { cls: 'prompt-text', text: 'guest@majid:~$' },
-                    { cls: 'output-text', text: ' exit\n' },
-                    { cls: 'output-text', text: 'logout\n' },
-                    { cls: 'output-text', text: 'Connection Closed...\n' },
-                ]
-            ];
-
-            function appendChar(cls, char) {
-                const span = document.createElement('span');
-                span.className = cls;
-                span.textContent = char;
-                outputDiv.appendChild(span);
-            }
-
-            function appendElement(element) {
-                outputDiv.appendChild(element);
-            }
-
-            function typeSegments(segments, callback) {
-                if (!segments || segments.length === 0) {
-                    if (callback) callback();
-                    return;
-                }
-                let segIdx = 0;
-                let charIdx = 0;
-
-                function nextChar() {
-                    if (segIdx >= segments.length) {
-                        if (callback) callback();
-                        return;
-                    }
-                    const seg = segments[segIdx];
-                    if (charIdx >= seg.text.length) {
-                        segIdx++;
-                        charIdx = 0;
-                        nextChar();
-                        return;
-                    }
-                    const ch = seg.text[charIdx];
-                    appendChar(seg.cls, ch);
-                    charIdx++;
-                    terminalBody.scrollTop = terminalBody.scrollHeight;
-                    typingInterval = setTimeout(nextChar, 18);
-                }
-                nextChar();
-            }
-
-            function stopTyping() {
-                if (typingInterval) {
-                    clearTimeout(typingInterval);
-                    typingInterval = null;
-                }
-            }
-
-            function startAutoSection(index) {
-                if (completedSections.has(index) || manualMode) return;
-                completedSections.add(index);
-                const content = sectionsContent[index];
-                if (index > 0) {
-                    appendChar('output-text', '\n');
-                }
-                typeSegments(content, () => {
-                    if (index === sectionsContent.length - 1) {
-                        commandInput.disabled = false;
-                        commandInput.focus();
-                    }
-                });
-            }
-
-            const sections = document.querySelectorAll('.scroll-sections section');
-            function getCurrentIndex() {
-                const scrollY = window.scrollY;
-                const vh = window.innerHeight;
-                const index = Math.round(scrollY / vh);
-                return Math.min(index, sections.length - 1);
-            }
-
-            let lastSection = -1;
-            function handleScroll() {
-                if (manualMode) return;
-                const idx = getCurrentIndex();
-                if (idx !== lastSection) {
-                    lastSection = idx;
-                    startAutoSection(idx);
-                }
-                if (window.scrollY > 50) {
-                    scrollIndicator.style.opacity = '0';
-                } else {
-                    scrollIndicator.style.opacity = '1';
-                }
-            }
-
-            window.addEventListener('load', () => {
-                window.scrollTo(0, 0);
-                lastSection = 0;
+        const sections = document.querySelectorAll('.scroll-sections section');
+        function getCurrentIndex(){
+            const idx = Math.round(window.scrollY / window.innerHeight);
+            return Math.min(idx, sections.length-1);
+        }
+        let lastIdx = -1;
+        function handleScroll(){
+            if(manualMode) return;
+            const idx = getCurrentIndex();
+            if(idx!==lastIdx){ lastIdx=idx; startAutoSection(idx); }
+        }
+        window.addEventListener('load', ()=>{
+            window.scrollTo(0,0); lastIdx=0;
+            initParticles(); initGrid();
+            runBoot().then(()=>{
                 startAutoSection(0);
-                commandInput.disabled = true;
             });
+            cmdInput.disabled=true;
+        });
+        window.addEventListener('scroll', ()=>{
+            requestAnimationFrame(handleScroll);
+        });
 
-            let ticking = false;
-            window.addEventListener('scroll', () => {
-                if (!ticking) {
-                    window.requestAnimationFrame(() => {
-                        handleScroll();
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            });
-
-            // ---------- حالت تعاملی ----------
-            commandInput.addEventListener('focus', () => {
-                if (!manualMode) {
-                    manualMode = true;
-                    stopTyping();
-                    commandInput.disabled = false;
-                    scrollIndicator.style.opacity = '0';
-                    appendChar('output-text', '\n');
-                    appendChar('prompt-text', 'guest@majid:~$ ');
-                }
-            });
-
-            commandInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    const cmd = commandInput.value.trim();
-                    if (cmd === '') return;
-                    commandInput.value = '';
-                    commandInput.disabled = true;
-                    appendChar('prompt-text', 'guest@majid:~$ ');
-                    appendChar('output-text', cmd + '\n');
-                    processCommand(cmd);
-                }
-            });
-
-            function processCommand(cmd) {
-                const lower = cmd.toLowerCase().trim();
-                let outputSegments = [];
-                switch (lower) {
-                    case 'help':
-                        outputSegments = [
-                            { cls: 'heading', text: 'Available commands:\n' },
-                            { cls: 'output-text', text: '  about      - About me\n' },
-                            { cls: 'output-text', text: '  skills     - Technical skills\n' },
-                            { cls: 'output-text', text: '  projects   - My projects\n' },
-                            { cls: 'output-text', text: '  contact    - Find me elsewhere\n' },
-                            { cls: 'output-text', text: '  whoami     - Identity\n' },
-                            { cls: 'output-text', text: '  clear      - Clear terminal\n' },
-                            { cls: 'output-text', text: '  help       - This help\n' }
-                        ];
-                        break;
-                    case 'about':
-                        outputSegments = [
-                            { cls: 'output-text', text: 'Loading about.txt...\n' },
-                            { cls: 'heading glitch', text: 'Majid\n' },
-                            { cls: 'highlight', text: 'Python Developer | Backend Developer | Cyber Security Enthusiast\n\n' },
-                            { cls: 'output-text', text: 'I build secure, scalable backend systems with Python.\nPassionate about open-source, automation, and ethical hacking.\n' }
-                        ];
-                        break;
-                    case 'skills':
-                        outputSegments = [
-                            { cls: 'output-text', text: 'Fetching skill matrix...\n' },
-                            { cls: 'heading', text: 'Languages:' },
-                            { cls: 'output-text', text: '  Python, JavaScript, Bash\n' },
-                            { cls: 'heading', text: 'Frameworks:' },
-                            { cls: 'output-text', text: '  FastAPI, Django, Flask\n' },
-                            { cls: 'heading', text: 'Databases:' },
-                            { cls: 'output-text', text: '  PostgreSQL, SQLite, Redis\n' },
-                            { cls: 'heading', text: 'DevOps & Tools:' },
-                            { cls: 'output-text', text: '  Linux, Docker, Git, GitHub Actions\n' },
-                            { cls: 'heading', text: 'Specialties:' },
-                            { cls: 'output-text', text: '  Telegram Bot, REST API, Cyber Security\n' }
-                        ];
-                        break;
-                    case 'projects':
-                        outputSegments = [
-                            { cls: 'output-text', text: 'Listing projects...\n' },
-                            { cls: 'highlight', text: 'telegram-superbot  HackerLab  Jamshid-AI  Portfolio\n\n' },
-                            { cls: 'output-text', text: 'Type "cd <project>" for details (feature coming soon).\n' }
-                        ];
-                        break;
-                    case 'contact':
-                        outputSegments = [
-                            { cls: 'output-text', text: '📡 Communication channels available below the terminal ↓\n' },
-                            { cls: 'highlight', text: 'Check the floating icons at the bottom.\n' }
-                        ];
-                        break;
-                    case 'whoami':
-                        outputSegments = [
-                            { cls: 'output-text', text: 'Identity confirmed:\n' },
-                            { cls: 'heading', text: 'Majid\n' },
-                            { cls: 'output-text', text: 'Python Developer\nBackend Developer\nOpen Source Enthusiast\nAlways Building Something...\n' }
-                        ];
-                        break;
-                    case 'clear':
-                        outputDiv.innerHTML = '';
-                        appendChar('prompt-text', 'guest@majid:~$ ');
-                        commandInput.disabled = false;
-                        commandInput.focus();
-                        return;
-                    default:
-                        outputSegments = [
-                            { cls: 'output-text', text: `command not found: ${cmd}\n` },
-                            { cls: 'output-text', text: 'Type "help" for available commands.\n' }
-                        ];
-                }
-                typeSegments(outputSegments, () => {
-                    appendChar('prompt-text', 'guest@majid:~$ ');
-                    commandInput.disabled = false;
-                    commandInput.focus();
-                });
+        // interactive mode
+        cmdInput.addEventListener('focus',()=>{
+            if(!manualMode){
+                manualMode=true; stopTyping(); typingQueue=[]; cmdInput.disabled=false;
+                appendChar('output-text','\n'); appendChar('prompt-text','guest@majid:~$ ');
             }
-        })();
+        });
+        cmdInput.addEventListener('keydown',function(e){
+            if(e.key==='Enter'){
+                const cmd = cmdInput.value.trim(); if(cmd==='')return;
+                cmdInput.value=''; cmdInput.disabled=true;
+                appendChar('prompt-text','guest@majid:~$ '); appendChar('output-text',cmd+'\n');
+                processCommand(cmd);
+            }
+        });
+
+        function processCommand(cmd){
+            const lower=cmd.toLowerCase().trim();
+            let segs=[];
+            switch(lower){
+                case 'help': segs=[{cls:'heading',text:'Commands: about, skills, projects, contact, whoami, clear, matrix, hack, coffee, hello majid, theme dark/cyberpunk/hacker'}]; break;
+                case 'about': segs=[...sectionsContent[0].slice(1)]; break;
+                case 'skills': segs=[...sectionsContent[1].slice(1)]; break;
+                case 'projects': segs=[...sectionsContent[2].slice(1)]; break;
+                case 'whoami': segs=[{cls:'heading',text:'Majid\n'},{cls:'output-text',text:'Python Developer\nBackend Developer\nOpen Source Enthusiast\nهمیشه در حال ساختن چیزی...\n'}]; break;
+                case 'matrix': document.getElementById('matrixCanvas').style.display='block'; setTimeout(()=>{document.getElementById('matrixCanvas').style.display='none';},5000); segs=[{cls:'output-text',text:'Entering the Matrix...\n'}]; break;
+                case 'hack': segs=[{cls:'output-text',text:'Hacking mainframe...\n'},{cls:'highlight',text:'Access Granted.\n'}]; playBeep(1000,0.2); break;
+                case 'coffee': segs=[{cls:'output-text',text:'☕ Brewing coffee...\n'}]; break;
+                case 'hello majid': segs=[{cls:'heading',text:'Hello Majid! Welcome back.\n'}]; break;
+                case 'clear': outputDiv.innerHTML=''; appendChar('prompt-text','guest@majid:~$ '); cmdInput.disabled=false; cmdInput.focus(); return;
+                default: segs=[{cls:'output-text',text:`command not found: ${cmd}\n`}];
+            }
+            typeSegments(segs,()=>{ appendChar('prompt-text','guest@majid:~$ '); cmdInput.disabled=false; cmdInput.focus(); });
+        }
     </script>
 </body>
 </html>
